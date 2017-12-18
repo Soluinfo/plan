@@ -4,7 +4,7 @@
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="#">Principal</a></li>                    
-                    <li class="active">Crear catalogo</li>
+                    <li class="active">Crear catalogo1</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
