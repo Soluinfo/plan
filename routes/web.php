@@ -11,7 +11,8 @@
 |
 */
 
-Route::get('/', 'PrincipalController@home');
+Route::get('/', 'Auth\LoginController@home');
+Route::get('/principal', 'PrincipalController@home');
 Route::get('/objetivos', 'objetivos\CatalogoController@home');
 Route::get('/crearobjetivo', 'objetivos\CatalogoController@crear');
 Route::get('/indicadores', 'indicadores\IndicadorController@home');

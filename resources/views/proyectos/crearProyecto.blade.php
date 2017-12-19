@@ -223,7 +223,7 @@
                 <!-- END MODALS -->   
                 @push('PageScript')
                 <script type="text/javascript" src="js/plugins/bootstrap/bootstrap-datepicker.js"></script>                
-                <script type="text/javascript" src="js/plugins/bootstrap/bootstrap-file-input.js"></script>
+               
                 <script type="text/javascript" src="js/plugins/bootstrap/bootstrap-select.js"></script>
                 <script type="text/javascript" src="js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
                 <script type="text/javascript" src="js/plugins/smartwizard/jquery.smartWizard-2.0.min.js"></script>        
