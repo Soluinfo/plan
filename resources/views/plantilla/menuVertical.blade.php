@@ -31,17 +31,10 @@
                     <li class="xn-openable">
                         <a href="#"><span class="fa fa-cogs"></span> <span class="xn-text">Portafolio</span></a>                        
                         <ul>
-                            <li><a href="ui-widgets.html"><span class="fa fa-heart"></span> Widgets</a></li>                            
-                            <li><a href="ui-elements.html"><span class="fa fa-cogs"></span> Elements</a></li>
-                            <li><a href="ui-buttons.html"><span class="fa fa-square-o"></span> Buttons</a></li>                            
-                            <li><a href="ui-panels.html"><span class="fa fa-pencil-square-o"></span> Panels</a></li>
-                            <li><a href="ui-icons.html"><span class="fa fa-magic"></span> Icons</a><div class="informer informer-warning">+679</div></li>
-                            <li><a href="ui-typography.html"><span class="fa fa-pencil"></span> Typography</a></li>
-                            <li><a href="ui-portlet.html"><span class="fa fa-th"></span> Portlet</a></li>
-                            <li><a href="ui-sliders.html"><span class="fa fa-arrows-h"></span> Sliders</a></li>
-                            <li><a href="ui-alerts-popups.html"><span class="fa fa-warning"></span> Alerts & Popups</a></li>                            
-                            <li><a href="ui-lists.html"><span class="fa fa-list-ul"></span> Lists</a></li>
-                            <li><a href="ui-tour.html"><span class="fa fa-random"></span> Tour</a></li>
+                            <li><a href="{{ url('/proyectos') }}"><span class="fa fa-heart"></span> Proyectos</a></li>                            
+                            <li><a href="{{ url('/actividades') }}"><span class="fa fa-cogs"></span> Actividades</a></li>
+                            <li><a href="ui-buttons.html"><span class="fa fa-square-o"></span> Metas</a></li>                            
+                            
                         </ul>
                     </li>                    
                     <li>

@@ -1,16 +1,16 @@
 @extends('master')
-@section('title','Crear objetivos')
+@section('title','Crear proyecto')
 @section('principal')
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="{{ url('/')}}">Principal</a></li>                    
-                    <li><a href="{{ url('/objetivos')}}">Catalogo de objetivos</a></li>
-                    <li class="active">Crear objetivo</li>
+                    <li><a href="{{ url('/proyectos')}}">Portafolio de proyectos</a></li>
+                    <li class="active">Crear proyecto</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
                 <div class="page-title">                    
-                    <h2><span class="fa fa-arrow-circle-o-left"></span> Crear catalogo</h2>
+                    <h2><span class="fa fa-arrow-circle-o-left"></span> Crear proyecto</h2>
                 </div>
                 <!-- END PAGE TITLE --> 
                 <!-- PAGE CONTENT WRAPPER -->
