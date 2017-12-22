@@ -18,12 +18,9 @@
                     <div class="row">
                         
                         <div class="col-md-12">
-
-                             <!-- START WIZARD WITH VALIDATION -->
-                             <div class="block">
-                                                            
-                                <form action="javascript:alert('Validated!');" role="form" class="form-horizontal" id="wizard-validation">
-                                <div class="wizard show-submit wizard-validation">
+                            <!-- START WIZARD WITH VALIDATION -->
+                            <div class="block">
+                                <div id="wizarProyecto" class="wizard">
                                     <ul>
                                         <li>
                                             <a href="#step-7">
@@ -36,30 +33,60 @@
                                                 <span class="stepNumber">2</span>
                                                 <span class="stepDesc">Paso 2<br /><small>Objetivos</small></span>
                                             </a>
-                                        </li>                                    
+                                        </li>
+                                        <li>
+                                            <a href="#step-9">
+                                                <span class="stepNumber">3</span>
+                                                <span class="stepDesc">Paso 3<br /><small>Miembros</small></span>
+                                            </a>
+                                        </li>                                  
                                     </ul>
 
                                     <div id="step-7">   
-
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">Nombre de catálogo</label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="login" placeholder="Login"/>
+                                        <form action="" role="form" class="form-horizontal" id="formProyecto" >
+                                            
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Nombre de proyecto :</label>
+                                                <div class="col-md-6">
+                                                    <input type="text" class="form-control" name="txtnombreProyecto" placeholder="Ejemplo: Proyecto 2017"/>
+                                                    
+                                                </div>
                                             </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">Fecha creacion</label>
-                                            <div class="col-md-6">
-                                                <input type="password" class="form-control" name="password" placeholder="Password" id="password"/>
+                                            <div class="form-group">                                        
+                                                <label class="col-md-3 col-xs-12 control-label">Fecha :</label>
+                                                <div class="col-md-6 col-xs-12">
+                                                    <input type="text" name="dpFechaProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd">
+                                                </div>
+                                            </div>            
+                                            <div class="form-group">
+                                                <label class="col-md-3 col-xs-12 control-label">Estado :</label>
+                                                <div class="col-md-6 col-xs-12">                                                                                            
+                                                    <select class="form-control select" name="slEstado">
+                                                        <option value="">Seleccione estado</option>
+                                                        <option value="1">Activo</option>
+                                                        <option value="2">Inactivo</option>
+                                                        
+                                                    </select>
+                                                    
+                                                </div>
                                             </div>
-                                        </div>             
-                                        <div class="form-group">
-                                            <label class="col-md-3 control-label">Estado</label>
-                                            <div class="col-md-6">
-                                                <input type="password" class="form-control" name="repassword" placeholder="Re-Password"/>
+                                            
+                                            <div class="form-group">
+                                                <label class="col-md-3 control-label">Direccion</label>
+                                                <div class="col-md-6">                                                                                
+                                                    <select class="form-control select" name="slDireccion" data-live-search="true">
+                                                        <option value="">seleccion direccion</option>
+                                                        
+                                                        <option value="1">Sit amet sicors</option>
+                                                        <option value="2">Mostoly stofu tiro</option>
+                                                        <option value="3">Vico sante fara</option>
+                                                        <option value="4">Delomo ponto si</option>
+                                                    </select>
+                                                </div>
                                             </div>
-                                        </div>
-
+                                            
+                                            <input type="text" name="idproyecto" value="0">
+                                        </form>
                                     </div>
 
                                     <div id="step-8">
@@ -136,12 +163,14 @@
                                             </div>
                                         </div>
                                         
-                                    </div>                                                                                                            
+                                    </div>
+                                    <div id="step-9">
+
+                                    </div>
                                 </div>
-                                </form>
+                 
                             </div>                        
                             <!-- END WIZARD WITH VALIDATION -->
-
                         </div>
                     </div>                    
                 </div>
@@ -208,6 +237,7 @@
                                                                 <span class="help-block">Select box example</span>
                                                             </div>
                                                         </div>
+                                                        
                                                        
                                             </form>
                                             
@@ -226,7 +256,173 @@
                
                 <script type="text/javascript" src="js/plugins/bootstrap/bootstrap-select.js"></script>
                 <script type="text/javascript" src="js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+                
+                <script type='text/javascript' src='js/plugins/noty/jquery.noty.js'></script>
+                <script type='text/javascript' src='js/plugins/noty/layouts/topCenter.js'></script>
+                <script type='text/javascript' src='js/plugins/noty/layouts/topLeft.js'></script>
+                <script type='text/javascript' src='js/plugins/noty/layouts/topRight.js'></script>            
+                
+                <script type='text/javascript' src='js/plugins/noty/themes/default.js'></script>
+
                 <script type="text/javascript" src="js/plugins/smartwizard/jquery.smartWizard-2.0.min.js"></script>        
                 <script type="text/javascript" src="js/plugins/jquery-validation/jquery.validate.js"></script> 
+                <script>
+                    $(function(){
+                        //variables para el wizard
+                            var lbnext = 'Guardar|siguiente';
+                            var lbprevious = 'Anterior';
+                            var lbfinal = 'Finalizar'
+                        //end variable
+                        //Inicio de funcion leaveAStepCallback para obtener el numero de step 
+                            function leaveAStepCallback(obj){
+                                var step_num= obj.attr('rel');
+                                return validateSteps(step_num);
+                            }
+                        //End de funcion leaveAStepCallback
+                       
+
+                        //validacion del paso 1 informacion general
+                        function validateStep1(){ 
+                            var datos = $("#formProyecto").validate({
+                                ignore: ":hidden:not(select)",
+                                
+                                rules: {
+                                    txtnombreProyecto: {
+                                        required: true,
+                                        minlength: 2,
+                                        maxlength: 250
+                                    },
+                                    dpFechaProyecto: {
+                                        required: true,
+                                    },
+                                    slDireccion: {
+                                        required: true,
+                                        
+                                    },
+                                    slEstado : {
+                                        required: true
+                                    }
+                                },
+                                messages: {
+                                    txtnombreProyecto: {
+                                        required: "El campo nombre de proyecto es requerido",
+                                        minlength: "El campo nombre de proyecto no puede contener menos de dos caracteres",
+                                        maxlength: "El campo nombre de proyecto no puede contener mas de 250 caracteres"
+                                    },
+                                    dpFechaProyecto : {
+                                        required: "El campo fecha es requerido"
+                                    },
+                                    slDireccion: {
+                                        required: "El campo direccion es requierido",
+                                        
+                                    },
+                                    slEstado: {
+                                        required: "El campo estado es requerido"
+                                    }
+                                },
+                                success: function ( label, element ) {
+                                    
+                                    var element2 = label.siblings('div'); 
+                                                      
+                                    if(element2.hasClass('btn-group')){
+                                        element2.attr("class","btn-group bootstrap-select form-control select valid");
+                                    }
+                                    
+                                },
+                                errorPlacement: function (error, element) {
+                                    console.log('error');
+                                    var element2 = element.siblings('div'); 
+                                    var element3 = element.siblings('span'); 
+                                    
+                                    if (element2.hasClass('btn-group')) {
+                                        element2.attr("class","btn-group bootstrap-select form-control select error");
+                                        error.insertAfter(element2);
+                                    } else {
+                                        
+                                        element3.hide();
+                                        error.insertAfter(element);
+                                        
+                                    }
+                                    /*Add other (if...else...) conditions depending on your
+                                    * validation styling requirements*/
+                                },
+                                submitHandler: function(form){
+                                    /*var dataString = 'name='+$('#name').val()+'&lastname='+$('#lastname').val()+'...';
+                                    $.ajax({
+                                        type: "POST",
+                                        url:"send.php",
+                                        data: dataString,
+                                        success: function(data){
+                                            $("#ok").html(data);
+                                            $("#ok").show();
+                                            $("#formid").hide();
+                                        }
+                                    });*/
+                                    console.log('guardado');
+                                }
+                                
+                            });
+                            $('select.select').on('change', function () {
+                                datos.element($(this));
+                                element = $(this);
+                                var element2 = element.siblings('div'); 
+                                if(element.val() > 0){
+                                    console.log('mayor a cero');
+                                }else{
+                                    if (element2.hasClass('btn-group')) {
+                                        element2.attr("class","btn-group bootstrap-select form-control select error");
+                                        error.insertAfter(element2);
+                                    }
+                                }
+                                
+                            })
+                           
+                            return datos.form();
+                           
+                        }
+                        //validacion del paso 2 agregar objetivos
+                        function validateStep3(){
+                            return false;
+                        }
+                        //funcion que valida en que paso se encuentra
+                        function validateSteps(step){
+                            var isStepValid = true;
+                            // validate step 1
+                            if(step == 1){
+                                if(validateStep1() == false ){
+                                    isStepValid = false; 
+                                    console.log('step 1 = '+isStepValid);
+                                    //$('#wizard').smartWizard('showMessage','Please correct the errors in step'+step+ ' and click next.');
+                                    //$('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
+                                }else{
+                                    alert('Informacion registrada con exito');
+                                    noty({text: 'Successful action', layout: 'topRight', type: 'success'});
+                                    console.log('step 1 = '+isStepValid);
+                                   // $('#wizard').smartWizard('hideMessage');
+                                   // $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
+                                }
+                            }
+                        
+                           
+                            
+                            return isStepValid;
+                        }
+                        
+                        if($("#idproyecto").val() > 0){
+                            var lbnext = 'Actualizar|siguiente';
+                        }else{
+                            
+                        }
+                        $("#wizarProyecto").smartWizard({
+                            labelNext : lbnext, 
+                            labelPrevious:'Anterior', // label for Previous button
+                            labelFinish:'Finalizar',  // label for Finish button                   
+                            // This part of code can be removed FROM
+                            onLeaveStep: leaveAStepCallback,// <-- TO
+                        });
+                         
+                    });
+                    
+                </script>
                 @endpush('PageScript')
 @endsection('principal')

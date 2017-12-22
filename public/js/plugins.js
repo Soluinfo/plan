@@ -246,8 +246,17 @@ $(function() {
             
         }//End Knob
         
-        // Start Smart Wizard
         var uiSmartWizard = function(){
+            if($(".wizard").length > 0){
+                //Check count of steps in each wizard
+                $(".wizard > ul").each(function(){
+                    $(this).addClass("steps_"+$(this).children("li").length);
+                });//end
+            }
+        }
+         // Start Smart Wizard
+         /*
+         var uiSmartWizard = function(){
             
             if($(".wizard").length > 0){
                 
@@ -335,7 +344,8 @@ $(function() {
                 });
             }            
             
-        }// End Smart Wizard
+         }*/// End Smart Wizard
+        
         
         //OWL Carousel
         var uiOwlCarousel = function(){
