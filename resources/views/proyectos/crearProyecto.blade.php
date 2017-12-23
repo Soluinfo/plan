@@ -42,29 +42,30 @@
                                         </li>                                  
                                     </ul>
 
-                                    <div id="step-7">   
-                                        <form action="" role="form" class="form-horizontal" id="formProyecto" >
+                                    <div id="step-7"> 
+                                    {!! Form::open(['url' => 'proyectos/guardar', "name" => "formProyecto", "id" => "formProyecto","class" => "form-horizontal", "role" => "form"]) !!}
+                                        
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Nombre de proyecto :</label>
-                                                <div class="col-md-6">
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Nombre de proyecto :</label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <input type="text" class="form-control" name="txtnombreProyecto" placeholder="Ejemplo: Proyecto 2017"/>
                                                     
                                                 </div>
                                             </div>
                                             <div class="form-group">                                        
-                                                <label class="col-md-3 col-xs-12 control-label">Fecha :</label>
-                                                <div class="col-md-6 col-xs-12">
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha :</label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <input type="text" name="dpFechaProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd">
                                                 </div>
                                             </div>            
                                             <div class="form-group">
-                                                <label class="col-md-3 col-xs-12 control-label">Estado :</label>
-                                                <div class="col-md-6 col-xs-12">                                                                                            
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Estado :</label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                            
                                                     <select class="form-control select" name="slEstado">
                                                         <option value="">Seleccione estado</option>
-                                                        <option value="1">Activo</option>
-                                                        <option value="2">Inactivo</option>
+                                                        <option value="1">ACTIVO</option>
+                                                        <option value="2">INACTIVO</option>
                                                         
                                                     </select>
                                                     
@@ -72,20 +73,19 @@
                                             </div>
                                             
                                             <div class="form-group">
-                                                <label class="col-md-3 control-label">Direccion</label>
-                                                <div class="col-md-6">                                                                                
-                                                    <select class="form-control select" name="slDireccion" data-live-search="true">
-                                                        <option value="">seleccion direccion</option>
-                                                        
-                                                        <option value="1">Sit amet sicors</option>
-                                                        <option value="2">Mostoly stofu tiro</option>
-                                                        <option value="3">Vico sante fara</option>
-                                                        <option value="4">Delomo ponto si</option>
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Departamento</label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                
+                                                    <select class="form-control select" name="slDepartamento" data-live-search="true">
+                                                        <option value="">seleccion departamento</option>
+                                                        @foreach($departamento as $d)
+                                                            <option value="{{$d->SERIAL_DEP}}">{{$d->DESCRIPCION_DEP}}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                             </div>
-                                            
+                                            {{ csrf_field() }}
                                             <input type="text" name="idproyecto" value="0">
+                                            
                                         </form>
                                     </div>
 
@@ -252,23 +252,25 @@
                     </div>
                 <!-- END MODALS -->   
                 @push('PageScript')
-                <script type="text/javascript" src="js/plugins/bootstrap/bootstrap-datepicker.js"></script>                
+                <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-datepicker.js') }}"></script>
+                <script type="text/javascript" src="{{ url('js/plugins/bootstrap/locales/bootstrap-datepicker.es.js') }}"></script>                
                
-                <script type="text/javascript" src="js/plugins/bootstrap/bootstrap-select.js"></script>
-                <script type="text/javascript" src="js/plugins/tagsinput/jquery.tagsinput.min.js"></script>
+                <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-select.js') }}"></script>
+                <script type="text/javascript" src="{{ url('js/plugins/tagsinput/jquery.tagsinput.min.js') }}"></script>
                 
-                <script type='text/javascript' src='js/plugins/noty/jquery.noty.js'></script>
-                <script type='text/javascript' src='js/plugins/noty/layouts/topCenter.js'></script>
-                <script type='text/javascript' src='js/plugins/noty/layouts/topLeft.js'></script>
-                <script type='text/javascript' src='js/plugins/noty/layouts/topRight.js'></script>            
+                <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>            
                 
-                <script type='text/javascript' src='js/plugins/noty/themes/default.js'></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
 
-                <script type="text/javascript" src="js/plugins/smartwizard/jquery.smartWizard-2.0.min.js"></script>        
-                <script type="text/javascript" src="js/plugins/jquery-validation/jquery.validate.js"></script> 
+                <script type="text/javascript" src="{{ url('js/plugins/smartwizard/jquery.smartWizard-2.0.min.js') }}"></script>        
+                <script type="text/javascript" src="{{ url('js/plugins/jquery-validation/jquery.validate.js') }}"></script> 
                 <script>
                     $(function(){
                         //variables para el wizard
+                            var datos;
                             var lbnext = 'Guardar|siguiente';
                             var lbprevious = 'Anterior';
                             var lbfinal = 'Finalizar'
@@ -280,10 +282,37 @@
                             }
                         //End de funcion leaveAStepCallback
                        
-
+                        //ajax guardar informacion proyecto
+                            $("#formProyecto").on("submit", function(e) {     
+                                e.preventDefault();
+                                $.ajax({
+                                    url: $(this).attr("action"),
+                                    type: $(this).attr("method"),
+                                    data: $(this).serialize(),
+                                    dataType : 'json',
+                                    beforeSend : function(){
+                                        
+                                    },
+                                    success : function(data){
+                                        if(data.respuesta == 'ok'){
+                                            $("input[name=idproyecto]").val(data.codigo);
+                                            var lbnext = 'Actualizar|siguiente';
+                                            $('.buttonNext').addClass('buttonDisabled');
+                                            
+                                            noty({text: 'Proyecto creado con exito', layout: 'topRight', type: 'success'});
+                                        }
+                                    },
+                                    error : function(xhr,estado){
+                                        alert("!Error "+xhr.status+", reportelo al centro de computo");
+                                        waitingDialog.hide();
+                                    }
+                                })
+                            })
+                        //end ajax
                         //validacion del paso 1 informacion general
+                        
                         function validateStep1(){ 
-                            var datos = $("#formProyecto").validate({
+                            datos = $("#formProyecto").validate({
                                 ignore: ":hidden:not(select)",
                                 
                                 rules: {
@@ -295,7 +324,7 @@
                                     dpFechaProyecto: {
                                         required: true,
                                     },
-                                    slDireccion: {
+                                    slDepartamento: {
                                         required: true,
                                         
                                     },
@@ -312,7 +341,7 @@
                                     dpFechaProyecto : {
                                         required: "El campo fecha es requerido"
                                     },
-                                    slDireccion: {
+                                    slDepartamento: {
                                         required: "El campo direccion es requierido",
                                         
                                     },
@@ -345,20 +374,6 @@
                                     }
                                     /*Add other (if...else...) conditions depending on your
                                     * validation styling requirements*/
-                                },
-                                submitHandler: function(form){
-                                    /*var dataString = 'name='+$('#name').val()+'&lastname='+$('#lastname').val()+'...';
-                                    $.ajax({
-                                        type: "POST",
-                                        url:"send.php",
-                                        data: dataString,
-                                        success: function(data){
-                                            $("#ok").html(data);
-                                            $("#ok").show();
-                                            $("#formid").hide();
-                                        }
-                                    });*/
-                                    console.log('guardado');
                                 }
                                 
                             });
@@ -391,15 +406,9 @@
                             if(step == 1){
                                 if(validateStep1() == false ){
                                     isStepValid = false; 
-                                    console.log('step 1 = '+isStepValid);
-                                    //$('#wizard').smartWizard('showMessage','Please correct the errors in step'+step+ ' and click next.');
-                                    //$('#wizard').smartWizard('setError',{stepnum:step,iserror:true});         
+                                    
                                 }else{
-                                    alert('Informacion registrada con exito');
-                                    noty({text: 'Successful action', layout: 'topRight', type: 'success'});
-                                    console.log('step 1 = '+isStepValid);
-                                   // $('#wizard').smartWizard('hideMessage');
-                                   // $('#wizard').smartWizard('setError',{stepnum:step,iserror:false});
+                                    $("#formProyecto").submit(); 
                                 }
                             }
                         

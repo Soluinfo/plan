@@ -11,7 +11,7 @@
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        
-        <link rel="stylesheet" type="text/css" id="theme" href="css/theme-default.css"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="{{ url('css/theme-default.css') }}"/>
         <!-- EOF CSS INCLUDE -->                                    
     </head>
     <body>
@@ -62,29 +62,29 @@
         
     <!-- START SCRIPTS -->
         <!-- START PLUGINS -->
-        <script type="text/javascript" src="js/plugins/jquery/jquery.min.js"></script>
-        <script type="text/javascript" src="js/plugins/jquery/jquery-ui.min.js"></script>
-        <script type="text/javascript" src="js/plugins/bootstrap/bootstrap.min.js"></script>        
+        <script type="text/javascript" src="{{ url('js/plugins/jquery/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url('js/plugins/jquery/jquery-ui.min.js') }}"></script>
+        <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap.min.js') }}"></script>        
         <!-- END PLUGINS -->
 
         <!-- START THIS PAGE PLUGINS-->        
-            <script type='text/javascript' src='js/plugins/icheck/icheck.min.js'></script>        
-            <script type="text/javascript" src="js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js"></script>
-            <script type="text/javascript" src="js/plugins/scrolltotop/scrolltopcontrol.js"></script> 
+            <script type='text/javascript' src="{{ url('js/plugins/icheck/icheck.min.js') }}"></script>        
+            <script type="text/javascript" src="{{ url('js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js') }}"></script>
+            <script type="text/javascript" src="{{ url('js/plugins/scrolltotop/scrolltopcontrol.js') }}"></script> 
             
-            <script type="text/javascript" src="js/plugins/morris/raphael-min.js"></script>
-            <script type="text/javascript" src="js/plugins/morris/morris.min.js"></script> 
+            <script type="text/javascript" src="{{ url('js/plugins/morris/raphael-min.js') }}"></script>
+            <script type="text/javascript" src="{{ url('js/plugins/morris/morris.min.js') }}"></script> 
             @stack('PageScript')
             
         <!-- END THIS PAGE PLUGINS-->        
 
         <!-- START TEMPLATE -->
-        <script type="text/javascript" src="js/settings.js"></script>
+        <script type="text/javascript" src="{{ url('js/settings.js') }}"></script>
         
-        <script type="text/javascript" src="js/plugins.js"></script>        
-        <script type="text/javascript" src="js/actions.js"></script>
+        <script type="text/javascript" src="{{ url('js/plugins.js') }}"></script>        
+        <script type="text/javascript" src="{{ url('js/actions.js') }}"></script>
         
-        <script type="text/javascript" src="js/demo_dashboard.js"></script>
+        <script type="text/javascript" src="{{ url('js/demo_dashboard.js') }}"></script>
         <!-- END TEMPLATE -->
     <!-- END SCRIPTS -->         
     </body>

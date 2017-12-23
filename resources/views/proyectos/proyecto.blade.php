@@ -16,7 +16,7 @@
                 <div class="page-content-wrap">
                     <div class="row">
                         <div class="col-lg-4">
-                            <a class="btn btn-block btn-primary" href="{{ url('/crearproyecto') }}"><span class="fa fa-plus"></span> Nuevo proyecto</a>
+                            <a class="btn btn-block btn-primary" href="{{ url('/proyectos/crear') }}"><span class="fa fa-plus"></span> Nuevo proyecto</a>
                         </div>
                         <div class="col-md-12">
                             <!-- START DEFAULT DATATABLE -->

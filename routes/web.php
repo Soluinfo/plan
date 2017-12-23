@@ -17,5 +17,6 @@ Route::get('/objetivos', 'objetivos\CatalogoController@home');
 Route::get('/crearobjetivo', 'objetivos\CatalogoController@crear');
 Route::get('/indicadores', 'indicadores\IndicadorController@home');
 Route::get('/proyectos', 'proyectos\ProyectoController@home');
-Route::get('/crearproyecto', 'proyectos\ProyectoController@crear');
+Route::get('/proyectos/crear/{id?}','proyectos\ProyectoController@crear')->where('id', '[0-9]+');
 Route::get('/actividades', 'proyectos\ActividadController@home');
+Route::post('/proyectos/guardar', 'proyectos\ProyectoController@guardar');
