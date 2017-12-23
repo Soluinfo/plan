@@ -6,11 +6,11 @@
                     </li>
                     <li class="xn-profile">
                         <a href="#" class="profile-mini">
-                            <img src="assets/images/users/avatar.jpg" alt="John Doe"/>
+                            <img src="{{ url('assets/images/users/avatar.jpg') }}" alt="John Doe"/>
                         </a>
                         <div class="profile">
                             <div class="profile-image">
-                                <img src="assets/images/users/avatar.jpg" alt="John Doe"/>
+                                <img src="{{ url('assets/images/users/avatar.jpg') }}" alt="John Doe"/>
                             </div>
                             <div class="profile-data">
                                 <div class="profile-data-name">John Doe</div>
@@ -24,7 +24,7 @@
                     </li>
                     <li class="xn-title">Navegacion</li>
                     <li class="active">
-                        <a href="{{ url('/') }}"><span class="fa fa-desktop"></span> <span class="xn-text">Principal</span></a>                        
+                        <a href="{{ url('/principal') }}"><span class="fa fa-desktop"></span> <span class="xn-text">Principal</span></a>                        
                     </li>                    
                     
                     <li class="xn-title">Proyectos</li>

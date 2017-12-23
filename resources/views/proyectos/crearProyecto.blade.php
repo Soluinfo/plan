@@ -291,20 +291,26 @@
                                     data: $(this).serialize(),
                                     dataType : 'json',
                                     beforeSend : function(){
-                                        
+                                        $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
                                     },
                                     success : function(data){
                                         if(data.respuesta == 'ok'){
                                             $("input[name=idproyecto]").val(data.codigo);
-                                            var lbnext = 'Actualizar|siguiente';
-                                            $('.buttonNext').addClass('buttonDisabled');
+                                            if(data.transaccion == 'guardar'){
+                                                noty({text: 'Proyecto creado con exito', layout: 'topRight', type: 'success'});
+                                            }else{
+                                                noty({text: 'Proyecto actualizado con exito', layout: 'topRight', type: 'success'});
+                                            }
                                             
-                                            noty({text: 'Proyecto creado con exito', layout: 'topRight', type: 'success'});
                                         }
+                                        $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                                        $.mpb('destroy');
                                     },
                                     error : function(xhr,estado){
+                                        $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                                        $.mpb('destroy');
                                         alert("!Error "+xhr.status+", reportelo al centro de computo");
-                                        waitingDialog.hide();
+                                        
                                     }
                                 })
                             })

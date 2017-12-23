@@ -12,7 +12,11 @@
         
         <!-- CSS INCLUDE -->        
         <link rel="stylesheet" type="text/css" id="theme" href="{{ url('css/theme-default.css') }}"/>
-        <!-- EOF CSS INCLUDE -->                                    
+        <!-- EOF CSS INCLUDE -->
+        <script>
+            var baseUrl = "{{ url('/') }}";
+            
+        </script>                               
     </head>
     <body>
         <!-- START PAGE CONTAINER -->
@@ -56,8 +60,8 @@
         <!-- END MESSAGE BOX-->
 
         <!-- START PRELOADS -->
-        <audio id="audio-alert" src="audio/alert.mp3" preload="auto"></audio>
-        <audio id="audio-fail" src="audio/fail.mp3" preload="auto"></audio>
+        <audio id="audio-alert" src="{{ url('audio/alert.mp3') }}" preload="auto"></audio>
+        <audio id="audio-fail" src="{{ url('audio/fail.mp3') }}" preload="auto"></audio>
         <!-- END PRELOADS -->                  
         
     <!-- START SCRIPTS -->
