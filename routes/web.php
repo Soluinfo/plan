@@ -20,3 +20,5 @@ Route::get('/proyectos', 'proyectos\ProyectoController@home');
 Route::get('/proyectos/crear/{id?}','proyectos\ProyectoController@crear')->where('id', '[0-9]+');
 Route::get('/actividades', 'proyectos\ActividadController@home');
 Route::post('/proyectos/guardar', 'proyectos\ProyectoController@guardar');
+Route::post('/proyectos/asignarSupervisorProyecto','proyectos\ProyectoController@asignarSupervisor');
+Route::post('/proyectos/obtenerSupervisorProyecto','proyectos\ProyectoController@obtenerSupervisores');

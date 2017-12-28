@@ -12,6 +12,7 @@
                 <div class="page-title">                    
                     <h2><span class="fa fa-arrow-circle-o-left"></span> Crear proyecto</h2>
                 </div>
+                <button class="btn btn default" data-toggle="modal" data-target="#modalSupervisor">modal</button>
                 <!-- END PAGE TITLE --> 
                 <!-- PAGE CONTENT WRAPPER -->
                 <div class="page-content-wrap">
@@ -83,7 +84,7 @@
                                                 </div>
                                             </div>
                                             {{ csrf_field() }}
-                                            <input type="hidden" name="idproyecto" value="0">
+                                            <input type="text" name="idproyecto" value="0">
                                             
                                         </form>
                                     </div>
@@ -249,8 +250,70 @@
                             </div>
                         </div>
                     </div>
-                <!-- END MODALS -->   
+                <!-- END MODALS --> 
+                <!-- MODALS -->        
+                    <div class="modal" id="modalSupervisor" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                                    <h4 class="modal-title" id="defModalHead">Agregar supervisor</h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            
+                                           
+                                                <div class="panel-body panel-body-table">
+
+                                                    <div class="table-responsive">
+                                                        <table class="table table-bordered table-striped table-actions datatable">
+                                                            <thead>
+                                                                <tr>
+                                                                    <th width="50">id</th>
+                                                                    <th>Cedula</th>
+                                                                    <th>Nombres</th>
+                                                                    <th width="100">Apellidos</th>
+                                                                    <th width="100">Email</th>
+                                                                    <th width="100">Celular</th>
+                                                                    <th width="100">actions</th>
+                                                                </tr>
+                                                            </thead>
+                                                            <tbody>
+                                                                @foreach($supervisores as $s)                                          
+                                                                    <tr id="trow_{{$s->SERIAL_EPL}}">
+                                                                        <td class="text-center">{{$s->SERIAL_EPL}}</td>
+                                                                        <td>{{$s->DOCUMENTOIDENTIDAD_EPL}}</td>
+                                                                        <td>{{$s->NOMBRE_EPL}}</td>
+                                                                        <td>{{$s->APELLIDO_EPL}}</td>
+                                                                        <td>{{$s->EMAIL_EPL}}</td>
+                                                                        <td>{{$s->CELULAR_EPL}}</td>
+                                                                        <td>
+                                                                            <button class="btn btn-default btn-sm" onclick="asignarSupervisor({{$s->SERIAL_EPL}});" ><span class="fa fa-pencil"></span></button>
+    
+                                                                        </td>
+                                                                    </tr>
+                                                                @endforeach
+                                                               
+                                                            </tbody>
+                                                        </table>
+                                                    </div>                                
+
+                                                </div>
+                                           
+                                            
+                                        </div>
+                                    </div>   
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                <!-- END MODALS -->     
                 @push('PageScript')
+        
                 <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-datepicker.js') }}"></script>
                 <script type="text/javascript" src="{{ url('js/plugins/bootstrap/locales/bootstrap-datepicker.es.js') }}"></script>                
                
@@ -260,14 +323,48 @@
                 <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
                 <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
                 <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
-                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>            
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+
+                        
                 
                 <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
 
                 <script type="text/javascript" src="{{ url('js/plugins/smartwizard/jquery.smartWizard-2.0.min.js') }}"></script>        
                 <script type="text/javascript" src="{{ url('js/plugins/jquery-validation/jquery.validate.js') }}"></script> 
+
+                <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
                 <script>
-                    $(function(){
+                    
+
+                    function obtenerSupervisoresDeProyecto(){
+                        IDPROYECTO = $("input[name=idproyecto]").val();
+                        $.post("{{ url('/proyectos/obtenerSupervisorProyecto') }}",{IDPROYECTO:IDPROYECTO},function(data){
+                            
+                        });
+                    }
+
+                    function asignarSupervisor(IDSUPERVISOR){
+                            IDPROYECTO = $("input[name=idproyecto]").val();
+                            _token = $("input[name=_token]").val();
+                            
+                            $.post("{{ url('/proyectos/asignarSupervisorProyecto') }}",{IDPROYECTO:IDPROYECTO,IDSUPERVISOR:IDSUPERVISOR,_token:_token},function(data){
+                                
+                                var data2 = JSON.parse(data);
+                                
+                                if(data2.respuesta == 'ok'){
+                                    noty({text: data2.mensaje, layout: 'topRight', type: 'success'});
+                                }else if(data2.respuesta == 'existe'){
+                                    
+                                    noty({text: data2.mensaje , layout: 'topRight', type: 'warning'});
+                                }else{
+                                    console.log(data2.respuesta);
+                                    noty({text: '!Error: Fallo la transaccion', layout: 'topRight', type: 'error'});
+                                }
+                            });
+                        }
+
+                    $(document).ready(function(){
+
                         //variables para el wizard
                             var datos;
                             var lbnext = 'Guardar|siguiente';

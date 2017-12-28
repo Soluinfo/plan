@@ -167,7 +167,11 @@ $(function() {
         //Datatables
         var uiDatatable = function(){
             if($(".datatable").length > 0){                
-                $(".datatable").dataTable();
+                $(".datatable").dataTable({
+                    "language" : {
+                        "url": baseUrl+"/js/plugins/datatables/spanish.json"
+                    },
+                });
                 $(".datatable").on('page.dt',function () {
                     onresize(100);
                 });
