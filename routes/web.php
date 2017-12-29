@@ -22,3 +22,5 @@ Route::get('/actividades', 'proyectos\ActividadController@home');
 Route::post('/proyectos/guardar', 'proyectos\ProyectoController@guardar');
 Route::post('/proyectos/asignarSupervisorProyecto','proyectos\ProyectoController@asignarSupervisor');
 Route::post('/proyectos/obtenerSupervisorProyecto','proyectos\ProyectoController@obtenerSupervisores');
+Route::post('/proyectos/obtenerSupervisoresProyectos','proyectos\ProyectoController@obtenerSupervisoresDeProyecto');
+Route::post('/proyectos/obtenerObjetivos','proyectos\ProyectoController@obtenerObjetivos');

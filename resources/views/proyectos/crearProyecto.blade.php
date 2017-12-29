@@ -12,7 +12,7 @@
                 <div class="page-title">                    
                     <h2><span class="fa fa-arrow-circle-o-left"></span> Crear proyecto</h2>
                 </div>
-                <button class="btn btn default" data-toggle="modal" data-target="#modalSupervisor">modal</button>
+                <button data-toggle="modal" data-target="#modalObjetivo" class="btn btn-default" >ejecutar funcion</button>
                 <!-- END PAGE TITLE --> 
                 <!-- PAGE CONTENT WRAPPER -->
                 <div class="page-content-wrap">
@@ -165,7 +165,52 @@
                                         
                                     </div>
                                     <div id="step-9">
+                                        <div class="row">
+                                            <div class="col-lg-4">
+                                                <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#modalSupervisor">Agregar supervisor</button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="row">
+                                            <div class="col-lg-12">
+                                                <!-- START RESPONSIVE TABLES -->
+                                                    <div class="panel panel-default">
 
+                                                        <div class="panel-heading">
+                                                            <h3 class="panel-title">Lista de asignaciones</h3>
+                                                        </div>
+
+                                                        <div class="panel-body panel-body-table">
+                                                            <div class="row">
+                                                                <div class="col-lg-12">
+                                                                    <div class="table-responsive">
+                                                                        <table class="table table-bordered table-striped table-actions datatable">
+                                                                            <thead>
+                                                                                <tr>
+                                                                                <th width="50">id</th>
+                                                                                <th width="100" >Cedula</th>
+                                                                                <th width="100">Nombres</th>
+                                                                                <th width="100">Apellidos</th>
+                                                                                <th width="100">Email</th>
+                                                                                <th width="100">Celular</th>
+                                                                                <th width="100">actions</th>
+                                                                                </tr>
+                                                                            </thead>
+                                                                            <tbody id="tablaasignacion">                                            
+                                                                                
+                                                                            </tbody>
+                                                                        </table>
+                                                                    </div>
+                                                                </div>
+                                                                  
+                                                            </div>
+                                                                                          
+
+                                                        </div>
+                                                    </div> 
+                                                <!-- END RESPONSIVE TABLES --> 
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                  
@@ -177,72 +222,50 @@
                 <!-- END PAGE CONTENT WRAPPER -->
                 <!-- MODALS -->        
                     <div class="modal" id="modalObjetivo" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
-                        <div class="modal-dialog">
+                        <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="defModalHead">Basic Modal</h4>
+                                    <h4 class="modal-title" id="defModalHead">Agregar objetivos</h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            
-                                            <form class="form-horizontal">
-                                                        <div class="form-group">
-                                                            <label class="col-md-3 col-xs-12 control-label">Literal</label>
-                                                            <div class="col-md-6 col-xs-12">                                                                                            
-                                                                <select class="form-control select">
-                                                                    <option>A</option>
-                                                                    <option>B</option>
-                                                                    <option>C</option>
-                                                                    <option>D</option>
-                                                                    <option>E</option>
+                                            <div class="block">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-body">
+                                                        <div class=".form-group">
+                                                            <label class="col-lg-2 col-md-2 col-sm-3 col-xs-12 control-label">Catalogo objetivos :</label>
+                                                            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12">                                                                                       
+                                                                <select class="form-control select" name="slcatalogo" id="slcatalogo" data-live-search="true">
+                                                                    <option value="">Seleccione catalogo</option>
+                                                                    @foreach($catalogo as $c)
+                                                                        <option value="{{ $c->IDCATALOGOOBJETIVO }}">{{ $c->NOMBRE }}</option>
+                                                                    @endforeach
                                                                 </select>
-                                                                <span class="help-block">Select box example</span>
                                                             </div>
                                                         </div>
-                                                        
-                                                        <div class="form-group">
-                                                            <label class="col-md-3 col-xs-12 control-label">Descripción</label>
-                                                            <div class="col-md-6 col-xs-12">                                                                                            
-                                                                <input type="text" class="form-control" row="5" value=""/>
-                                                                <span class="help-block">Default textarea field</span>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="form-group">
-                                                            <label class="col-md-3 col-xs-12 control-label">Alcance</label>
-                                                            <div class="col-md-6 col-xs-12">                                                                                            
-                                                                <select class="form-control select">
-                                                                    <option>Option 1</option>
-                                                                    <option>Option 2</option>
-                                                                    <option>Option 3</option>
-                                                                    <option>Option 4</option>
-                                                                    <option>Option 5</option>
-                                                                </select>
-                                                                <span class="help-block">Select box example</span>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                        <div class="form-group">
-                                                            <label class="col-md-3 col-xs-12 control-label">Ambito</label>
-                                                            <div class="col-md-6 col-xs-12">                                                                                            
-                                                                <select class="form-control select">
-                                                                    <option>Option 1</option>
-                                                                    <option>Option 2</option>
-                                                                    <option>Option 3</option>
-                                                                    <option>Option 4</option>
-                                                                    <option>Option 5</option>
-                                                                </select>
-                                                                <span class="help-block">Select box example</span>
-                                                            </div>
-                                                        </div>
-                                                        
-                                                       
-                                            </form>
-                                            
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        <div class="col-lg-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-bordered table-striped table-actions" id="datatableObjetivos">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="50">id</th>
+                                                            <th>literal</th>
+                                                            <th>Descripcion</th>
+                                                            <th width="100">seleccionar</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tablaObjetivoSeleccionar">
+                                                                                                        
+                                                    </tbody>
+                                                </table>
+                                            </div>   
                                         </div>
-                                    </div>   
+                                    </div>
+                                    
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
@@ -276,7 +299,7 @@
                                                                     <th width="100">Apellidos</th>
                                                                     <th width="100">Email</th>
                                                                     <th width="100">Celular</th>
-                                                                    <th width="100">actions</th>
+                                                                    <th width="100">seleccionar</th>
                                                                 </tr>
                                                             </thead>
                                                             <tbody>
@@ -289,7 +312,7 @@
                                                                         <td>{{$s->EMAIL_EPL}}</td>
                                                                         <td>{{$s->CELULAR_EPL}}</td>
                                                                         <td>
-                                                                            <button class="btn btn-default btn-sm" onclick="asignarSupervisor({{$s->SERIAL_EPL}});" ><span class="fa fa-pencil"></span></button>
+                                                                            <button class="btn btn-default btn-sm" onclick="asignarSupervisor({{$s->SERIAL_EPL}});" ><span class="fa fa-check"></span></button>
     
                                                                         </td>
                                                                     </tr>
@@ -338,8 +361,10 @@
 
                     function obtenerSupervisoresDeProyecto(){
                         IDPROYECTO = $("input[name=idproyecto]").val();
-                        $.post("{{ url('/proyectos/obtenerSupervisorProyecto') }}",{IDPROYECTO:IDPROYECTO},function(data){
-                            
+                        _token = $("input[name=_token]").val();
+                        console.log('entro a funcion');
+                        $.post("{{ url('/proyectos/obtenerSupervisoresProyectos') }}",{IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                           $("#tablaasignacion").html(data);
                         });
                     }
 
@@ -353,18 +378,42 @@
                                 
                                 if(data2.respuesta == 'ok'){
                                     noty({text: data2.mensaje, layout: 'topRight', type: 'success'});
+                                    obtenerSupervisoresDeProyecto();
                                 }else if(data2.respuesta == 'existe'){
-                                    
                                     noty({text: data2.mensaje , layout: 'topRight', type: 'warning'});
                                 }else{
                                     console.log(data2.respuesta);
                                     noty({text: '!Error: Fallo la transaccion', layout: 'topRight', type: 'error'});
                                 }
                             });
-                        }
-
+                    }
+               
                     $(document).ready(function(){
+                        table = $("#datatableObjetivos").dataTable({
 
+                        });
+                       
+                        $("#slcatalogo").on("change",function(){
+                            $.mpb('show',{value: [0,40],speed: 10,state: 'info'});
+                            $("#slcatalogo option:selected").each(function(){
+                                idcatalogo = $("#slcatalogo").val();
+                                _token = $("input[name=_token]").val();
+                                $.post("{{ url('/proyectos/obtenerObjetivos') }}",{idcatalogo:idcatalogo,_token:_token},function(data){
+                                    $("#tablaObjetivoSeleccionar").html(data);
+                                    table = $("#datatableObjetivos").dataTable({
+
+                                    });
+                                })
+                            })
+                            $.mpb('show',{value: [40,100],speed: 10,state: 'info'});
+                        })
+                        $("#wizarProyecto").smartWizard({
+                            labelNext : lbnext, 
+                            labelPrevious:'Anterior', // label for Previous button
+                            labelFinish:'Finalizar',  // label for Finish button                   
+                            // This part of code can be removed FROM
+                            onLeaveStep: leaveAStepCallback,// <-- TO
+                        });
                         //variables para el wizard
                             var datos;
                             var lbnext = 'Guardar|siguiente';
@@ -397,7 +446,8 @@
                                             }else{
                                                 noty({text: 'Proyecto actualizado con exito', layout: 'topRight', type: 'success'});
                                             }
-                                            
+                                            //se cargan los supervisores del proyecto
+                                            obtenerSupervisoresDeProyecto();
                                         }
                                         $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                                         $.mpb('destroy');
@@ -524,13 +574,7 @@
                         }else{
                             
                         }
-                        $("#wizarProyecto").smartWizard({
-                            labelNext : lbnext, 
-                            labelPrevious:'Anterior', // label for Previous button
-                            labelFinish:'Finalizar',  // label for Finish button                   
-                            // This part of code can be removed FROM
-                            onLeaveStep: leaveAStepCallback,// <-- TO
-                        });
+                        
                          
                     });
                     

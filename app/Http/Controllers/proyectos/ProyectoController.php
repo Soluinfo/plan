@@ -8,6 +8,8 @@ use App\Http\Controllers\Controller;
 use App\Proyecto;
 use App\Empleado;
 use App\Proyectosupervisor;
+use App\Catalogoobjetivo;
+use App\Objetivoestrategico;
 
 class ProyectoController extends Controller
 {
@@ -19,8 +21,9 @@ class ProyectoController extends Controller
     //inicio de funcion crear que muestra la vista del formulario de creacion de proyecto
         public function crear($id = null){
             $departamentos = DB::table('departamento')->get();
-            $supervisores = DB::table('empleado')->get();
-            return view('proyectos.crearProyecto',['departamento' => $departamentos,'supervisores' => $supervisores]);
+            $supervisores = $this->obtenerSupervisores(null);
+            $catalogo = $this->obtenerCatalogoObjetivo(null);
+            return view('proyectos.crearProyecto',['departamento' => $departamentos,'supervisores' => $supervisores,'catalogo' => $catalogo]);
         }
     //fin de funcion crear
 
@@ -104,17 +107,31 @@ class ProyectoController extends Controller
     //inicio de funcion para obtener supervisores de un determinado proyecto
         public function obtenerSupervisoresDeProyecto(Request $r){
             if($r->ajax()){
-                $datosdesupervisor = Empleado::join('proyectosupervisor','IDPROYECTO',$r->IDPROYECTO)
-                                                ->join('proyectosupervisor','IDSUPERVISOR','empleado.SERIAL_EPL')
-                                                ->get();
-                var_dump($datosdesupervisor);
+                $tablaSupervisorProyecto = '';
+                $datosdesupervisor = Empleado::join('proyectosupervisor', 'empleado.SERIAL_EPL', '=', 'proyectosupervisor.IDSUPERVISOR')
+                                                    ->where('proyectosupervisor.IDPROYECTO', '=' ,$r->IDPROYECTO)
+                                                    ->select('proyectosupervisor.*','empleado.*')
+                                                    ->get();
+                                                
                 if(isset($datosdesupervisor)){
                     foreach($datosdesupervisor as $ds){
-                        ?>
-                       
-                        <?php
+                        $tablaSupervisorProyecto .= '<tr id="trow_';
+                        $tablaSupervisorProyecto .= $ds->SERIAL_EPL;
+                        $tablaSupervisorProyecto .= '">';
+                        $tablaSupervisorProyecto .= '<td class="text-center">'.$ds->SERIAL_EPL.'</td>';
+                        $tablaSupervisorProyecto .= '<td>'.$ds->DOCUMENTOIDENTIDAD_EPL.'</td>';
+                        $tablaSupervisorProyecto .= '<td>'.$ds->NOMBRE_EPL.'</td>';
+                        $tablaSupervisorProyecto .= '<td>'.$ds->APELLIDO_EPL.'</td>';
+                        $tablaSupervisorProyecto .= '<td>'.$ds->EMAIL_EPL.'</td>';
+                        $tablaSupervisorProyecto .= ' <td>'.$ds->CELULAR_EPL.'</td>';
+                        $tablaSupervisorProyecto .= '<td>
+                                                        <button class="btn btn-default btn-sm"  ><span class="fa fa-pencil"></span></button>
+                                                    </td>';
+                        $tablaSupervisorProyecto .= ' </tr>';
+
                     }
                 }
+                echo $tablaSupervisorProyecto;
             }
         }
     //final de funcion obtenerSupervisoresDeProyecto
@@ -133,5 +150,48 @@ class ProyectoController extends Controller
             }
         }
     //final de funcion verificarSupervisorProyectoExiste
+
+    //inicio de function para obtener los catalogos de objetivos
+        public function obtenerCatalogoObjetivo($id = null){
+            $catalogoObjetivos = Catalogoobjetivo::all();
+            return $catalogoObjetivos;
+        }
+    //final de funcion obtenerCatalgoObjetivos
+    public function obtenerObjetivos(Request $r){
+        if($r->ajax()){
+            $tablaObjetivos = '';
+            $data = array();
+            $obtenerObjetivos = Objetivoestrategico::where('IDCATALOGOOBJETIVO',$r->idcatalogo)
+                                                    ->get();
+            if(isset($obtenerObjetivos)){
+                foreach($obtenerObjetivos as $o){
+                    $tablaObjetivos .= '<tr id="trow_';
+                    $tablaObjetivos .= $o->IDOBJETIVOESTRATEGICO;
+                    $tablaObjetivos .= '">';
+                    $tablaObjetivos .= '<td class="text-center">'.$o->IDOBJETIVOESTRATEGICO.'</td>';
+                    $tablaObjetivos .= '<td>'.$o->LITERAL.'</td>';
+                    $tablaObjetivos .= '<td>'.$o->DESCRIPCION.'</td>';
+                   
+                    $tablaObjetivos .= '<td>
+                                            <button class="btn btn-default btn-sm"  ><span class="fa fa-pencil"></span></button>
+                                        </td>';
+                    $tablaObjetivos .= ' </tr>';
+                    /*$row = array();
+                    $row[] = $sol->IDOBJETIVOESTRATEGICO;
+                    //$row[] = $sol->v_id_vehiculo;
+                   
+                    $row[] = $sol->LITERAL;
+                    $row[] = $sol->DESCRIPCION;
+                    $row[] = '<td>
+                                <button class="btn btn-default btn-sm"  ><span class="fa fa-pencil"></span></button>
+                            </td>';
+                    $data[] = $row;*/
+                }
+            }
+            //$datos['data'] = $data;
+            //echo json_encode($datos);
+            echo $tablaObjetivos;
+        }
+    }
 
 }
