@@ -17,10 +17,16 @@ Route::get('/objetivos', 'objetivos\CatalogoController@home');
 Route::get('/crearobjetivo', 'objetivos\CatalogoController@crear');
 Route::get('/indicadores', 'indicadores\IndicadorController@home');
 Route::get('/proyectos', 'proyectos\ProyectoController@home');
+//sirve para guardar y editar proyectos
 Route::get('/proyectos/crear/{id?}','proyectos\ProyectoController@crear')->where('id', '[0-9]+');
 Route::get('/actividades', 'proyectos\ActividadController@home');
 Route::post('/proyectos/guardar', 'proyectos\ProyectoController@guardar');
 Route::post('/proyectos/asignarSupervisorProyecto','proyectos\ProyectoController@asignarSupervisor');
 Route::post('/proyectos/obtenerSupervisorProyecto','proyectos\ProyectoController@obtenerSupervisores');
+
+Route::post('/proyectos/asignarObjetivoProyecto','proyectos\ProyectoController@asignarObjetivoProyecto');
+
+//datatables
+Route::post('/proyectos/objetivos','proyectos\ProyectoController@datatableObjetivo');
+Route::post('/proyectos/datatableObjetivosProyecto','proyectos\ProyectoController@datatableObjetivosProyecto');
 Route::post('/proyectos/obtenerSupervisoresProyectos','proyectos\ProyectoController@obtenerSupervisoresDeProyecto');
-Route::post('/proyectos/obtenerObjetivos','proyectos\ProyectoController@obtenerObjetivos');

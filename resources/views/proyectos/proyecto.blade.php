@@ -61,7 +61,7 @@
                                                 </td>
                                                 <td>
                                                     <button type="button" class="btn btn-info btn-xs"><span class="fa fa-eye"></span></button>
-                                                    <button type="button" class="btn btn-primary btn-xs"><span class="fa fa-edit"></span></button>
+                                                    <a href="{{ action('proyectos\ProyectoController@crear',$p->IDPROYECTO) }}" class="btn btn-primary btn-xs"><span class="fa fa-edit"></span></a>
                                                     <button type="button" class="btn btn-danger btn-xs"><span class="fa fa-eraser"></span></button>
                                                 </td>
                                             </tr>

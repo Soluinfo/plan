@@ -10,6 +10,8 @@ use App\Empleado;
 use App\Proyectosupervisor;
 use App\Catalogoobjetivo;
 use App\Objetivoestrategico;
+use App\Proyectosobjetivos;
+
 
 class ProyectoController extends Controller
 {
@@ -20,10 +22,30 @@ class ProyectoController extends Controller
     }
     //inicio de funcion crear que muestra la vista del formulario de creacion de proyecto
         public function crear($id = null){
+            $datosDeProyecto = array();
+            $transaccion = 1;
+            if($id == null){
+
+            }else{
+                $Proyecto = $this->obtener($id);
+                if(isset($Proyecto)){
+                    foreach($Proyecto as $p){
+                        $datosDeProyecto['IDPROYECTO'] = $p->IDPROYECTO;
+                        $datosDeProyecto['NOMBREPROYECTO'] = $p->NOMBREPROYECTO;
+                        $datosDeProyecto['FECHAPROYECTO'] = $p->FECHAPROYECTO;
+                        $datosDeProyecto['ESTADOPROYECTO'] = $p->ESTADOPROYECTO;
+                        $datosDeProyecto['SERIAL_DEP'] = $p->SERIAL_DEP;
+                    }
+                }
+            }
+            
             $departamentos = DB::table('departamento')->get();
             $supervisores = $this->obtenerSupervisores(null);
             $catalogo = $this->obtenerCatalogoObjetivo(null);
-            return view('proyectos.crearProyecto',['departamento' => $departamentos,'supervisores' => $supervisores,'catalogo' => $catalogo]);
+            return view('proyectos.crearProyecto')->with(['departamento' => $departamentos,
+                                                            'supervisores' => $supervisores,
+                                                            'catalogo' => $catalogo])
+                                                            ->with($datosDeProyecto);
         }
     //fin de funcion crear
 
@@ -65,9 +87,18 @@ class ProyectoController extends Controller
 
     //Inicio de funcion para obtener todos los proyecto con su departamento respectivo
         public function obtener($id = null){
-            $proyectos = Proyecto::join('departamento', 'proyectos.IDDEPARTAMENTO', '=', 'departamento.SERIAL_DEP')
-                                ->select('proyectos.*','departamento.DESCRIPCION_DEP')
-                                ->get();
+            if($id == null){
+                $proyectos = Proyecto::join('departamento', 'proyectos.IDDEPARTAMENTO', '=', 'departamento.SERIAL_DEP')
+                                    
+                                    ->select('proyectos.*','departamento.*')
+                                    ->get();
+            }else{
+                $proyectos = Proyecto::join('departamento', 'proyectos.IDDEPARTAMENTO', '=', 'departamento.SERIAL_DEP')
+                                    ->where('IDPROYECTO',$id)
+                                    ->select('proyectos.*','departamento.*')
+                                    ->get();
+            }
+           
             return $proyectos;
         }
     //fin de funcion obtener
@@ -107,31 +138,16 @@ class ProyectoController extends Controller
     //inicio de funcion para obtener supervisores de un determinado proyecto
         public function obtenerSupervisoresDeProyecto(Request $r){
             if($r->ajax()){
-                $tablaSupervisorProyecto = '';
                 $datosdesupervisor = Empleado::join('proyectosupervisor', 'empleado.SERIAL_EPL', '=', 'proyectosupervisor.IDSUPERVISOR')
-                                                    ->where('proyectosupervisor.IDPROYECTO', '=' ,$r->IDPROYECTO)
-                                                    ->select('proyectosupervisor.*','empleado.*')
+                                                    ->where('proyectosupervisor.IDPROYECTO', '=' ,$r->idproyecto)
+                                                    ->select('empleado.SERIAL_EPL','empleado.DOCUMENTOIDENTIDAD_EPL','empleado.NOMBRE_EPL','empleado.APELLIDO_EPL','empleado.EMAIL_EPL','empleado.CELULAR_EPL')
                                                     ->get();
                                                 
-                if(isset($datosdesupervisor)){
-                    foreach($datosdesupervisor as $ds){
-                        $tablaSupervisorProyecto .= '<tr id="trow_';
-                        $tablaSupervisorProyecto .= $ds->SERIAL_EPL;
-                        $tablaSupervisorProyecto .= '">';
-                        $tablaSupervisorProyecto .= '<td class="text-center">'.$ds->SERIAL_EPL.'</td>';
-                        $tablaSupervisorProyecto .= '<td>'.$ds->DOCUMENTOIDENTIDAD_EPL.'</td>';
-                        $tablaSupervisorProyecto .= '<td>'.$ds->NOMBRE_EPL.'</td>';
-                        $tablaSupervisorProyecto .= '<td>'.$ds->APELLIDO_EPL.'</td>';
-                        $tablaSupervisorProyecto .= '<td>'.$ds->EMAIL_EPL.'</td>';
-                        $tablaSupervisorProyecto .= ' <td>'.$ds->CELULAR_EPL.'</td>';
-                        $tablaSupervisorProyecto .= '<td>
-                                                        <button class="btn btn-default btn-sm"  ><span class="fa fa-pencil"></span></button>
-                                                    </td>';
-                        $tablaSupervisorProyecto .= ' </tr>';
-
-                    }
-                }
-                echo $tablaSupervisorProyecto;
+                return Datatables($datosdesupervisor)
+                ->addColumn('action', function ($datosdesupervisor) {
+                    return '<a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Detalle</a>';
+                })
+                ->make(true);
             }
         }
     //final de funcion obtenerSupervisoresDeProyecto
@@ -157,40 +173,45 @@ class ProyectoController extends Controller
             return $catalogoObjetivos;
         }
     //final de funcion obtenerCatalgoObjetivos
-    public function obtenerObjetivos(Request $r){
+  
+    public function datatableObjetivo(Request $r){
+        $obtenerObjetivos = Objetivoestrategico::where('IDCATALOGOOBJETIVO',$r->idcatalogo)
+                                                        ->select('IDOBJETIVOESTRATEGICO',
+                                                            'LITERAL',
+                                                            'DESCRIPCION'
+                                                        );
+                                                    
+        return Datatables($obtenerObjetivos)
+                    ->addColumn('action', function ($obtenerObjetivos) {
+                        return '<a onclick="agregarObjetivos('.$obtenerObjetivos->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Agregar</a>';
+                    })
+                    ->make(true);
+    }
+
+    public function datatableObjetivosProyecto(Request $r){
+        $objetivosProyeto = Objetivoestrategico::join('proyectosobjetivos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','proyectosobjetivos.IDOBJETIVOESTRATEGICO')
+                                                ->where('proyectosobjetivos.IDPROYECTO', $r->idproyecto)
+                                                ->select('objetivosestrategicos.IDOBJETIVOESTRATEGICO',
+                                                        'objetivosestrategicos.LITERAL',
+                                                        'objetivosestrategicos.DESCRIPCION');
+            return Datatables($objetivosProyeto)
+                    ->addColumn('action', function ($objetivosProyeto) {
+                        return '<a onclick="hola('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Agregar</a>';
+                    })
+                    ->make(true);
+    }
+
+    public function asignarObjetivoProyecto(Request $r){
         if($r->ajax()){
-            $tablaObjetivos = '';
-            $data = array();
-            $obtenerObjetivos = Objetivoestrategico::where('IDCATALOGOOBJETIVO',$r->idcatalogo)
-                                                    ->get();
-            if(isset($obtenerObjetivos)){
-                foreach($obtenerObjetivos as $o){
-                    $tablaObjetivos .= '<tr id="trow_';
-                    $tablaObjetivos .= $o->IDOBJETIVOESTRATEGICO;
-                    $tablaObjetivos .= '">';
-                    $tablaObjetivos .= '<td class="text-center">'.$o->IDOBJETIVOESTRATEGICO.'</td>';
-                    $tablaObjetivos .= '<td>'.$o->LITERAL.'</td>';
-                    $tablaObjetivos .= '<td>'.$o->DESCRIPCION.'</td>';
-                   
-                    $tablaObjetivos .= '<td>
-                                            <button class="btn btn-default btn-sm"  ><span class="fa fa-pencil"></span></button>
-                                        </td>';
-                    $tablaObjetivos .= ' </tr>';
-                    /*$row = array();
-                    $row[] = $sol->IDOBJETIVOESTRATEGICO;
-                    //$row[] = $sol->v_id_vehiculo;
-                   
-                    $row[] = $sol->LITERAL;
-                    $row[] = $sol->DESCRIPCION;
-                    $row[] = '<td>
-                                <button class="btn btn-default btn-sm"  ><span class="fa fa-pencil"></span></button>
-                            </td>';
-                    $data[] = $row;*/
-                }
-            }
-            //$datos['data'] = $data;
-            //echo json_encode($datos);
-            echo $tablaObjetivos;
+            $datos = array('respuesta' => 'no','mensaje' => '');
+            $Proyectosobjetivos = new Proyectosobjetivos(array(
+                'IDPROYECTO' => $r->IDPROYECTO,
+                'IDOBJETIVOESTRATEGICO' => $r->IDOBJETIVOESTRATEGICO,
+            ));
+            $Proyectosobjetivos->save();
+            $datos['respuesta'] = 'ok';
+            $datos['mensaje'] = 'Objetivo estrategico asignado al proyecto';
+            echo json_encode($datos);
         }
     }
 

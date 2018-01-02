@@ -171,6 +171,7 @@ $(function() {
                     "language" : {
                         "url": baseUrl+"/js/plugins/datatables/spanish.json"
                     },
+                    "lengthMenu": [ 8, 10],
                 });
                 $(".datatable").on('page.dt',function () {
                     onresize(100);
