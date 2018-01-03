@@ -10,7 +10,6 @@ class Proyectosobjetivos extends Model
     protected $fillable = ['IDPROYECTOOBJETIVO',
                             'IDPROYECTO',
                             'IDOBJETIVOESTRATEGICO',
-                            'FECHAPROYECTOOBJETIVO',
                             'updated_at',
                             'created_at',
                             'idusuario'

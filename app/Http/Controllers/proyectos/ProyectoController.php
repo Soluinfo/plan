@@ -117,7 +117,7 @@ class ProyectoController extends Controller
                 $verificarSupervisor = $this->verificarSupervisorProyectoExiste($r->IDPROYECTO,$r->IDSUPERVISOR);
                 if($verificarSupervisor == true){
                     $datos['respuesta'] = 'existe';
-                    $datos['mensaje'] = '<strong>!AVISO:</strong> El supervisor seleccionado ya se encuentra asignado a este proyecto';
+                    $datos['mensaje'] = 'El supervisor seleccionado ya se encuentra asignado a este proyecto';
                 }else{
                     $asignacion = new Proyectosupervisor([
                         'IDPROYECTO' => $r->IDPROYECTO,
@@ -127,7 +127,7 @@ class ProyectoController extends Controller
                     ]);
                     $asignacion->save();
                     $datos['respuesta'] = 'ok';
-                    $datos['mensaje'] = '<strong>!INFO:</strong> Supervisor asignado con exito';
+                    $datos['mensaje'] = 'Supervisor asignado con exito';
                 }
                 
                 echo json_encode($datos);
@@ -145,7 +145,9 @@ class ProyectoController extends Controller
                                                 
                 return Datatables($datosdesupervisor)
                 ->addColumn('action', function ($datosdesupervisor) {
-                    return '<a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Detalle</a>';
+                    return '<a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                            <a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Editar!"><i class="fa fa-edit"></i></a>
+                            <a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                 })
                 ->make(true);
             }
@@ -196,7 +198,9 @@ class ProyectoController extends Controller
                                                         'objetivosestrategicos.DESCRIPCION');
             return Datatables($objetivosProyeto)
                     ->addColumn('action', function ($objetivosProyeto) {
-                        return '<a onclick="hola('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Agregar</a>';
+                        return '<a onclick="hola('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                                <a onclick="hola('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Editar!"><i class="fa fa-edit"></i></a>
+                                <a onclick="hola('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                     })
                     ->make(true);
     }
@@ -204,15 +208,36 @@ class ProyectoController extends Controller
     public function asignarObjetivoProyecto(Request $r){
         if($r->ajax()){
             $datos = array('respuesta' => 'no','mensaje' => '');
-            $Proyectosobjetivos = new Proyectosobjetivos(array(
-                'IDPROYECTO' => $r->IDPROYECTO,
-                'IDOBJETIVOESTRATEGICO' => $r->IDOBJETIVOESTRATEGICO,
-            ));
-            $Proyectosobjetivos->save();
-            $datos['respuesta'] = 'ok';
-            $datos['mensaje'] = 'Objetivo estrategico asignado al proyecto';
+            $verificarObjetivo = $this->verificarObjetivoProyectoExiste($r->IDPROYECTO,$r->IDOBJETIVOESTRATEGICO);
+            if($verificarObjetivo == true){
+                $datos['respuesta'] = 'existe';
+                $datos['mensaje'] = 'El objetivo seleccionado ya se encuentra asignado a este proyecto';
+            }else{
+                $Proyectosobjetivos = new Proyectosobjetivos(array(
+                    'IDPROYECTO' => $r->IDPROYECTO,
+                    'IDOBJETIVOESTRATEGICO' => $r->IDOBJETIVOESTRATEGICO,
+                ));
+                $Proyectosobjetivos->save();
+                $datos['respuesta'] = 'ok';
+                $datos['mensaje'] = 'Objetivo estrategico asignado al proyecto';
+            }
+            
             echo json_encode($datos);
         }
     }
+    //inicio de funcion para validar si existe objetivo asignado a proyecto
+        public function verificarObjetivoProyectoExiste($idproyecto,$idobjetivo){
+            $datosdeobjetivo = Proyectosobjetivos::where([
+                                                        ['IDPROYECTO','=',$idproyecto],
+                                                        ['IDOBJETIVOESTRATEGICO','=',$idobjetivo]
+                                                    ])
+                                                    ->count();
+            if($datosdeobjetivo > 0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    //final de funcion verificarSupervisorProyectoExiste
 
 }

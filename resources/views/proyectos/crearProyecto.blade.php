@@ -84,14 +84,14 @@
                                                 </div>
                                             </div>
                                             {{ csrf_field() }}
-                                            <input type="text" name="idproyecto" value="{{ $IDPROYECTO or '0'}}">
+                                            <input type="hidden" name="idproyecto" value="{{ $IDPROYECTO or '0'}}">
                                             
                                         </form>
                                         <button id="btnGuardarProyecto" class="btn btn-primary pull-right">Guardar proyecto <span class="fa fa-floppy-o fa-right"></span></button>
                                     </div>
                                     <div class="tab-pane" id="tab-objetivo">
 
-                                        <button class="btn btn-block btn-primary col-md-4" data-toggle="modal" data-target="#modalObjetivo"><span class="fa fa-plus"></span>Agregar objetivo</button>
+                                        <button id="btnAgregarObjetivo" class="btn btn-block btn-primary col-md-4"><span class="fa fa-plus"></span>Agregar objetivo</button>
                                         
                                         <!-- START RESPONSIVE TABLES -->
                                         <div class="panel panel-default">
@@ -123,7 +123,7 @@
                                         
                                     </div>
                                     <div class="tab-pane" id="tab-supervisor">
-                                        <button class="btn btn-block btn-primary" data-toggle="modal" data-target="#modalSupervisor"><span class="fa fa-plus"></span>Agregar supervisor</button>
+                                        <button id="btnAgregarSupervisor" class="btn btn-block btn-primary"><span class="fa fa-plus"></span>Agregar supervisor</button>
                                         <!-- START RESPONSIVE TABLES -->
                                             <div class="panel panel-default">
 
@@ -135,7 +135,7 @@
                                                     <div class="row">
                                                         <div class="col-lg-12">
                                                             <div class="table-responsive">
-                                                                <table class="table table-bordered table-striped table-actions datatable" id="datatable-supervisorProyecto">
+                                                                <table class="table table-bordered table-striped table-actions" id="datatable-supervisorProyecto">
                                                                     <thead>
                                                                         <tr>
                                                                         <th width="50">id</th>
@@ -168,6 +168,15 @@
                         </div>
                     </div>                    
                 </div>
+
+                @component('componentes.mensageBox')
+                    @slot('titleComponent')
+                        !Alerta
+                    @endslot
+
+                    Para agregar un objetivo y un supervisor necesita registrar un proyecto
+
+                @endcomponent
                 <!-- END PAGE CONTENT WRAPPER -->
                 <!-- MODALS -->        
                     <div class="modal" id="modalObjetivo" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
@@ -261,7 +270,7 @@
                                                                         <td>{{$s->EMAIL_EPL}}</td>
                                                                         <td>{{$s->CELULAR_EPL}}</td>
                                                                         <td>
-                                                                            <button class="btn btn-default btn-sm" onclick="asignarSupervisor({{$s->SERIAL_EPL}});" ><span class="fa fa-check"></span></button>
+                                                                            <a class="btn btn-primary btn-xs" onclick="asignarSupervisor({{$s->SERIAL_EPL}});" ><i class="fa fa-plus"></i>Agregar</a>
     
                                                                         </td>
                                                                     </tr>
@@ -335,6 +344,8 @@
                             if(data2.respuesta == 'ok'){
                                 noty({text: data2.mensaje, layout: 'topRight', type: 'success'});
                                 tableObjetivosProyectos.ajax.reload();
+                            }else if(data2.respuesta == 'existe'){
+                                noty({text: data2.mensaje, layout: 'topRight', type: 'warning'});
                             }else{
                                 console.log(data2.respuesta);
                                 noty({text: '!Error: Fallo la transaccion', layout: 'topRight', type: 'error'});
@@ -343,6 +354,56 @@
                     }
                
                     $(document).ready(function(){
+                        $("#btnAgregarObjetivo").on("click",function(){
+                            IDPROYECTO = $("input[name=idproyecto]").val();
+                            if(IDPROYECTO > 0){
+                                $('#modalObjetivo').modal('show')
+                            }else{
+                              
+                                /* MESSAGE BOX */
+                                var box = $("#message-box-sound-1");
+                                    if(box.length > 0){
+                                        box.toggleClass("open");
+                                        
+                                        var sound = box.data("sound");
+                                        
+                                        if(sound === 'alert')
+                                            playAudio('alert');
+                                        
+                                        if(sound === 'fail')
+                                            playAudio('fail');
+                                        
+                                    }        
+                                   
+                                /* END MESSAGE BOX */
+                                
+                            }
+                            
+                        })
+                        $("#btnAgregarSupervisor").on("click",function(){
+                            IDPROYECTO = $("input[name=idproyecto]").val();
+                            if(IDPROYECTO > 0){
+                                $('#modalSupervisor').modal('show')
+                            }else{
+                                /* MESSAGE BOX */
+                                var box = $("#message-box-sound-1");
+                                    if(box.length > 0){
+                                        box.toggleClass("open");
+                                        
+                                        var sound = box.data("sound");
+                                        
+                                        if(sound === 'alert')
+                                            playAudio('alert');
+                                        
+                                        if(sound === 'fail')
+                                            playAudio('fail');
+                                        
+                                    }        
+                                   
+                                /* END MESSAGE BOX */
+                            }
+                            
+                        })
                         //tap para Guardar informacion proyecto
                             $("#btnGuardarProyecto").on("click",function(){
                                 datos = $("#formProyecto").validate({
@@ -445,14 +506,17 @@
                                             $("input[name=idproyecto]").val(data.codigo);
                                             if(data.transaccion == 'guardar'){
                                                 noty({text: 'Proyecto creado con exito', layout: 'topRight', type: 'success'});
+                                                $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                                                $.mpb('destroy');
                                             }else{
                                                 noty({text: 'Proyecto actualizado con exito', layout: 'topRight', type: 'success'});
+                                                $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                                                $.mpb('destroy');
                                             }
                                             //se cargan los supervisores del proyecto
                                             obtenerSupervisoresDeProyecto();
                                         }
-                                        $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
-                                        $.mpb('destroy');
+                                        
                                     },
                                     error : function(xhr,estado){
                                         $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
@@ -466,8 +530,10 @@
                         //tap para agregar objetivos estrategicos
                             table = $("#datatableObjetivos").DataTable({
                                 "lengthMenu": [ 5, 10],
-                                "url": baseUrl+"js/plugins/datatables/spanish.json",
-                                
+                                "language" : {
+                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
                                 "order": [], //Initial no order
                                 "processing" : true,
                                 "serverSide": true,
@@ -479,19 +545,21 @@
                                         d._token = $("input[name=_token]").val();
                                     }
                                 },
-                                "columnDefs": [{ targets: [3], "orderable": false}],
+                               
                                 "columns": [
-                                    {data: 'IDOBJETIVOESTRATEGICO'},
-                                    {data: 'LITERAL'},
-                                    {data: 'DESCRIPCION'},
-                                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                                    {width: '8%',data: 'IDOBJETIVOESTRATEGICO'},
+                                    {width: '8%',data: 'LITERAL'},
+                                    {width: '70%',data: 'DESCRIPCION'},
+                                    {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
                                 
                                 ]
                             });
                             tableObjetivosProyectos = $("#datatableObjetivosProyectos").DataTable({
                                 "lengthMenu": [ 5, 10],
-                                "url": baseUrl+"js/plugins/datatables/spanish.json",
-                                
+                                "language" : {
+                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
                                 "order": [], //Initial no order
                                 "processing" : true,
                                 "serverSide": true,
@@ -505,25 +573,26 @@
                                 },
                                 "columnDefs": [{ targets: [3], "orderable": false}],
                                 "columns": [
-                                    {data: 'IDOBJETIVOESTRATEGICO'},
-                                    {data: 'LITERAL'},
-                                    {data: 'DESCRIPCION'},
-                                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                                    {width: '8%',data: 'IDOBJETIVOESTRATEGICO'},
+                                    {width: '8%',data: 'LITERAL'},
+                                    {width: '70%',data: 'DESCRIPCION'},
+                                    {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
                                 
                                 ]
                             });
                             $("#slcatalogo").on("change",function(){
-                                $.mpb('show',{value: [0,40],speed: 10,state: 'info'});
                                 $("#slcatalogo option:selected").each(function(){
                                     table.ajax.reload();
                                 })
-                                $.mpb('show',{value: [40,100],speed: 10,state: 'info'});
                             })
                         //end tab agregar objetivos estrategicos
                         //tap para agregar supervisores al proyecto
                             tableSupervisoresProyectos = $("#datatable-supervisorProyecto").DataTable({
                                 "lengthMenu": [ 5, 10],
-                                "url": baseUrl+"js/plugins/datatables/spanish.json",
+                                "language" : {
+                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
                                 "order": [], //Initial no order
                                 "processing" : true,
                                 "serverSide": true,
@@ -536,13 +605,13 @@
                                     }
                                 },
                                 "columns": [
-                                    {data: 'SERIAL_EPL'},
-                                    {data: 'DOCUMENTOIDENTIDAD_EPL'},
-                                    {data: 'NOMBRE_EPL'},
-                                    {data: 'APELLIDO_EPL'},
-                                    {data: 'EMAIL_EPL'},
-                                    {data: 'CELULAR_EPL'},
-                                    {data: 'action', name: 'action', orderable: false, searchable: false},
+                                    {width: '8%',data: 'SERIAL_EPL'},
+                                    {width: '10%',data: 'DOCUMENTOIDENTIDAD_EPL'},
+                                    {width: '17%',data: 'NOMBRE_EPL'},
+                                    {width: '20%',data: 'APELLIDO_EPL'},
+                                    {width: '20%',data: 'EMAIL_EPL'},
+                                    {width: '10%',data: 'CELULAR_EPL'},
+                                    {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
                                 
                                 ]
                             })

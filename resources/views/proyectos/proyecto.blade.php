@@ -60,9 +60,9 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <button type="button" class="btn btn-info btn-xs"><span class="fa fa-eye"></span></button>
-                                                    <a href="{{ action('proyectos\ProyectoController@crear',$p->IDPROYECTO) }}" class="btn btn-primary btn-xs"><span class="fa fa-edit"></span></a>
-                                                    <button type="button" class="btn btn-danger btn-xs"><span class="fa fa-eraser"></span></button>
+                                                    <a type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
+                                                    <a href="{{ action('proyectos\ProyectoController@crear',$p->IDPROYECTO) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
+                                                    <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
                                                 </td>
                                             </tr>
                                             @endforeach
