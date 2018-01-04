@@ -36,21 +36,21 @@
                                                 <th>Id</th>
                                                 <th>Literal</th>
                                                 <th>Descripcion</th>
-                                                <th>Nombre Proyecto</th>
+                                                <th>Catalogo</th>
                                                 <th>Accion</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             @foreach($objetivosestrategicos as $p)
                                             <tr>      
-                                                <td>{{ $p->IDOBJETIVOESTRATEGICO }}</td>
-                                                <td>{{ $p->LITERAL }}</td>
-                                                <td>{{ $p->DESCRIPCION }}</td>
-                                                <td>{{ $p->NOMBRE }}</td>
+                                                <td width="8%">{{ $p->IDOBJETIVOESTRATEGICO }}</td>
+                                                <td width="8%">{{ $p->LITERAL }}</td>
+                                                <td width="54%">{{ $p->DESCRIPCION }}</td>
+                                                <td width="20%">{{ $p->NOMBRE }}</td>
                                                 
                                                    
                                                 </td>
-                                                <td>
+                                                <td width="10%">
                                                     <a type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
                                                     <a href="{{ action('objetivos\ObjetivosController@crear',$p->IDOBJETIVOESTRATEGICO) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
                                                     <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>

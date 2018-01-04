@@ -4,7 +4,7 @@ namespace App\Helpers;
  
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
-use App\Objetivoestrategico;
+use App\Objetivo;
 use App\Ambitoinfluencia;
 use App\Alcance;
 use App\Empleado;
@@ -29,7 +29,7 @@ class ObjetivoHelper {
                         </tr>
                         </thead>
                         <tbody>';
-        $objetivos = Objetivoestrategico::where('IDOBJETIVOESTRATEGICO',$IDOBJETIVOESTRATEGICO)
+        $objetivos = Objetivo::where('IDOBJETIVOESTRATEGICO',$IDOBJETIVOESTRATEGICO)
                                         ->get();
         if(isset($objetivos)){
             foreach($objetivos as $o){
