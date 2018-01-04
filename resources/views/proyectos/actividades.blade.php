@@ -7,7 +7,7 @@
                     <ul class="breadcrumb push-down-0">
                         <li><a href="{{ url('/')}}">Principal</a></li>
                         
-                        <li class="active">Actividades2</li>
+                        <li class="active">Actividades</li>
                     </ul>
                 <!-- END BREADCRUMB -->  
                                                              
