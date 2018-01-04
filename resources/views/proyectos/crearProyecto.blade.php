@@ -3,7 +3,7 @@
 @section('principal')
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
-                    <li><a href="{{ url('/')}}">Principal</a></li>                    
+                    <li><a href="{{ url('/principal')}}">Principal</a></li>                    
                     <li><a href="{{ url('/proyectos')}}">Portafolio de proyectos</a></li>
                     <li class="active">Crear proyecto</li>
                 </ul>
@@ -36,9 +36,15 @@
                                                 </div>
                                             </div>
                                             <div class="form-group">                                        
-                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha :</label>
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha inicial:</label>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                     <input type="text" name="dpFechaProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">                                        
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha final:</label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" name="dpFechaFinalProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAFINAL)){echo $FECHAFINAL;} ?>">
                                                 </div>
                                             </div>            
                                             <div class="form-group">
@@ -48,15 +54,15 @@
                                                         <option value="">Seleccione estado</option>
                                                         @if( isset($ESTADOPROYECTO))
                                                             @if($ESTADOPROYECTO == 1)
-                                                            <option selected="selected" value="1">ACTIVO</option>
-                                                            <option value="2">INACTIVO</option>
+                                                            <option selected="selected" value="1">ABIERTO</option>
+                                                            <option value="2">EN PROGRESO</option>
                                                             @else
-                                                            <option value="1">ACTIVO</option>
-                                                            <option selected="selected" value="2">INACTIVO</option>
+                                                            <option value="1">ABIERTO</option>
+                                                            <option selected="selected" value="2">EN PROGRESO</option>
                                                             @endif
                                                         @else
-                                                        <option value="1">ACTIVO</option>
-                                                        <option value="2">INACTIVO</option>
+                                                        <option value="1">ABIERTO</option>
+                                                        <option value="2">EN PROGRESO</option>
                                                         @endif
                                                         
                                                     </select>
@@ -94,71 +100,45 @@
                                         <button id="btnAgregarObjetivo" class="btn btn-block btn-primary col-md-4"><span class="fa fa-plus"></span>Agregar objetivo</button>
                                         
                                         <!-- START RESPONSIVE TABLES -->
-                                        <div class="panel panel-default">
-                                            <div class="panel-heading">
-                                                <h3 class="panel-title">Objetivos estrategicos del proyecto</h3>
-                                            </div>
+                                        @component('componentes.dataTable')
+                                            @slot('titleComponent')
+                                            Objetivos estrategicos del proyecto
+                                            @endslot
+                                            @slot('idcomponent')
+                                            datatableObjetivosProyectos
+                                            @endslot
+                                            <tr>
+                                            <th width="50">id</th>
+                                            <th>literal</th>
+                                            <th>Descripcion</th>
+                                            <th width="100">Accion</th>
+                                            </tr>
 
-                                            <div class="panel-body panel-body-table">
-
-                                                <div class="table-responsive">
-                                                    <table class="table table-bordered table-striped table-actions" id="datatableObjetivosProyectos">
-                                                        <thead>
-                                                            <tr>
-                                                            <th width="50">id</th>
-                                                            <th>literal</th>
-                                                            <th>Descripcion</th>
-                                                            <th width="100">Accion</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>                                            
-                                                           
-                                                        </tbody>
-                                                    </table>
-                                                </div>                                
-
-                                            </div>
-                                            </div> 
-                                            <!-- END RESPONSIVE TABLES --> 
+                                        @endcomponent
+                                        <!-- END RESPONSIVE TABLES --> 
                                         
                                     </div>
                                     <div class="tab-pane" id="tab-supervisor">
                                         <button id="btnAgregarSupervisor" class="btn btn-block btn-primary"><span class="fa fa-plus"></span>Agregar supervisor</button>
                                         <!-- START RESPONSIVE TABLES -->
-                                            <div class="panel panel-default">
+                                        @component('componentes.dataTable')
+                                            @slot('titleComponent')
+                                            Supervisores del proyecto
+                                            @endslot
+                                            @slot('idcomponent')
+                                            datatable-supervisorProyecto
+                                            @endslot
+                                            <tr>
+                                            <th width="50">id</th>
+                                            <th width="100" >Cedula</th>
+                                            <th width="100">Nombres</th>
+                                            <th width="100">Apellidos</th>
+                                            <th width="100">Email</th>
+                                            <th width="100">Celular</th>
+                                            <th width="100">actions</th>
+                                            </tr>
 
-                                                <div class="panel-heading">
-                                                    <h3 class="panel-title">Supervisores del proyecto</h3>
-                                                </div>
-
-                                                <div class="panel-body panel-body-table">
-                                                    <div class="row">
-                                                        <div class="col-lg-12">
-                                                            <div class="table-responsive">
-                                                                <table class="table table-bordered table-striped table-actions" id="datatable-supervisorProyecto">
-                                                                    <thead>
-                                                                        <tr>
-                                                                        <th width="50">id</th>
-                                                                        <th width="100" >Cedula</th>
-                                                                        <th width="100">Nombres</th>
-                                                                        <th width="100">Apellidos</th>
-                                                                        <th width="100">Email</th>
-                                                                        <th width="100">Celular</th>
-                                                                        <th width="100">actions</th>
-                                                                        </tr>
-                                                                    </thead>
-                                                                    <tbody id="tablaasignacion">                                            
-                                                                        
-                                                                    </tbody>
-                                                                </table>
-                                                            </div>
-                                                        </div>
-                                                            
-                                                    </div>
-                                                                                    
-
-                                                </div>
-                                            </div> 
+                                        @endcomponent
                                         <!-- END RESPONSIVE TABLES --> 
                                        
                                     </div>
@@ -168,7 +148,6 @@
                         </div>
                     </div>                    
                 </div>
-
                 @component('componentes.mensageBox')
                     @slot('titleComponent')
                         !Alerta
@@ -294,7 +273,23 @@
                             </div>
                         </div>
                     </div>
-                <!-- END MODALS -->     
+                <!-- END MODALS -->
+                <!-- MODALS -->   
+                    @component('componentes.modal')
+                        @slot('idmodal')
+                            modalDetalleObjetivo
+                        @endslot
+                        @slot('tamanomodal')
+                            modal-lg
+                        @endslot
+                        @slot('titulomodal')
+                            Informacion de objetivo2
+                        @endslot
+                        <div id="tablaDetalleObjetivo" class="panel-body panel-body-table">
+                        </div>
+
+                    @endcomponent
+                <!-- END MODALS -->  
                 @push('PageScript')
         
                 <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-datepicker.js') }}"></script>
@@ -317,7 +312,14 @@
 
                 <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
                 <script>
-                    
+                    function obtenerDetalleObjetivo(IDOBJETIVOESTRATEGICO){
+                        _token = $("input[name=_token]").val();
+                        $.post("{{ url('/objetivos/detalles') }}",{_token:_token,IDOBJETIVOESTRATEGICO:IDOBJETIVOESTRATEGICO},function(data){
+                            $("#tablaDetalleObjetivo").html(data);
+                        })
+                        $("#modalDetalleObjetivo").modal('show');
+                        
+                    }
                     function asignarSupervisor(IDSUPERVISOR){
                             IDPROYECTO = $("input[name=idproyecto]").val();
                             _token = $("input[name=_token]").val();
@@ -420,6 +422,9 @@
                                         dpFechaProyecto: {
                                             required: true,
                                         },
+                                        dpFechaFinalProyecto: {
+                                            required: true,
+                                        },
                                         slDepartamento: {
                                             required: true,
                                             
@@ -435,7 +440,10 @@
                                             maxlength: "El campo nombre de proyecto no puede contener mas de 250 caracteres"
                                         },
                                         dpFechaProyecto : {
-                                            required: "El campo fecha es requerido"
+                                            required: "El campo fecha inicial es requerido"
+                                        },
+                                        dpFechaFinalProyecto : {
+                                            required: "El campo fecha final es requerido"
                                         },
                                         slDepartamento: {
                                             required: "El campo direccion es requierido",
