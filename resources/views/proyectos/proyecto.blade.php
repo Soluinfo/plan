@@ -22,7 +22,7 @@
                             <!-- START DEFAULT DATATABLE -->
                             <div class="panel panel-default">
                                 <div class="panel-heading">                                
-                                    <h3 class="panel-title">Default</h3>
+                                    <h3 class="panel-title">Listas de proyectos</h3>
                                     <ul class="panel-controls">
                                         <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
                                         <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
@@ -49,9 +49,13 @@
                                                 <td>{{ $p->NOMBREPROYECTO }}</td>
                                                 <td>{{ $p->FECHAPROYECTO }}</td>
                                                 @if($p->ESTADOPROYECTO == 1)
-                                                <td><span class="label label-success label-form">Estado 1</span></td>
+                                                <td><span class="label label-info label-form">ABIERTO</span></td>
                                                 @elseif($p->ESTADOPROYECTO == 2)
-                                                <td><span class="label label-danger label-form">Estado 2</span></td>
+                                                <td><span class="label label-success label-form">EN PROGRESO</span></td>
+                                                @elseif($p->ESTADOPROYECTO == 3)
+                                                <td><span class="label label-danger label-form">EN RETRASO</span></td>
+                                                @else
+                                                <td><span class="label label-success label-form">COMPLETADO</span></td>
                                                 @endif
                                                 <td>{{ $p->DESCRIPCION_DEP }}</td>
                                                 <td>
@@ -60,7 +64,7 @@
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <a type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
+                                                    <a href="{{ action('proyectos\DetalleProyectoController@home',$p->IDPROYECTO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
                                                     <a href="{{ action('proyectos\ProyectoController@crear',$p->IDPROYECTO) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
                                                     <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
                                                 </td>

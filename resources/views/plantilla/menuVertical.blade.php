@@ -31,8 +31,8 @@
                     <li class="xn-openable">
                         <a href="#"><span class="fa fa-cogs"></span> <span class="xn-text">Portafolio</span></a>                        
                         <ul>
-                            <li><a href="{{ url('/proyectos') }}"><span class="fa fa-heart"></span> Proyectos</a></li>                            
-                            <li><a href="{{ url('/actividades') }}"><span class="fa fa-cogs"></span> Actividades</a></li>
+                            <li><a href="{{ url('/proyectos') }}"><span class="fa fa-folder"></span> Proyectos</a></li>                            
+                            <li><a href="{{ url('/actividades') }}"><span class="fa fa-ticket"></span> Actividades</a></li>
                             <li><a href="ui-buttons.html"><span class="fa fa-square-o"></span> Metas</a></li>                            
                             
                         </ul>

@@ -11,13 +11,14 @@ use App\Proyectosupervisor;
 use App\Catalogoobjetivo;
 use App\Objetivoestrategico;
 use App\Proyectosobjetivos;
+use App\Helpers\ProyectoHelper;
 
 
 class ProyectoController extends Controller
 {
     public function home(){
-        $proyectos = $this->obtener(null);
-        
+        //$proyectos = $this->obtener(null);
+        $proyectos = ProyectoHelper::obtenerProyectos(null);
         return view('proyectos.proyecto',['proyectos' => $proyectos]);
     }
     //inicio de funcion crear que muestra la vista del formulario de creacion de proyecto
@@ -60,6 +61,7 @@ class ProyectoController extends Controller
                                         ->update([
                                         'NOMBREPROYECTO' => $r->txtnombreProyecto,
                                         'FECHAPROYECTO' => $r->dpFechaProyecto,
+                                        'dpFechaFinalProyecto' => $r->dpFechaFinalProyecto,
                                         'ESTADOPROYECTO' => $r->slEstado,
                                         'IDDEPARTAMENTO' => $r->slDepartamento
                                         ]);
@@ -70,6 +72,7 @@ class ProyectoController extends Controller
                     $proyecto = new Proyecto(array(
                         'NOMBREPROYECTO' => $r->txtnombreProyecto,
                         'FECHAPROYECTO' => $r->dpFechaProyecto,
+                        'dpFechaFinalProyecto' => $r->dpFechaFinalProyecto,
                         'ESTADOPROYECTO' => $r->slEstado,
                         'IDDEPARTAMENTO' => $r->slDepartamento
                     ));
@@ -145,8 +148,7 @@ class ProyectoController extends Controller
                                                 
                 return Datatables($datosdesupervisor)
                 ->addColumn('action', function ($datosdesupervisor) {
-                    return '<a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                            <a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Editar!"><i class="fa fa-edit"></i></a>
+                    return '<a onclick="obtenerDetalleSupervisor('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
                             <a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                 })
                 ->make(true);
@@ -198,9 +200,8 @@ class ProyectoController extends Controller
                                                         'objetivosestrategicos.DESCRIPCION');
             return Datatables($objetivosProyeto)
                     ->addColumn('action', function ($objetivosProyeto) {
-                        return '<a onclick="hola('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                                <a onclick="hola('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-primary" data-toggle="tooltip" data-placement="top" title="Editar!"><i class="fa fa-edit"></i></a>
-                                <a onclick="hola('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                        return '<a onclick="obtenerDetalleObjetivo('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                                <a onclick="eliminarObjetivoProyecto('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                     })
                     ->make(true);
     }
