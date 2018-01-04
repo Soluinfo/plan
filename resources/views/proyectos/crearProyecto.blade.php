@@ -207,7 +207,8 @@
                                             </div>
                                         <div class="col-lg-12">
                                             <div class="table-responsive">
-                                                <table class="table table-bordered table-striped table-actions" id="datatableObjetivos">
+                                                <table class="table table-bordered table-striped table-actions" id="datatableOb
+                                                jetivos">
                                                     <thead>
                                                         <tr>
                                                             <th width="50">id</th>
@@ -228,8 +229,9 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                                 </div>
+                                
                             </div>
-                        </div>
+                        </div
                     </div>
                 <!-- END MODALS --> 
                 <!-- MODALS -->        
