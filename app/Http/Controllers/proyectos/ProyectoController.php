@@ -9,7 +9,7 @@ use App\Proyecto;
 use App\Empleado;
 use App\Proyectosupervisor;
 use App\Catalogoobjetivo;
-use App\Objetivoestrategico;
+use App\Objetivo;
 use App\Proyectosobjetivos;
 use App\Helpers\ProyectoHelper;
 
@@ -179,7 +179,7 @@ class ProyectoController extends Controller
     //final de funcion obtenerCatalgoObjetivos
   
     public function datatableObjetivo(Request $r){
-        $obtenerObjetivos = Objetivoestrategico::where('IDCATALOGOOBJETIVO',$r->idcatalogo)
+        $obtenerObjetivos = Objetivo::where('IDCATALOGOOBJETIVO',$r->idcatalogo)
                                                         ->select('IDOBJETIVOESTRATEGICO',
                                                             'LITERAL',
                                                             'DESCRIPCION'
@@ -193,7 +193,7 @@ class ProyectoController extends Controller
     }
 
     public function datatableObjetivosProyecto(Request $r){
-        $objetivosProyeto = Objetivoestrategico::join('proyectosobjetivos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','proyectosobjetivos.IDOBJETIVOESTRATEGICO')
+        $objetivosProyeto = Objetivo::join('proyectosobjetivos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','proyectosobjetivos.IDOBJETIVOESTRATEGICO')
                                                 ->where('proyectosobjetivos.IDPROYECTO', $r->idproyecto)
                                                 ->select('objetivosestrategicos.IDOBJETIVOESTRATEGICO',
                                                         'objetivosestrategicos.LITERAL',
