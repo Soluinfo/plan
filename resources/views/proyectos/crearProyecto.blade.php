@@ -38,13 +38,13 @@
                                             <div class="form-group">                                        
                                                 <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha inicial:</label>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="dpFechaProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>">
+                                                    <input type="text" name="dpFechaProyecto" id="dpFechaProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>">
                                                 </div>
                                             </div>
                                             <div class="form-group">                                        
                                                 <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha final:</label>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="dpFechaFinalProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAFINAL)){echo $FECHAFINAL;} ?>">
+                                                    <input type="text" name="dpFechaFinalProyecto" id="dpFechaFinalProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAFINAL)){echo $FECHAFINAL;} ?>">
                                                 </div>
                                             </div>            
                                             <div class="form-group">
@@ -93,7 +93,8 @@
                                             <input type="hidden" name="idproyecto" value="{{ $IDPROYECTO or '0'}}">
                                             
                                         </form>
-                                        <button id="btnGuardarProyecto" class="btn btn-primary pull-right">Guardar proyecto <span class="fa fa-floppy-o fa-right"></span></button>
+                                        <a href="{{ url('/proyectos/crear') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo proyecto <span class="fa fa-plus fa-right"></span></a>
+                                        <button id="btnGuardarProyecto" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Guardar proyecto <span class="fa fa-floppy-o fa-right"></span></button>
                                     </div>
                                     <div class="tab-pane" id="tab-objetivo">
 
@@ -157,61 +158,55 @@
 
                 @endcomponent
                 <!-- END PAGE CONTENT WRAPPER -->
-                <!-- MODALS -->        
-                    <div class="modal" id="modalObjetivo" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="defModalHead">Agregar objetivos</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                            <div class="block">
-                                                <div class="panel panel-default">
-                                                    <div class="panel-body">
-                                                        <div class=".form-group">
-                                                            <label class="col-lg-2 col-md-2 col-sm-3 col-xs-12 control-label">Catalogo objetivos :</label>
-                                                            <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12">                                                                                       
-                                                                <select class="form-control select" name="slcatalogo" id="slcatalogo" data-live-search="true">
-                                                                    <option value="">Seleccione catalogo</option>
-                                                                    @foreach($catalogo as $c)
-                                                                        <option value="{{ $c->IDCATALOGOOBJETIVO }}">{{ $c->NOMBRE }}</option>
-                                                                    @endforeach
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        <div class="col-lg-12">
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered table-striped table-actions" id="datatableOb
-                                                jetivos">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="50">id</th>
-                                                            <th>literal</th>
-                                                            <th>Descripcion</th>
-                                                            <th width="100">seleccionar</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tablaObjetivoSeleccionar">
-                                                                                                        
-                                                    </tbody>
-                                                </table>
-                                            </div>   
-                                        </div>
+                <!-- MODALS -->  
+                    @component('componentes.modal')
+                    @slot('idmodal')
+                        modalObjetivo
+                    @endslot
+                    @slot('tamanomodal')
+                        modal-lg
+                    @endslot
+                    @slot('titulomodal')
+                        Agregar objetivos
+                    @endslot
+                    <div class="block">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <div class=".form-group">
+                                    <label class="col-lg-2 col-md-2 col-sm-3 col-xs-12 control-label">Catalogo objetivos :</label>
+                                    <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12">                                                                                       
+                                        <select class="form-control select" name="slcatalogo" id="slcatalogo" data-live-search="true">
+                                            <option value="">Seleccione catalogo</option>
+                                            @foreach($catalogo as $c)
+                                                <option value="{{ $c->IDCATALOGOOBJETIVO }}">{{ $c->NOMBRE }}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
-                                    
                                 </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
-                                
                             </div>
-                        </div
+                        </div>
                     </div>
+                    <div class="col-lg-12">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-actions" id="datatableOb
+                            jetivos">
+                                <thead>
+                                    <tr>
+                                        <th width="50">id</th>
+                                        <th>literal</th>
+                                        <th>Descripcion</th>
+                                        <th width="100">seleccionar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tablaObjetivoSeleccionar">
+                                                                                    
+                                </tbody>
+                            </table>
+                        </div>   
+                    </div>
+
+                    @endcomponent  
+                    
                 <!-- END MODALS --> 
                 <!-- MODALS -->        
                     <div class="modal" id="modalSupervisor" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
@@ -303,8 +298,6 @@
                 <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
                 <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
 
-                        
-                
                 <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
 
                 <script type="text/javascript" src="{{ url('js/plugins/smartwizard/jquery.smartWizard-2.0.min.js') }}"></script>        
@@ -356,8 +349,64 @@
                             }
                         })
                     }
+
+                    function eliminarObjetivoProyecto(IDOBJETIVOESTRATEGICO,IDPROYECTO){
+                        _token = $("input[name=_token]").val();
+                        noty({
+                            text: 'Esta seguro que desea eliminar el objetivo estrategico del proyecto?',
+                            layout: 'topRight',
+                            buttons: [
+                                    {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                        $noty.close();
+                                        $.post("{{ url('/proyectos/eliminarProyectoObjetivos') }}",{IDOBJETIVOESTRATEGICO:IDOBJETIVOESTRATEGICO,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                            if(data == 'eliminado'){
+                                                noty({text: 'El objetivo a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                tableObjetivosProyectos.ajax.reload();
+                                            }else{
+                                                noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
+                                            }
+                                        })
+                                        
+                                        
+                                    }
+                                    },
+                                    {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                        $noty.close();
+                                        noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                        }
+                                    }
+                                ]
+                        })
+                        
+                    }
                
-                    $(document).ready(function(){
+                    $(function (){
+                        table = $("#datatableObjetivos").DataTable({
+                                "lengthMenu": [ 5, 10],
+                                "language" : {
+                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
+                                "order": [], //Initial no order
+                                "processing" : true,
+                                "serverSide": true,
+                                "ajax": {
+                                    "url": '{{url("/proyectos/objetivos")}}',
+                                    "type": "post",
+                                    "data": function (d){
+                                        d.idcatalogo = $("#slcatalogo").val();
+                                        d._token = $("input[name=_token]").val();
+                                    }
+                                },
+                               
+                                "columns": [
+                                    {width: '8%',data: 'IDOBJETIVOESTRATEGICO'},
+                                    {width: '8%',data: 'LITERAL'},
+                                    {width: '70%',data: 'DESCRIPCION'},
+                                    {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                
+                                ]
+                            });
                         $("#btnAgregarObjetivo").on("click",function(){
                             IDPROYECTO = $("input[name=idproyecto]").val();
                             if(IDPROYECTO > 0){
@@ -409,6 +458,25 @@
                             
                         })
                         //tap para Guardar informacion proyecto
+                            $.validator.addMethod("validarProyectoExiste",function(value,element){
+                                _token = $("input[name=_token]").val();
+                                
+                                $.post("{{ url('/proyectos/validacion/proyectoExiste') }}",{value: value,_token:_token},function(data){
+                                    data2 = JSON.parse(data);
+                                    if(data2.respuesta == 'no'){
+                                        return true;
+                                    }else{
+                                        return false;
+                                    }
+                                })
+                                
+                            },"!El nombre de proyecto ingresado ya existe");
+                            $.validator.addMethod("validarFechaFinal", function(value, element, param) {
+                             
+                                return this.optional(element) || value > $(param).val();
+                                
+                            }, "El campo [Fecha final] no puede ser menor al campo [Fecha inicial]");
+                                                   
                             $("#btnGuardarProyecto").on("click",function(){
                                 datos = $("#formProyecto").validate({
                                     ignore: ":hidden:not(select)",
@@ -417,13 +485,32 @@
                                         txtnombreProyecto: {
                                             required: true,
                                             minlength: 2,
-                                            maxlength: 250
+                                            maxlength: 250,
+                                            remote: {
+                                                url: "{{ url('/proyectos/validacion/proyectoExiste') }}",
+                                                type: "post",
+                                                dataType: "json",
+                                                data: {
+                                                    txtnombreProyecto : function(){
+                                                        return $("input[name=txtnombreProyecto]").val();
+                                                    },
+                                                    _token : function(){
+                                                        return $("input[name=_token]").val();
+                                                    },
+                                                    IDPROYECTO : function(){
+                                                        return $("input[name=idproyecto]").val();
+                                                    }
+                                                  
+                                                },
+                                            },
                                         },
                                         dpFechaProyecto: {
                                             required: true,
                                         },
                                         dpFechaFinalProyecto: {
                                             required: true,
+                                            validarFechaFinal: '#dpFechaProyecto',
+                                            
                                         },
                                         slDepartamento: {
                                             required: true,
@@ -433,24 +520,35 @@
                                             required: true
                                         }
                                     },
+                                    highlight: function (element) {
+                                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                                        
+                                
+                                    },
+                                    unhighlight: function (element) {
+                                        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                                        
+
+                                    },
                                     messages: {
                                         txtnombreProyecto: {
-                                            required: "El campo nombre de proyecto es requerido",
-                                            minlength: "El campo nombre de proyecto no puede contener menos de dos caracteres",
-                                            maxlength: "El campo nombre de proyecto no puede contener mas de 250 caracteres"
+                                            required: "El campo [Nombre de proyecto] es requerido",
+                                            minlength: "El campo [Nombre de proyecto] no puede contener menos de dos caracteres",
+                                            maxlength: "El campo [Nombre de proyecto] no puede contener mas de 250 caracteres",
+                                            remote : "El [Nombre de proyecto] ingresado ya existe",
                                         },
                                         dpFechaProyecto : {
-                                            required: "El campo fecha inicial es requerido"
+                                            required: "El campo [Fecha inicial] es requerido"
                                         },
                                         dpFechaFinalProyecto : {
-                                            required: "El campo fecha final es requerido"
+                                            required: "El campo [Fecha final] es requerido"
                                         },
                                         slDepartamento: {
-                                            required: "El campo direccion es requierido",
+                                            required: "El campo [Direccion] es requierido",
                                             
                                         },
                                         slEstado: {
-                                            required: "El campo estado es requerido"
+                                            required: "El campo [Estado] es requerido"
                                         }
                                     },
                                     success: function ( label, element ) {
@@ -463,7 +561,7 @@
                                         
                                     },
                                     errorPlacement: function (error, element) {
-                                        console.log('error');
+                                        //console.log('error');
                                         var element2 = element.siblings('div'); 
                                         var element3 = element.siblings('span'); 
                                         
@@ -472,12 +570,11 @@
                                             error.insertAfter(element2);
                                         } else {
                                             
-                                            element3.hide();
+                                            element3.remove();
                                             error.insertAfter(element);
                                             
                                         }
-                                        /*Add other (if...else...) conditions depending on your
-                                        * validation styling requirements*/
+                                        
                                     }
                                     
                                 });
@@ -524,7 +621,7 @@
                                                 $.mpb('destroy');
                                             }
                                             //se cargan los supervisores del proyecto
-                                            obtenerSupervisoresDeProyecto();
+                                           
                                         }
                                         
                                     },
@@ -538,32 +635,7 @@
                             })
                         //end tap Guardar informacion proyecto
                         //tap para agregar objetivos estrategicos
-                            table = $("#datatableObjetivos").DataTable({
-                                "lengthMenu": [ 5, 10],
-                                "language" : {
-                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
-                                },
-                                "autoWidth": false,
-                                "order": [], //Initial no order
-                                "processing" : true,
-                                "serverSide": true,
-                                "ajax": {
-                                    "url": '{{url("/proyectos/objetivos")}}',
-                                    "type": "post",
-                                    "data": function (d){
-                                        d.idcatalogo = $("#slcatalogo").val();
-                                        d._token = $("input[name=_token]").val();
-                                    }
-                                },
-                               
-                                "columns": [
-                                    {width: '8%',data: 'IDOBJETIVOESTRATEGICO'},
-                                    {width: '8%',data: 'LITERAL'},
-                                    {width: '70%',data: 'DESCRIPCION'},
-                                    {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
-                                
-                                ]
-                            });
+                            
                             tableObjetivosProyectos = $("#datatableObjetivosProyectos").DataTable({
                                 "lengthMenu": [ 5, 10],
                                 "language" : {

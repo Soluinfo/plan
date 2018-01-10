@@ -61,7 +61,7 @@ class ProyectoController extends Controller
                                         ->update([
                                         'NOMBREPROYECTO' => $r->txtnombreProyecto,
                                         'FECHAPROYECTO' => $r->dpFechaProyecto,
-                                        'dpFechaFinalProyecto' => $r->dpFechaFinalProyecto,
+                                        'FECHAFINAL' => $r->dpFechaFinalProyecto,
                                         'ESTADOPROYECTO' => $r->slEstado,
                                         'IDDEPARTAMENTO' => $r->slDepartamento
                                         ]);
@@ -72,7 +72,7 @@ class ProyectoController extends Controller
                     $proyecto = new Proyecto(array(
                         'NOMBREPROYECTO' => $r->txtnombreProyecto,
                         'FECHAPROYECTO' => $r->dpFechaProyecto,
-                        'dpFechaFinalProyecto' => $r->dpFechaFinalProyecto,
+                        'FECHAFINAL' => $r->dpFechaFinalProyecto,
                         'ESTADOPROYECTO' => $r->slEstado,
                         'IDDEPARTAMENTO' => $r->slDepartamento
                     ));
@@ -193,16 +193,20 @@ class ProyectoController extends Controller
     }
 
     public function datatableObjetivosProyecto(Request $r){
+        $idProyecto = $r->idproyecto;
         $objetivosProyeto = Objetivo::join('proyectosobjetivos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','proyectosobjetivos.IDOBJETIVOESTRATEGICO')
                                                 ->where('proyectosobjetivos.IDPROYECTO', $r->idproyecto)
                                                 ->select('objetivosestrategicos.IDOBJETIVOESTRATEGICO',
                                                         'objetivosestrategicos.LITERAL',
-                                                        'objetivosestrategicos.DESCRIPCION');
+                                                        'objetivosestrategicos.DESCRIPCION',
+                                                        'proyectosobjetivos.IDPROYECTO'
+                                                    );
             return Datatables($objetivosProyeto)
                     ->addColumn('action', function ($objetivosProyeto) {
                         return '<a onclick="obtenerDetalleObjetivo('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                                <a onclick="eliminarObjetivoProyecto('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                                <a onclick="eliminarObjetivoProyecto('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.','.$objetivosProyeto->IDPROYECTO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                     })
+                    ->removeColumn('IDPROYECTO')
                     ->make(true);
     }
 
@@ -241,4 +245,28 @@ class ProyectoController extends Controller
         }
     //final de funcion verificarSupervisorProyectoExiste
 
+    //funcion de validacion si existe proyecto
+        public function validarExisteProyecto(Request $r){
+            if($r->ajax()){
+                
+                $respuesta = ProyectoHelper::existeProyecto($r->txtnombreProyecto,$r->IDPROYECTO);
+                if($respuesta == true){
+                    //return ['valid'=>true, 'messages' => 'Proyecto existe'];
+                    echo 'false';
+                }else{
+                    //return ['valid'=>false];
+                    echo 'true';
+                }
+            }
+        }
+    //end funcion validacion proyecto
+    //funcion para eliminar objetivo de proyecto
+    public function eliminarProyectoObjetivo(Request $r){
+        if($r->ajax()){
+            $eliminar = Proyectosobjetivos::where(['IDOBJETIVOESTRATEGICO' => $r->IDOBJETIVOESTRATEGICO, 'IDPROYECTO' => $r->IDPROYECTO])
+                                            ->delete();
+            
+            echo 'eliminado';          
+        }
+    }
 }

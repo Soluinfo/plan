@@ -30,6 +30,10 @@ Route::post('/objetivos/detalles', 'proyectos\DetalleProyectoController@obtenerD
 Route::post('/supervisor/detalles','proyectos\DetalleProyectoController@obtenerDetalleSupervisor');
 
 Route::post('/proyectos/asignarObjetivoProyecto','proyectos\ProyectoController@asignarObjetivoProyecto');
+Route::post('/proyectos/eliminarProyectoObjetivos','proyectos\ProyectoController@eliminarProyectoObjetivo');
+
+//validaciones
+Route::post('/proyectos/validacion/proyectoExiste','proyectos\ProyectoController@validarExisteProyecto');
 
 //datatables
 Route::post('/proyectos/objetivos','proyectos\ProyectoController@datatableObjetivo');

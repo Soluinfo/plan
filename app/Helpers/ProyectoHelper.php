@@ -49,4 +49,25 @@ class ProyectoHelper {
         }
         return $datosDeProyecto;
     }
+
+    public static function existeProyecto($nombre,$idproyecto){
+        $resultado = false;
+        $respuesta = Proyecto::where('NOMBREPROYECTO','=',$nombre)
+                            ->count();
+        if($respuesta > 0){
+            if($idproyecto > 0){
+                $respuesta2 = Proyecto::where(['NOMBREPROYECTO' => $nombre,'IDPROYECTO' => $idproyecto])
+                            ->count();
+                if($respuesta2 > 0){
+                    $resultado = false;
+                }else{
+                    $resultado = true;
+                }
+            }else{
+                $resultado = true;
+            }
+        }
+        
+        return $resultado;
+    }
 }

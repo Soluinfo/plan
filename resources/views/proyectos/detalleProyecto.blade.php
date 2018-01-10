@@ -191,6 +191,12 @@
                 </div>
                 <!-- END MODALS -->
                 @push('PageScript')
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
+
                     <script>
                         
                         function obtenerDetalleObjetivo(IDOBJETIVOESTRATEGICO){
@@ -208,6 +214,36 @@
                                 $("#tablaDetalleObjetivo").html(data);
                             })*/
                             $("#modalDetalleSupervisor").modal('show');
+                        }
+
+                        function eliminarObjetivoProyecto(IDOBJETIVOESTRATEGICO,IDPROYECTO){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el objetivo estrategico del proyecto?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/proyectos/eliminarProyectoObjetivos') }}",{IDOBJETIVOESTRATEGICO:IDOBJETIVOESTRATEGICO,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El objetivo a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableObjetivosProyectos.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
                         }
                         $(function(){
                             var $input = $("#progreso");
