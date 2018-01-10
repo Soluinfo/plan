@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Objetivo;
 use App\Ambitoinfluencia;
+use App\Alcance;
 
 
 
@@ -130,12 +131,62 @@ public function guardarambito(Request $r){
                                                     ->get();
                                                 
                 return Datatables($datosambitos)
-                ->addColumn('action', function ($datosambitos) {
+                 ->addColumn('action', function ($datosambitos) {
                     return '<a onclick="obtenerDetalleSupervisor('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
                             <a onclick="agregarObjetivos('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                 })
                 ->make(true);
             }
-        } 
+        }
+        public function guardaralcance(Request $r){
+            if($r->ajax()){
+                $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
+                $idAlcance = $r->idalcance;
+        
+                if($idAlcance > 0){
+                    $ambitoinfluencia = Alcance::where('IDALCANCE', $idAlcance)
+                                        ->update([
+                                        'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,   
+                                        'DESCRIPCIONALCANCE' => $r->txtDescripcionAlcance
+                                        
+                                        
+                                        ]);
+                    $datos['respuesta'] = 'ok';
+                    $datos['codigo'] = $idAlcance;
+                    $datos['transaccion'] = 'actualizar';
+                    }else{
+                        $alcance = new Alcance(array(
+                            'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,   
+                            'DESCRIPCIONALCANCE' => $r->txtDescripcionAlcance
+                            
+                        ));
+                        $alcance ->save();
+                        $id = $alcance ->id;
+                        $datos['respuesta'] = 'ok';
+                        $datos['codigo'] = $id;
+                        $datos['transaccion'] = 'guardar';
+                    }
+                    echo json_encode($datos);
+                } 
     
+}
+public function datatablesAlcance(Request $r){
+    if($r->ajax()){
+        $datosalcance = Alcance::join('objetivosestrategicos', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', '=', 'alcances.IDOBJETIVOESTRATEGICO')
+                                            ->where('alcances.IDOBJETIVOESTRATEGICO', '=' ,$r->idobjetivo)
+                                            ->select('alcances.IDALCANCE','objetivosestrategicos.DESCRIPCION','alcances.DESCRIPCIONALCANCE')
+                                            ->get();
+                                        
+        return Datatables($datosalcance)
+        ->addColumn('action', function ($datosalcance) {
+            return '<a onclick="obtenerDetalleSupervisor('.$datosalcance->IDALCANCE.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                    <a onclick="agregarObjetivos('.$datosalcance->IDALCANCE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+        })
+        ->make(true);
+    }
+}
+/*public function obtenerAmbitos($id = null){
+    $ambitos = Ambitoinfluencia::all();
+    return $ambitos;
+}*/
 }

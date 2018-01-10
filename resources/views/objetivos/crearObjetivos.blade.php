@@ -46,7 +46,7 @@
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Seleccione el Proyecto</label>
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Seleccione el Catalogo</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                
                                                 <select class="form-control select" name="slidcatalogo" data-live-search="true">
                                                     <option value="">seleccion proyecto</option>
@@ -73,7 +73,7 @@
                                 </div> 
 
                                 <div class="tab-pane" id="tab-ambito">
-                                       
+                                        
                                     <button id="btnAgregarAmbito" class="btn btn-block btn-primary col-md-4"><span class="fa fa-plus"></span>Agregar Ambito de Influencia</button>
                                     @component('componentes.dataTable')
                                         @slot('titleComponent')
@@ -82,48 +82,36 @@
                                         @slot('idcomponent')
                                         datatableAmbitosObjetivos
                                         @endslot
-                                        <tr>
+                                    <tr>
                                         <th width="50">id</th>
-                                        <th>Descripcion</th>
+                                        <th>Objetivo</th>
                                         <th>Nombre de Ambito</th>
                                         <th width="100">Accion</th>
                                     </tr>
 
                                     @endcomponent
-                                   
+                                    
                                 </div>
 
                                 <div class="tab-pane" id="tab-alcance">
                                         
-                                    <button id="btnAgregarAlcance" class="btn btn-block btn-primary col-md-4"><span class="fa fa-plus"></span>Agregar Alcance</button>
-                                        
-                                    <!-- START RESPONSIVE TABLES -->
-                                    <div class="panel panel-default">
-                                        <div class="panel-heading">
-                                            <h3 class="panel-title">Alcance del objetivo</h3>
-                                        </div>
-    
-                                        <div class="panel-body panel-body-table">
-    
-                                            <div class="table-responsive">
-                                                <table class="table table-bordered table-striped table-actions" id="#">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="50">id</th>
-                                                            
-                                                            <th>Descripcion</th>
-                                                            <th width="100">Accion</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody>                                            
-                                                           
-                                                    </tbody>
-                                                </table>
-                                            </div>                                
-    
-                                        </div>
-                                    </div> 
-                                    <!-- END RESPONSIVE TABLES --> 
+                                    <button id="btnAgregarAlcance" class="btn btn-block btn-primary col-md-4"><span class="fa fa-plus"></span>Agregar Ambito de Influencia</button>
+                                    @component('componentes.dataTable')
+                                        @slot('titleComponent')
+                                        Alcance del objetivo estrategicos
+                                        @endslot
+                                        @slot('idcomponent')
+                                        datatableAlcanceObjetivos
+                                        @endslot
+                                        <tr>
+                                        <th width="50">id</th>
+                                        <th>Objetivo</th>
+                                        <th>Nombre de Alcance</th>
+                                        <th width="100">Accion</th>
+                                    </tr>
+
+                                    @endcomponent
+                                    
                                 </div>
                             </div>
                         </div>
@@ -196,12 +184,15 @@
                                     <div class="block">
                                         <div class="panel panel-default">
                                             <div class="panel-body">
+                                            {!! Form::open(['url' => 'alcance/guardaralcance', "name" => "formAlcance", "id" => "formAlcance","class" => "form-horizontal", "role" => "form"])!!}
+
                                                 <div class="form-group">
                                                     <label class="col lg-3 col-md-3 col sm-3 col xs-12 control-label">Descripcion</label>
                                                     <div class="col lg-6 col-md-6 col sm-6 col xs-12">
-                                                        <textarea class="form-control push-down-10" id="txtDescripcionalcance" rows="4" placeholder="Su texto aquí..."></textarea>                            
+                                                        <textarea class="form-control push-down-10" name="txtDescripcionAlcance"  id="txtDescripcionAlcance" rows="4" placeholder="Su texto aquí..."></textarea>                            
                                                     </div> 
                                                 </div>
+                                            </form>
                                             </div>
                                         </div>
                                     </div>
@@ -209,6 +200,8 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                <a id="btnGuardarAlcance" class="btn btn-primary pull-right">Guardar Ambito <span class="fa fa-floppy-o fa-right"></span></a>
+
                             </div>
                         </div>
                     </div>
@@ -237,40 +230,38 @@
 
                 <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
                 <script>
-
-
     /////////////////////////////////////////////////////////////////////////////
 //inicio de la funcion para validar el formulario de crear  objetivos///
 //////////////////////////////////////////////////////////////////////////////
 $(document).ready(function(){
-    //tap para agregar objetivos estrategicos
-    tableObjetivosambitos = $("#datatableAmbitosObjetivos").DataTable({
-            "lengthMenu": [ 5, 10],
-            "language" : {
-                "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
-            },
-            "autoWidth": false,
-            "order": [], //Initial no order
-            "processing" : true,
-            "serverSide": true,
-            "ajax": {
-                "url": '{{ url("/proyectos/datatableAmbitoObjetivo") }}',
-                "type": "post",
-                "data": function (d){
-                    d.idobjetivo = $("input[name=idobjetivo]").val();
-                    d._token = $("input[name=_token]").val();
-                }
-            },
-            "columnDefs": [{ targets: [3], "orderable": false}],
-            "columns": [
-                {width: '8%',data: 'IDAMBITOINFLUENCIA'},
-                {width: '8%',data: 'DESCRIPCION'},
-                {width: '70%',data: 'NOMBREAMBITO'},
-                {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
-            
-            ]
-        });
-    //end tap para agregar objetivos estrategicos
+     //tap para agregar objetivos estrategicos
+     tableObjetivosambitos = $("#datatableAmbitosObjetivos").DataTable({
+        "lengthMenu": [ 5, 10],
+        "language" : {
+            "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+        },
+        "autoWidth": false,
+        "order": [], //Initial no order
+        "processing" : true,
+        "serverSide": true,
+        "ajax": {
+            "url": '{{ url("/objetivos/datatableAmbitosObjetivo") }}',
+            "type": "post",
+            "data": function (d){
+                d.idobjetivo = $("input[name=idobjetivo]").val();
+                d._token = $("input[name=_token]").val();
+            }
+        },
+        "columnDefs": [{ targets: [3], "orderable": false}],
+        "columns": [
+            {width: '8%',data: 'IDAMBITOINFLUENCIA'},
+            {width: '40%',data: 'DESCRIPCION'},
+            {width: '38%',data: 'NOMBREAMBITO'},
+            {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
+        
+        ]
+    });
+//end tap para agregar objetivos estrategicos
                         $("#btnAgregarAmbito").on("click",function(){
                             IDAMBITOINFLUENCIA = $("input[name=idobjetivo]").val();
                             if(IDAMBITOINFLUENCIA > 0){
@@ -297,9 +288,37 @@ $(document).ready(function(){
                             }
                             
                         })
+                    //tap para agregar objetivos estrategicos
+                    tableObjetivosalcance = $("#datatableAlcanceObjetivos").DataTable({
+                            "lengthMenu": [ 5, 10],
+                            "language" : {
+                                "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                            },
+                            "autoWidth": false,
+                            "order": [], //Initial no order
+                            "processing" : true,
+                            "serverSide": true,
+                            "ajax": {
+                                "url": '{{ url("/objetivos/datatableAlcanceObjetivo") }}',
+                                "type": "post",
+                                "data": function (d){
+                                    d.idobjetivo = $("input[name=idobjetivo]").val();
+                                    d._token = $("input[name=_token]").val();
+                                }
+                            },
+                            "columnDefs": [{ targets: [3], "orderable": false}],
+                            "columns": [
+                                {width: '8%',data: 'IDALCANCE'},
+                                {width: '40%',data: 'DESCRIPCION'},
+                                {width: '38%',data: 'DESCRIPCIONALCANCE'},
+                                {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
+                            
+                            ]
+                        });
+                    //end tap para agregar objetivos estrategicos
                         $("#btnAgregarAlcance").on("click",function(){
-                            IDPROYECTO = $("input[name=idobjetivo]").val();
-                            if(IDPROYECTO > 0){
+                            IDALCANCE = $("input[name=idobjetivo]").val();
+                            if(IDALCANCE > 0){
                                 $('#modalAlcance').modal('show')
                             }else{
                                 /* MESSAGE BOX */
@@ -321,8 +340,6 @@ $(document).ready(function(){
                             }
                             
                         })
-
-
     //variables para el wizard
     $("#btnGuardarObjetivo").on("click",function(){
         datos = $("#formObjetivos").validate({
@@ -451,8 +468,6 @@ $(document).ready(function(){
             })
         })
     //end ajax
-
-
 //////////////////////////////////////////////////////
 //FUNCION PARA AGREGAR Y VALIDAR AMBITO DE OBJETIVOS//
 /////////////////////////////////////////////////////
@@ -559,130 +574,132 @@ $(document).ready(function(){
                 }
             })
         })
-    //end ajax
 
-});
-////////////////////////////////
-//FUNCION PARA AGREGAR ALCANCE//
-///////////////////////////////
+        //ALCANCE 
 
-$(document).ready(function(){
-    //variables para el wizard
-    $("#btnGuardrAlcance").on("click",function(){
-        datos = $("#formAlcance").validate({
-            ignore: ":hidden:not(select)",
-            rules: {
-                txtDescripcionalcance: {
-                    required: true,
-                    maxlength:15                   
-                },
-                slLiteral:{
-                    required:true,
-                }
-                
-            },
-            messages: {
-                txtDescripcionalcance: {
-                    required: "El campo descripcion es requerido",
-                    maxlength: "El campo descripcion no puede contener mas de 15 caracteres"
-                   
-                },
-               
-                slLiteral: {
-                    required: "El campo Literal es requerido", 
-                    
-                }
-                
-            },
-            success: function ( label, element ) {
-                
-                var element2 = label.siblings('div'); 
-                                  
-                if(element2.hasClass('btn-group')){
-                    element2.attr("class","btn-group bootstrap-select form-control select valid");
-                }
-                
-            },
-            errorPlacement: function (error, element) {
-                console.log('error');
-                var element2 = element.siblings('div'); 
-                var element3 = element.siblings('span'); 
-                
-                if (element2.hasClass('btn-group')) {
-                    element2.attr("class","btn-group bootstrap-select form-control select error");
-                    error.insertAfter(element2);
-                } else {
-                    
-                    element3.hide();
-                    error.insertAfter(element);
-                    
-                }
-                /*Add other (if...else...) conditions depending on your
-                * validation styling requirements*/
-            }
-            
-        });
-        $('select.select').on('change', function () {
-            datos.element($(this));
-            element = $(this);
-            var element2 = element.siblings('div'); 
-            if(element.val() > 0){
-                console.log('mayor a cero');
-            }else{
-                if (element2.hasClass('btn-group')) {
-                    element2.attr("class","btn-group bootstrap-select form-control select error");
-                    error.insertAfter(element2);
-                }
-            }
-            
-        })
-       
-       
-        if(datos.form() == true){
-            $("#formAlcance").submit();
-        }
-    });
     
+//end ajax
+
+//variables para el wizard
+$("#btnGuardarAlcance").on("click",function(){
+       datos = $("#formAlcance").validate({
+           ignore: ":hidden:not(select)",
+           
+           rules: {
+               
+               txtDescripcionAlcance: {
+                   required: true,                
+           }
+           },
+           messages: {
+              
+               txtDescripcionAlcance: {
+                   required: "El campo descripcion de Alcance es requerido",
+               }
+               
+           },
+           success: function ( label, element ) {
+               
+               var element2 = label.siblings('div'); 
+                                 
+               if(element2.hasClass('btn-group')){
+                   element2.attr("class","btn-group bootstrap-select form-control select valid");
+               }
+               
+           },
+           errorPlacement: function (error, element) {
+               console.log('error');
+               var element2 = element.siblings('div'); 
+               var element3 = element.siblings('span'); 
+               
+               if (element2.hasClass('btn-group')) {
+                   element2.attr("class","btn-group bootstrap-select form-control select error");
+                   error.insertAfter(element2);
+               } else {
+                   
+                   element3.hide();
+                   error.insertAfter(element);
+                   
+               }
+               
+           }
+           
+       });
+       $('select.select').on('change', function () {
+           datos.element($(this));
+           element = $(this);
+           var element2 = element.siblings('div'); 
+           if(element.val() > 0){
+               console.log('mayor a cero');
+           }else{
+               if (element2.hasClass('btn-group')) {
+                   element2.attr("class","btn-group bootstrap-select form-control select error");
+                   error.insertAfter(element2);
+               }
+           }
+           
+       })
+      
+      
+       if(datos.form() == true){
+           $("#formAlcance").submit(); 
+       }
+       
+   })
    
-    //ajax guardar informacion proyecto
-        $("#formAlcance").on("submit", function(e) {     
-            e.preventDefault();
-            $.ajax({
-                url: $(this).attr("action"),
-                type: $(this).attr("method"),
-                data: $(this).serialize(),
-                dataType : 'json',
-                beforeSend : function(){
-                    $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
-                },
-                success : function(data){
-                    if(data.respuesta == 'ok'){
-                        $("input[name=idalcance]").val(data.codigo);
-                        if(data.transaccion == 'guardar'){
-                            noty({text: 'Alcance creado con exito', layout: 'topRight', type: 'success'});
-                        }else{
-                            noty({text: 'Alcance actualizado con exito', layout: 'topRight', type: 'success'});
-                        }
-                        
-                    }
-                    $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
-                    $.mpb('destroy');
-                },
-                error : function(xhr,estado){
-                    $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
-                    $.mpb('destroy');
-                    alert("!Error "+xhr.status+", reportelo al centro de computo");
-                    
-                }
-            })
-        })
-    //end ajax
+  
+   //ajax guardar informacion proyecto
+       $("#formAlcance").on("submit", function(e) {
+           var idobjetivo = $("input[name=idobjetivo]").val();
+           var txtDescripcionAlcance =   $("#txtDescripcionAlcance").val();
+           var _token = $("input[name=_token]").val();
+           e.preventDefault();
+           $.ajax({
+               url: $(this).attr("action"),
+               type: $(this).attr("method"),
+               data: {idobjetivo:idobjetivo, txtDescripcionAlcance:txtDescripcionAlcance, _token:_token },
+               dataType : 'json',
+               beforeSend : function(){
+                   $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
+               },
+               success : function(data){
+                   if(data.respuesta == 'ok'){
+                       $("input[name=idalcance]").val(data.codigo);
+                       if(data.transaccion == 'guardar'){
+                           noty({text: 'Alcance creado con exito', layout: 'topRight', type: 'success'});
+                       }else{
+                           noty({text: 'Alcance actualizado con exito', layout: 'topRight', type: 'success'});
+                       }
+                       tableObjetivosalcance.ajax.reload();
+                   }
+                   $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                   $.mpb('destroy');
+               },
+               error : function(xhr,estado){
+                   $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                   $.mpb('destroy');
+                   alert("!Error "+xhr.status+", reportelo al centro de computo");
+                   
+               }
+           })
+       })
+
+       //ALCANCE 
+
+   
+//end ajax
+
 });
+    
 
 
 
 
-</script>         
+
+
+
+
+    </script>         
 
 @endpush('PageScript')
 @endsection('principal')

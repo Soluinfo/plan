@@ -339,7 +339,6 @@
                                 }
                             });
                     }
-
                     function agregarObjetivos(IDOBJETIVOESTRATEGICO){
                         IDPROYECTO = $("input[name=idproyecto]").val();
                         _token = $("input[name=_token]").val();
