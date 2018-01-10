@@ -36,10 +36,30 @@ Route::post('/proyectos/objetivos','proyectos\ProyectoController@datatableObjeti
 Route::post('/proyectos/datatableObjetivosProyecto','proyectos\ProyectoController@datatableObjetivosProyecto');
 Route::post('/proyectos/obtenerSupervisoresProyectos','proyectos\ProyectoController@obtenerSupervisoresDeProyecto');
 
-//diego intriago
-Route::post('/proyectos/datatableAmbitoObjetivo', 'objetivos\ObjetivosController@datatablesAmbito');
+//Diego Intriago
+Route::post('/ambito/detalles', 'objetivos\DetalleObjetivoController@obtenerDetalleAmbito');
+
+
 Route::get('/objetivos', 'objetivos\ObjetivosController@home');
+
+Route::get('/objetivos/detalleObjetivo/{id}','objetivos\DetalleObjetivoController@home');
+
+Route::post('/objetivos/datatableAmbitosObjetivo','objetivos\ObjetivosController@datatablesAmbito');
+Route::post('/objetivos/datatableAlcanceObjetivo','objetivos\ObjetivosController@datatablesAlcance');
+
 Route::get('/crearobjetivos/{id?}', 'objetivos\ObjetivosController@crear');
 Route::post('/objetivos/guardar', 'objetivos\ObjetivosController@guardar');
 
 Route::post('/ambito/guardara', 'objetivos\ObjetivosController@guardarambito');
+Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralcance');
+
+
+// rutas de catalogo
+Route::get('/catalogo', 'objetivos\CatalogoController@home');
+//Route::get('/crearobjetivo/crear/{id?}', 'objetivos\CatalogoController@crear')->where('id', '[0-9]+');
+Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
+Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
+
+Route::get('/catalogo/detalleCatalogo/{id}','objetivos\DetalleCatalogoController@home');
+
+
