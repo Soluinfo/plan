@@ -45,15 +45,16 @@
                                             <tr>      
                                                 <td width="8%">{{ $p->IDOBJETIVOESTRATEGICO }}</td>
                                                 <td width="8%">{{ $p->LITERAL }}</td>
-                                                <td width="54%">{{ $p->DESCRIPCION }}</td>
-                                                <td width="20%">{{ $p->NOMBRE }}</td>
+                                                <td width="40%">{{ $p->DESCRIPCION }}</td>
+                                                <td width="34%">{{ $p->NOMBRE }}</td>
                                                 
                                                    
                                                 </td>
                                                 <td width="10%">
-                                                    <a type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
+                                                    <a href="{{ action('objetivos\DetalleObjetivoController@home',$p->IDOBJETIVOESTRATEGICO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
                                                     <a href="{{ action('objetivos\ObjetivosController@crear',$p->IDOBJETIVOESTRATEGICO) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
-                                                    <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
+                                                    <a href="{{ action('objetivos\ObjetivosController@destroy',$p->IDOBJETIVOESTRATEGICO) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
+
                                                 </td>
                                             </tr>
                                             @endforeach

@@ -1,16 +1,16 @@
 @extends('master')
-@section('title','Crear Catalogo')
+@section('title','Crear Indicadores')
 @section('principal')
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="{{ url('/')}}">Principal</a></li>                    
-                    <li><a href="{{ url('/catalogo')}}">Catalogo de objetivos</a></li>
-                    <li class="active">Crear objetivo</li>
+                    <li><a href="{{ url('/indicadores')}}">Indicadores</a></li>
+                    <li class="active">Crear Indicadores</li>
                 </ul>
              <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
                 <div class="page-title">                    
-                <h2><span class="fa fa-arrow-circle-o-left"></span> Crear catalogo</h2>
+                <h2><span class="fa fa-arrow-circle-o-left"></span> Crear Indicadores</h2>
             </div>
             <!-- END PAGE TITLE --> 
             <!-- PAGE CONTENT WRAPPER -->
@@ -21,43 +21,53 @@
                             <!--<div id="crearob" class="wizard">--> 
                                                      
                             <ul class="nav nav-tabs" role="tablist">
-                                <li class="active"><a href="#tab-catalogo" role="tab" data-toggle="tab">Crear Catalogo de Objetivos</a></li>
+                                <li class="active"><a href="#tab-catalogo" role="tab" data-toggle="tab">Crear Indicador</a></li>
                                 
                             </ul>
                             <div class="panel-body tab-content">
-                                <div class="tab-pane active" id="tab-catalogo">
-                                {!! Form::open(['url' => 'crearcatalogo/guardar', "name" => "formCatalogo", "id" => "formCatalogo","class" => "form-horizontal", "role" => "form"])!!}
+                                <div class="tab-pane active" id="tab-indicador">
+                                {!! Form::open(['url' => 'crearindicadores/guardar', "name" => "formIndicador", "id" => "formIndicador","class" => "form-horizontal", "role" => "form"])!!}
                                 <p aling="justify">En esta interfaz se podrá crear Catalogos para los objetivos.</p>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Nombre de catálogo</label>
-                                            <div class="col-md-6">
-                                                <input type="text" class="form-control" name="txtnombre" placeholder="Catalogo de Objetivos"/>
+                                            <label class="col-md-3 col-xs-12 control-label">Literal</label>
+                                            <div class="col-md-6 col-xs-12">                                                                                                                                                        
+                                                <input type="text" class="form-control" name="txtLiteral" placeholder="Ejemplo A" value="<?php if(isset($LITERAL)){echo $LITERAL;} ?>"/>                                                    
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha creacion</label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" name="dpFecha" class="form-control datepicker" placeholder="aaaa-mm-dd">
+                                            <label class="col-md-3 col-xs-12 control-label">Descripcion</label>
+                                            <div class="col-md-6 col-xs-12">                                            
+                                                <input type="text" class="form-control" name="txtDescripcion" value="<?php if(isset($DESCRIPCION)){echo $DESCRIPCION;} ?>"/>
                                             </div>
-                                        </div>  
+                                        </div> 
 
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Estado</label>
-                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <select class="form-control select" name="slEstado">
-                                                    <option value="">Seleccione un estado</option>
-                                                    <option value="1">PENDIENTE</option>
-                                                    <option value="2">APROBADO</option> 
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Seleccione el Catalogo de Indicador</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                
+                                                <select class="form-control select" name="slidcatalogo" data-live-search="true">
+                                                    <option value="">seleccion proyecto</option>
+                                                    @foreach($catalogoindicadores as $d)
+                                                        @if(isset($IDCATALOGOINDICADORES))
+                                                            @if($IDCATALOGOINDICADORES == $d->IDCATALOGOINDICADORES)
+                                                            <option selected="selected" value="{{$d->IDCATALOGOINDICADORES}}">{{$d->NOMBRE}}</option>
+                                                            @else 
+                                                            <option value="{{$d->IDCATALOGOINDICADORES}}">{{$d->NOMBRE}}</option>
+                                                            @endif
+                                                        @else 
+                                                        <option value="{{$d->IDCATALOGOINDICADORES}}">{{$d->NOMBRE}}</option>
+                                                        @endif
+                                                
+                                                    @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                         {{ csrf_field() }}
-                                        <input type="text" name="idcatalogoobjetivo" value="{{ $IDCATALOGOOBJETIVO or '0'}}"/>
+                                        <input type="text" name="idindicador" value="{{ $IDINDICADORES or '0'}}"/>
                                         
                                     </form>
-                                    <button id="btnGuardarCatalogo" class="btn btn-primary pull-right">Guardar Catalogo<span class="fa fa-floppy-o fa-right"></span></button>
+                                    <button id="btnGuardarCatalogo" class="btn btn-primary pull-right">Guardar Indicador<span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 
                             </div>
@@ -102,34 +112,42 @@
 
 //variables para el wizard
 $("#btnGuardarCatalogo").on("click",function(){
-        datos = $("#formCatalogo").validate({
+        datos = $("#formIndicador").validate({
             ignore: ":hidden:not(select)",
             
             rules: {
-                txtnombre: {
+                txtLiteral: {
                     required: true,
                     
-                    maxlength: 25
+                    maxlength:2
+        
                 },
-                dpFecha: {
+                txtDescripcion: {
                     required: true,
                 },
-                slEstado : {
-                    required: true
+               
+                slidcatalogo : {
+                    required: true,
                 }
+                
             },
             messages: {
-                txtnombre: {
-                    required: "El campo nombre de Catalogo es requerido",
+                txtLiteral: {
+                    required: "El campo literal de indicador es requerido",
+                    
+                    maxlength: "El campo literal no puede contener mas de 2 caracteres"
                    
-                    maxlength: "El campo nombre de Catalogo no puede contener mas de 25 caracteres"
                 },
-                dpFecha : {
-                    required: "El campo fecha es requerido"
+                txtDescripcion: {
+                    required: "El campo descripcion de indicador es requerido",
                 },
-                slEstado: {
-                    required: "El campo estado es requerido"
+               
+                slidcatalogo: {
+                    required: "Seleccione un catalogo de indicadores",
+                    
+                    
                 }
+                
             },
             success: function ( label, element ) {
                 
@@ -176,10 +194,10 @@ $("#btnGuardarCatalogo").on("click",function(){
        
        
         if(datos.form() == true){
-            $("#formCatalogo").submit();
+            $("#formIndicador").submit();
         }
     });
-    $("#formCatalogo").on("submit", function(e) {     
+    $("#formIndicador").on("submit", function(e) {     
             e.preventDefault();
             $.ajax({
                 url: $(this).attr("action"),
@@ -191,11 +209,11 @@ $("#btnGuardarCatalogo").on("click",function(){
                 },
                 success : function(data){
                     if(data.respuesta == 'ok'){
-                        $("input[name=idcatalogoobjetivo]").val(data.codigo);
+                        $("input[name=idindicador]").val(data.codigo);
                         if(data.transaccion == 'guardar'){
-                            noty({text: 'Catalogo creado con exito', layout: 'topRight', type: 'success'});
+                            noty({text: 'Indicador creado con exito', layout: 'topRight', type: 'success'});
                         }else{
-                            noty({text: 'Catalogo actualizado con exito', layout: 'topRight', type: 'success'});
+                            noty({text: 'Indicador actualizado con exito', layout: 'topRight', type: 'success'});
                         }
                         
                     }

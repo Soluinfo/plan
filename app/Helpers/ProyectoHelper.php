@@ -5,6 +5,7 @@ namespace App\Helpers;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Proyecto;
+use App\Actividad;
  
 class ProyectoHelper {
     /**
@@ -70,4 +71,21 @@ class ProyectoHelper {
         
         return $resultado;
     }
+    //Inicio de funcion para obtener todos los proyecto con su departamento respectivo
+    public static function obtenerActividades($id = null){
+        if($id == null){
+            $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
+            
+            ->select('indicadores.*','actividades.*')
+            ->get();
+        }else{
+        $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
+            ->where('IDACTIVIDAD',$id)
+            ->select('indicadores.*','actividades.*')
+            ->get();
+        }
+    
+        return $actividad;
+    }
+//fin de funcion obtener
 }

@@ -32,6 +32,7 @@
                         <a href="#"><span class="fa fa-cogs"></span> <span class="xn-text">Portafolio</span></a>                        
                         <ul>
                             <li><a href="{{ url('/proyectos') }}"><span class="fa fa-folder"></span> Proyectos</a></li>                            
+                            <li><a href="{{ url('/actividadesprogreso') }}"><span class="fa fa-ticket"></span> Progreso Actividades </a></li>
                             <li><a href="{{ url('/actividades') }}"><span class="fa fa-ticket"></span> Actividades</a></li>
                             <li><a href="ui-buttons.html"><span class="fa fa-square-o"></span> Metas</a></li>                            
                             
@@ -42,7 +43,8 @@
                      <ul> 
                      <li><a href="{{ url('/objetivos') }}"><span class="fa fa-pencil"></span> <span class="xn-text">Agregar Objetivos</span></a></li>
                      <li><a href="{{ url('/catalogo') }}"><span class="fa fa-pencil"></span> <span class="xn-text">Catalogo de Objetivos</span></a></li>
-                     <li><a href="{{ url('/indicadores') }}"><span class="fa fa-table"></span> <span class="xn-text">Catalogo de indicadores</span></a></li>
+                     <li><a href="{{ url('/indicadores') }}"><span class="fa fa-table"></span> <span class="xn-text">Agregar indicadores</span></a></li>
+                     <li><a href="{{ url('/catalogoindicadores') }}"><span class="fa fa-table"></span> <span class="xn-text">Catalogo de indicadores</span></a></li>
                      </ul>
                      </li>
                      
