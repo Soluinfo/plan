@@ -32,10 +32,10 @@ class CatalogoController extends Controller
                 }
             }
         }
-        $catalogoobjetivo = DB::table('objetivosestrategicos')->get();        
+        $obtenercatalogo = DB::table('objetivosestrategicos')->get();        
         //$ambitos = $this->obtenerAmbitos(null);
         //$alcances = $this->obtenerAlcances(null);
-        return view('objetivos.crearcatalogo')->with(['objetivosestrategicos' => $catalogoobjetivo])
+        return view('objetivos.crearcatalogo')->with(['objetivosestrategicos' => $obtenercatalogo])
                                                             ->with($datosDeCatalogo);
         
     }
@@ -74,6 +74,7 @@ class CatalogoController extends Controller
         public function obtener($id = null){
             if($id == null){
                 $catalogoobjetivos = Catalogoobjetivo::join('objetivosestrategicos', 'catalogoobjetivos.IDCATALOGOOBJETIVO', '=', 'objetivosestrategicos.IDCATALOGOOBJETIVO')
+                                ->where('catalogoobjetivos.IDCATALOGOOBJETIVO',$id)
                                 ->select('catalogoobjetivos.*','objetivosestrategicos.*')
                                 ->get();
             }else{

@@ -133,6 +133,7 @@ public function guardarambito(Request $r){
                 return Datatables($datosambitos)
                  ->addColumn('action', function ($datosambitos) {
                     return '<a onclick="obtenerDetalleSupervisor('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                            <a onclick=class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
                             <a onclick="agregarObjetivos('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                 })
                 ->make(true);
@@ -189,4 +190,18 @@ public function datatablesAlcance(Request $r){
     $ambitos = Ambitoinfluencia::all();
     return $ambitos;
 }*/
+public function destroy($id)
+{
+    //$catalogo = catalogoobjetivo::all();
+    
+    //$id = $catalogoobjetivo->id;
+    
+    $objetivo = Objetivo::find($id);
+    //$id = $objetivo->id;
+    $objetivo::destroy($id);
+    
+    
+  
+    return view('objetivos.objetivos');
+}
 }

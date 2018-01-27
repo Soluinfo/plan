@@ -66,7 +66,7 @@
                                             </div>
                                         </div>
                                         {{ csrf_field() }}
-                                        <input type="text" name="idobjetivo" value="{{ $IDOBJETIVOESTRATEGICO or '0'}}"/>
+                                        <input type="hidden" name="idobjetivo" value="{{ $IDOBJETIVOESTRATEGICO or '0'}}"/>
                                     </form>
                                     <button id="btnGuardarObjetivo" class="btn btn-primary pull-right">Guardar Objetivo <span class="fa fa-floppy-o fa-right"></span></button>
 

@@ -15,13 +15,13 @@ Route::get('/', 'Auth\LoginController@home');
 Route::get('/principal', 'PrincipalController@home');
 Route::get('/objetivos', 'objetivos\CatalogoController@home');
 Route::get('/crearobjetivo', 'objetivos\CatalogoController@crear');
-Route::get('/indicadores', 'indicadores\IndicadorController@home');
 Route::get('/proyectos', 'proyectos\ProyectoController@home');
 //ruta para detalle de proyecto
 Route::get('/proyectos/detalleProyecto/{id}','proyectos\DetalleProyectoController@home');
 //sirve para guardar y editar proyectos
 Route::get('/proyectos/crear/{id?}','proyectos\ProyectoController@crear')->where('id', '[0-9]+');
-Route::get('/actividades', 'proyectos\ActividadController@home');
+Route::get('/actividadesprogreso', 'proyectos\ActividadController@home');
+
 Route::post('/proyectos/guardar', 'proyectos\ProyectoController@guardar');
 Route::post('/proyectos/asignarSupervisorProyecto','proyectos\ProyectoController@asignarSupervisor');
 Route::post('/proyectos/obtenerSupervisorProyecto','proyectos\ProyectoController@obtenerSupervisores');
@@ -49,6 +49,7 @@ Route::post('/objetivos/datatableAlcanceObjetivo','objetivos\ObjetivosController
 
 Route::get('/crearobjetivos/{id?}', 'objetivos\ObjetivosController@crear');
 Route::post('/objetivos/guardar', 'objetivos\ObjetivosController@guardar');
+Route::get('/objetivos/eliminar{id}', 'objetivos\ObjetivosController@destroy');
 
 Route::post('/ambito/guardara', 'objetivos\ObjetivosController@guardarambito');
 Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralcance');
@@ -61,5 +62,29 @@ Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
 Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
 
 Route::get('/catalogo/detalleCatalogo/{id}','objetivos\DetalleCatalogoController@home');
+
+//rutas de indicadores
+Route::get('/indicadores', 'indicadores\IndicadorController@home');
+Route::get('/crearindicadores/{id?}', 'indicadores\IndicadorController@crear');
+Route::post('/crearindicadores/guardar', 'indicadores\IndicadorController@guardar');
+Route::get('/indicadores/detalleIndicador/{id}','indicadores\DetalleIndicadorController@home');
+
+Route::post('/indicadores/datatableActividadesIndicadores','indicadores\IndicadorController@datatableActividadesIndicadores');
+
+Route::get('/catalogoindicadores', 'indicadores\CatalogoIndicadorController@home');
+Route::get('/catalogo/crear{id?}', 'indicadores\CatalogoIndicadorController@crear');
+Route::post('/crearcatalogoindicador/guardar', 'indicadores\CatalogoIndicadorController@guardar');
+
+Route::get('/actividades', 'proyectos\ActividadController@inicio');
+Route::get('/crearactividad/{id?}', 'proyectos\ActividadController@crear');
+Route::post('/crearactividades/guardar', 'proyectos\ActividadController@guardar');
+
+Route::post('/actividades/obtenerResponsableActividades','proyectos\ActividadController@obtenerResponsablesDeActividad');
+
+Route::post('/actividades/datatableActividad','proyectos\ActividadController@datatableActividad');
+Route::post('/actividades/asignarResponsableActividad','proyectos\ActividadController@asignarResponsable');
+Route::post('/actividades/ObtenerResponsablesDeActividad','proyectos\ActividadController@obtenerResponsablesDeActividad');
+
+
 
 

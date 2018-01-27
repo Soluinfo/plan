@@ -156,6 +156,8 @@ class ProyectoController extends Controller
         }
     //final de funcion obtenerSupervisoresDeProyecto
 
+    
+
     //inicio de funcion para validar si existe supervisor asignado a proyecto
         public function verificarSupervisorProyectoExiste($idproyecto,$idsupervisor){
             $datosdesupervisor = Proyectosupervisor::where([
