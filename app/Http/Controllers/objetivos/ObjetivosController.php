@@ -190,18 +190,4 @@ public function datatablesAlcance(Request $r){
     $ambitos = Ambitoinfluencia::all();
     return $ambitos;
 }*/
-public function destroy($id)
-{
-    //$catalogo = catalogoobjetivo::all();
-    
-    //$id = $catalogoobjetivo->id;
-    
-    $objetivo = Objetivo::find($id);
-    //$id = $objetivo->id;
-    $objetivo::destroy($id);
-    
-    
-  
-    return view('objetivos.objetivos');
-}
 }

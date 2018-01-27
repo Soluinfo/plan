@@ -88,3 +88,16 @@ Route::post('/actividades/ObtenerResponsablesDeActividad','proyectos\ActividadCo
 
 
 
+Route::post('/ambito/guardara', 'objetivos\ObjetivosController@guardarambito');
+Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralcance');
+
+
+// rutas de catalogo
+Route::get('/catalogo', 'objetivos\CatalogoController@home');
+//Route::get('/crearobjetivo/crear/{id?}', 'objetivos\CatalogoController@crear')->where('id', '[0-9]+');
+Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
+Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
+
+Route::get('/catalogo/detalleCatalogo/{id}','objetivos\DetalleCatalogoController@home');
+
+
