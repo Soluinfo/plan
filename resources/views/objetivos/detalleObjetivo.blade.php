@@ -35,10 +35,10 @@
                                                 </div>
                                                 <div class="panel-body">
                                                     <ul class="list-group border-bottom">
-                                                        <li class="list-group-item"><strong>codigo : </strong> {{$IDOBJETIVOESTRATEGICO}}</li>
-                                                        <li class="list-group-item"><strong>Literal : </strong> {{$LITERAL}}</li>
-                                                        <li class="list-group-item"><strong>Nombre objetivo : </strong> {{$DESCRIPCION}}</li>
-                                                        <li class="list-group-item"><strong>Catalogo : </strong>{{$NOMBRE}}</li>
+                                                        <li class="list-group-item"><strong>codigo : </strong> {{$IDOBJETIVOESTRATEGICO or ''}}</li>
+                                                        <li class="list-group-item"><strong>Literal : </strong> {{$LITERAL or ''}}</li>
+                                                        <li class="list-group-item"><strong>Nombre objetivo : </strong> {{$DESCRIPCION or ''}}</li>
+                                                        <li class="list-group-item"><strong>Catalogo : </strong>{{$NOMBRE or ''}}</li>
 
                                                     </ul>                                
                                                 </div>

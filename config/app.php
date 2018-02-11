@@ -51,7 +51,7 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://planificacionestrategica.com:90/'),
+    'url' => env('APP_URL', 'http://localhost:90/plan/public/'),
 
     /*
     |--------------------------------------------------------------------------

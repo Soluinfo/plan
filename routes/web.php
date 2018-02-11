@@ -37,8 +37,10 @@ Route::post('/proyectos/validacion/proyectoExiste','proyectos\ProyectoController
 
 //datatables
 Route::post('/proyectos/objetivos','proyectos\ProyectoController@datatableObjetivo');
+Route::post('/proyectos/indicador','proyectos\ProyectoController@datatableIndicador');
 Route::post('/proyectos/datatableObjetivosProyecto','proyectos\ProyectoController@datatableObjetivosProyecto');
 Route::post('/proyectos/obtenerSupervisoresProyectos','proyectos\ProyectoController@obtenerSupervisoresDeProyecto');
+Route::post('/proyectos/obtenerIndicadorProyectos','proyectos\ProyectoController@datatableIndicadorProyectos');
 
 //Diego Intriago
 Route::post('/ambito/detalles', 'objetivos\DetalleObjetivoController@obtenerDetalleAmbito');
@@ -88,9 +90,8 @@ Route::post('/actividades/obtenerResponsableActividades','proyectos\ActividadCon
 Route::post('/actividades/datatableActividad','proyectos\ActividadController@datatableActividad');
 Route::post('/actividades/asignarResponsableActividad','proyectos\ActividadController@asignarResponsable');
 Route::post('/actividades/ObtenerResponsablesDeActividad','proyectos\ActividadController@obtenerResponsablesDeActividad');
-
-
-
+Route::post('/actividades/eliminarResponsableActividad','proyectos\ActividadController@eliminarResponsableActividad');
+Route::post('/actividades/eliminarFechaActividad','proyectos\ActividadController@eliminarfechasActividad');
 
 Route::post('/ambito/guardara', 'objetivos\ObjetivosController@guardarambito');
 Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralcance');
@@ -104,4 +105,17 @@ Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
 
 Route::get('/catalogo/detalleCatalogo/{id}','objetivos\DetalleCatalogoController@home');
 
+//rutas de atividades
+Route::post('/actividades/obtenerobjetivosproyecto','proyectos\ActividadController@obtenerObjetivosProyectos');
+Route::post('/actividades/obtenerindicadorproyecto','proyectos\ActividadController@obtenerIndicadoresproyectos');
+Route::post('/actividades/guardarFechas','proyectos\ActividadController@guardarFechas');
+Route::post('/actividades/datatablesfechasactividades','proyectos\ActividadController@datatablesFechasActividades');
+Route::get('/actividades/detalleactividades/{id}','proyectos\ActividadController@detalleactividades');
+Route::get('/actividades/modalDetalleActividad','proyectos\ActividadController@modalDetalleActividad');
+Route::post('/actividades/guardarRecursos','proyectos\ActividadController@guardarRecursosActividad');
+Route::post('/actividades/datatablesrecursosactividades','proyectos\ActividadController@datatablesrecursosactividades');
 
+Route::post('/ProgresoActividad/obtenerActividadesDeProyecto','proyectos\ActividadController@obtenerActividadesDeProyecto');
+Route::post('/ProgresoActividad/obtenerDetalleActividadesEnModal','proyectos\ActividadController@obtenerDetalleActividadesEnModal');
+Route::post('/ProgresoActividad/obtenerAvanceActividadmodal','proyectos\ActividadController@obtenerAvanceActividadmodal');
+Route::post('/ProgresoActividad/obtenerRecursosActividadesEnModal','proyectos\ActividadController@obtenerRecursosActividadesEnModal');

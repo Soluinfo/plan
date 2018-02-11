@@ -19,6 +19,7 @@
         
             <div class="login-box animated fadeInDown">
                 <div class="login-logo"></div>
+                
                 <div class="login-body">
                     <div class="login-title"><strong>Bienvenido</strong>, por favor Inicia sesión</div>
                     <form  class="form-horizontal" method="post">

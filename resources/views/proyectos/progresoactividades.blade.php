@@ -22,18 +22,14 @@
                             <div class="pull-right">
                                 <button class="btn btn-default content-frame-left-toggle"><span class="fa fa-bars"></span></button>
                             </div>                                
-                            <div class="pull-right" style="width: 100px; margin-right: 5px;">
-                                <select class="form-control select">
-                                    <option>All</option>                                
-                                    <option>Work</option>
-                                    <option>Home</option>
-                                    <option>Friends</option>
-                                    <option>Closed</option>
-                                </select>
+                            <div class="pull-right" style="width: 150px; margin-right: 5px;">
+                                <button id="btnSeleccionarProyecto" type="button" class="btn btn-primary">Seleccione proyecto</button>
                             </div>
                             
                         </div>                    
                         <div class="content-frame-left">
+                            {{ csrf_field() }}
+                            <input type="hidden" name="idactividad">
                             <div class="form-group">
                                 <h4>Agregar nueva Actividad:</h4>
                                 <textarea class="form-control push-down-10" id="new_task" rows="4" placeholder="Your task text here..."></textarea>                            
@@ -76,91 +72,35 @@
                         <div class="content-frame-body">
                                                     
                             <div class="row push-up-10">
-                                <div class="col-md-4">
+                                <div class="col-md-3">
+                                    
+                                    <h3>Abierto</h3>
+                                    
+                                    <div class="tasks" id="tasks-abierta">
+
+                                       
+                                    </div>                            
+
+                                </div>
+                                <div class="col-md-3">
                                     
                                     <h3>Retrasadas</h3>
                                     
-                                    <div class="tasks" id="tasks">
-
-                                        <div class="task-item task-primary">                                    
-                                            <div class="task-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris rutrum velit vel erat fermentum, a dignissim dolor malesuada.</div>
-                                            <div class="task-footer">
-                                                <div class="pull-left"><span class="fa fa-clock-o"></span> 1h 30min</div>                                    
-                                            </div>                                    
-                                        </div>
-
-                                        <div class="task-item task-success">                                    
-                                            <div class="task-text">Suspendisse a tempor eros. Curabitur fringilla maximus lorem, eget congue lacus ultrices eu. Nunc et molestie elit. Curabitur consectetur mollis ipsum, id hendrerit nunc molestie id.</div>
-                                            <div class="task-footer">
-                                                <div class="pull-left"><span class="fa fa-clock-o"></span> 1h 45min</div>
-                                                <div class="pull-right"><a href="#"><span class="fa fa-chain"></span></a> <a href="#"><span class="fa fa-comments"></span></a></div>
-                                            </div>                                    
-                                        </div>
-
-                                        <div class="task-item task-warning">                                    
-                                            <div class="task-text">Donec lacus lacus, iaculis nec pharetra id, congue ut tortor. Donec tincidunt luctus metus eget rhoncus.</div>
-                                            <div class="task-footer">
-                                                <div class="pull-left"><span class="fa fa-clock-o"></span> 1day ago</div>
-                                            </div>                                    
-                                        </div>
-
-                                        <div class="task-item task-danger">                                    
-                                            <div class="task-text">Pellentesque faucibus molestie lectus non efficitur. Vestibulum mattis dignissim diam, eget dapibus urna rutrum vitae.</div>
-                                            <div class="task-footer">
-                                                <div class="pull-left"><span class="fa fa-clock-o"></span> 2days ago</div>
-                                                <div class="pull-right"><a href="#"><span class="fa fa-chain"></span></a> <a href="#"><span class="fa fa-comments"></span></a></div>
-                                            </div>                                    
-                                        </div>
-
-                                        <div class="task-item task-info">                                    
-                                            <div class="task-text">Quisque quis ipsum quis magna bibendum laoreet.</div>
-                                            <div class="task-footer">
-                                                <div class="pull-left"><span class="fa fa-clock-o"></span> 3days ago</div>
-                                                <div class="pull-right"><a href="#"><span class="fa fa-chain"></span></a> <a href="#"><span class="fa fa-comments"></span></a></div>
-                                            </div>                                    
-                                        </div>
+                                    <div class="tasks" id="tasks-retrasadas">                                     
                                         
                                     </div>                            
 
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h3>En Progreso</h3>
-                                    <div class="tasks" id="tasks_progreess">
-
-                                        <div class="task-item task-warning">
-                                            <div class="task-text">In mauris nunc, blandit a turpis in, vehicula viverra metus. Quisque dictum purus lorem, in rhoncus justo dapibus eget. Aenean pretium non mauris et porttitor.</div>
-                                            <div class="task-footer">
-                                                <div class="pull-left"><span class="fa fa-clock-o"></span> 2h 55min</div>
-                                                <div class="pull-right"><span class="fa fa-pause"></span> 4:51</div>
-                                            </div>                                    
-                                        </div>                            
-                                        
-                                        <div class="task-drop push-down-10">
-                                            <span class="fa fa-cloud"></span><br>
-                                            Arrastre su tarea aquí para comenzar en el tiempo de seguimiento
-                                        </div>
+                                    <div class="tasks" id="tasks-enejecucion">
                                         
                                     </div>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-3">
                                     <h3>Completadas</h3>
-                                    <div class="tasks" id="tasks_completed">
-                                        <div class="task-item task-danger task-complete">                                    
-                                            <div class="task-text">Donec maximus sodales feugiat.</div>
-                                            <div class="task-footer">
-                                                <div class="pull-left"><span class="fa fa-clock-o"></span> 15min</div>                                    
-                                            </div>                                    
-                                        </div>
-                                        <div class="task-item task-info task-complete">                                    
-                                            <div class="task-text">Aliquam eget est a dui tincidunt commodo in nec ante.</div>
-                                            <div class="task-footer">
-                                                <div class="pull-left"><span class="fa fa-clock-o"></span> 35min</div>                                    
-                                            </div>                                    
-                                        </div>
-                                        <div class="task-drop">
-                                            <span class="fa fa-cloud"></span><br>
-                                            Arrastra tu tarea aquí para terminarla
-                                        </div>                                    
+                                    <div class="tasks" id="tasks-completa">
+                                                                       
                                     </div>
                                 </div>
                             </div>                        
@@ -170,39 +110,321 @@
                         
                     </div>
                     <!-- END CONTENT FRAME -->
-                   <!-- MODALS -->        
-                    <div class="modal fade" id="taskEdit" tabindex="-1" role="dialog" aria-labelledby="taskEditModalHead" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="taskEditModalHead">Edit Task</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group">
-                                        <label>Task description</label>
-                                        <textarea class="form-control" id="task-text" rows="4"></textarea>
+
+                    <!-- MODALS -->  
+                        @component('componentes.modal')
+                            @slot('idmodal')
+                                modalDetalleActividad
+                            @endslot
+                            @slot('tamanomodal')
+                                modal-lg
+                            @endslot
+                            @slot('titulomodal')
+                                Detalle de actividad
+                            @endslot
+                           
+                            <div class="col-lg-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-body profile bg-info">
+                                        <div class="profile-data">
+                                            <div class="profile-data-name">Informacion de actividad</div>
+                                            
+                                        </div>
                                     </div>
-                                    <div class="form-group">
-                                        <label>Task group</label>
-                                        <select class="form-control select">
-                                            <option>Work</option>
-                                            <option>Home</option>
-                                            <option>Friends</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">                        
-                                    <button type="button" class="btn btn-primary">Save changes</button>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
+                                    <div class="panel-body list-group" id="informacionactividad">
+                                        <a class="list-group-item"><strong>codigo : </strong> {{$IDACTIVIDAD or null}}</a>
+                                        <a class="list-group-item"><strong>Nombre de actividad : </strong> {{$NOMBREACTIVIDAD or null}}</a>
+                                        <a class="list-group-item"><strong>Proyecto : </strong> {{$NOMBREPROYECTO or null}}</a>
+                                        <a class="list-group-item"><strong>Objetivo : </strong> {{$OBJETIVO or null}}</a>
+                                        <a class="list-group-item"><strong>Indicador : </strong> {{$INDICADOR or null}}</a>
+                                    </div>                            
+                                </div>                                    
                             </div>
-                        </div>
-                    </div>        
+                                       
+                            <div class="col-lg-6">
+                                <!-- DEFAULT LIST GROUP -->
+                                <div class="panel panel-default">
+                                    <div class="panel-body profile bg-info">
+                                        <div class="profile-data">
+                                            <div class="profile-data-name">Informacion de actividad</div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="panel-body list-group" id="avanceActividad">
+                                        
+                                        <a class="list-group-item">
+                                            <div class="progress">
+                                                <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: 0%">0% Complete</div>
+                                            </div> 
+                                        </a>
+                                        <a class="list-group-item"><strong>Fecha de inicio : </strong></a> 
+                                        <a class="list-group-item"><strong>Fecha de final : </strong></a>                     
+                                    </div>
+                                </div>
+                                
+                                <!-- END DEFAULT LIST GROUP -->
+                            </div>
+                                                        
+                        @endcomponent  
+                    
                     <!-- END MODALS -->
+
+                    <!-- MODALS -->  
+                    @component('componentes.modal')
+                            @slot('idmodal')
+                                modalreprogramaractividad
+                            @endslot
+                            @slot('tamanomodal')
+                                modal-lg
+                            @endslot
+                            @slot('titulomodal')
+                                    Panel para programar actividad
+                            @endslot
+                                <!-- START RESPONSIVE TABLES -->
+                                @component('componentes.dataTable')
+                                    @slot('titleComponent')
+                                    Programar actividad
+                                    @endslot
+                                    @slot('idcomponent')
+                                    datatable-reprogramarActividad
+                                    @endslot
+                                    <tr>
+                                    <th width="50">id</th>
+                                    
+                                    <th width="100" >Fecha de Inicio</th>
+                                    <th width="100">Fecha de Entrega</th>
+                                    
+                                    <th width="100">Estado</th>
+                                    <th width="100">Accion</th>
+                                    </tr>
+
+                                @endcomponent
+                                <!-- END RESPONSIVE TABLES -->
+                        @endcomponent  
+                    
+                    <!-- END MODALS -->
+                    <!-- MODALS -->  
+                        @component('componentes.modal')
+                            @slot('idmodal')
+                                modalProyecto
+                            @endslot
+                            @slot('tamanomodal')
+                                modal-lg
+                            @endslot
+                            @slot('titulomodal')
+                                Seleccione proyecto
+                            @endslot
+                            <div>                   
+                                <table class="table datatable">
+                                    <thead>
+                                        <tr>
+                                            <th>Id</th>
+                                            <th>Nombre proyecto</th>
+                                            <th>estado</th>
+                                            
+                                            <th>Accion</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach($proyectos as $p)
+                                        <tr>
+                                            <td>{{ $p->IDPROYECTO }}</td>
+                                            <td>{{ $p->NOMBREPROYECTO }}</td>
+                                            
+                                            @if($p->ESTADOPROYECTO == 1)
+                                            <td><span class="label label-info label-form">ABIERTO</span></td>
+                                            @elseif($p->ESTADOPROYECTO == 2)
+                                            <td><span class="label label-success label-form">EN PROGRESO</span></td>
+                                            @elseif($p->ESTADOPROYECTO == 3)
+                                            <td><span class="label label-danger label-form">EN RETRASO</span></td>
+                                            @else
+                                            <td><span class="label label-success label-form">COMPLETADO</span></td>
+                                            @endif
+                                        
+                                            
+                                            <td>
+                                                <a onclick="cargarActividadesDeProyecto({{ $p->IDPROYECTO }});" type="button" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-check-circle-o"></span></a>
+                                                
+                                            </td>
+                                        </tr>
+                                        @endforeach
+                                        
+                                    </tbody>
+                                </table>
+                            </div>
+
+                        @endcomponent  
+                        
+                    <!-- END MODALS -->
+                     <!-- MODALS -->  
+                     @component('componentes.modal')
+                            @slot('idmodal')
+                                modalResponsableActividad
+                            @endslot
+                            @slot('tamanomodal')
+                                modal-lg
+                            @endslot
+                            @slot('titulomodal')
+                                Responsable actividad
+                            @endslot
+                            <!-- START RESPONSIVE TABLES -->
+                            @component('componentes.dataTable')
+                                @slot('titleComponent')
+                                Responsables de la actividad
+                                @endslot
+                                @slot('idcomponent')
+                                datatable-responsableActividad
+                                @endslot
+                                <tr>
+                                <th width="50">id</th>
+                                <th width="100" >Cedula</th>
+                                <th width="100">Nombres</th>
+                                <th width="100">Apellidos</th>
+                                <th width="100">Email</th>
+                                <th width="100">Celular</th>
+                                <th width="100">actions</th>
+                                </tr>
+
+                            @endcomponent
+                            <!-- END RESPONSIVE TABLES --> 
+                    @endComponent
+                    <!-- MODALS -->  
+                    @component('componentes.modal')
+                            @slot('idmodal')
+                                modalRecursosActividad
+                            @endslot
+                            @slot('tamanomodal')
+                                modal-lg
+                            @endslot
+                            @slot('titulomodal')
+                                Panel recursos de actividad
+                            @endslot
+                             <!-- START ACCORDION -->        
+                             <div class="panel-group accordion" id="acordionRecursosActividad">
+                                
+                            </div>
+                            <!-- END ACCORDION -->   
+                    @endComponent
+                     <!--END MODALS --> 
                 @push('PageScript')
-                <script type="text/javascript" src="js/plugins/moment.min.js"></script>
-                <script type="text/javascript" src="js/plugins/bootstrap/bootstrap-select.js"></script>
-                <script type="text/javascript" src="js/demo_tasks.js"></script> 
+                <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js')}}"></script> 
+                <script type="text/javascript" src="{{ url('js/plugins/moment.min.js')}}"></script>
+                <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-select.js')}}"></script>
+                <script type="text/javascript" src="{{ url('js/demo_tasks.js')}}"></script> 
+                <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>
+                <script>
+                    function cargarActividadesDeProyecto(IDPROYECTO){
+                        _token = $("input[name=_token]").val();
+                        estadoabierto = '1';
+                        estadoenejecucion = '2';
+                        estadoenretrasa = '3';
+                        estadocompletada = '4';
+                        $.post(" {{ url('/ProgresoActividad/obtenerActividadesDeProyecto') }}",{IDPROYECTO:IDPROYECTO,_token:_token,ESTADO:estadoabierto},function(data){
+                            $("#tasks-abierta").html(data);
+                        })
+                        $.post(" {{ url('/ProgresoActividad/obtenerActividadesDeProyecto') }}",{IDPROYECTO:IDPROYECTO,_token:_token,ESTADO:estadoenejecucion},function(data){
+                            $("#tasks-enejecucion").html(data);
+                        })
+                        $.post(" {{ url('/ProgresoActividad/obtenerActividadesDeProyecto') }}",{IDPROYECTO:IDPROYECTO,_token:_token,ESTADO:estadoenretrasa},function(data){
+                            $("#tasks-retrasadas").html(data);
+                        })
+                        $.post(" {{ url('/ProgresoActividad/obtenerActividadesDeProyecto') }}",{IDPROYECTO:IDPROYECTO,_token:_token,ESTADO:estadocompletada},function(data){
+                            $("#tasks-completa").html(data);
+                        })
+                        $('#modalProyecto').modal('hide');
+                    }
+                    function programarFechaActividad(IDACTIVIDAD){
+                        $("input[name=idactividad]").val(IDACTIVIDAD);
+                        tableFechasActividad.ajax.reload();
+                        $('#modalreprogramaractividad').modal('show');
+                    }
+                    function detalleActividad(IDACTIVIDAD){
+                        
+                        _token = $("input[name=_token]").val();
+                        $.post(" {{url('/ProgresoActividad/obtenerDetalleActividadesEnModal') }}",{IDACTIVIDAD:IDACTIVIDAD,_token:_token},function(data){
+                            $("#informacionactividad").html(data);
+                        })
+                        $.post(" {{url('/ProgresoActividad/obtenerAvanceActividadmodal') }}",{IDACTIVIDAD:IDACTIVIDAD,_token:_token},function(data){
+                            $("#avanceActividad").html(data);
+                           
+                        })
+                        $('#modalDetalleActividad').modal('show');
+                    }
+
+                    function recursoDeActividad(IDACTIVIDAD){
+                        $.post(" {{url('/ProgresoActividad/obtenerRecursosActividadesEnModal') }}",{IDACTIVIDAD:IDACTIVIDAD,_token:_token},function(data){
+                            $("#acordionRecursosActividad").html(data);
+                        })
+                        $('#modalRecursosActividad').modal('show');
+                    }
+
+                    function responsablesDeActividad(IDACTIVIDAD){
+                        $("input[name=idactividad]").val(IDACTIVIDAD);
+                        tableResponsableActividad.ajax.reload();
+                        $('#modalResponsableActividad').modal('show');
+                    }
+                    
+                    $(document).ready(function(){
+                       
+                        $("#btnSeleccionarProyecto").on("click", function(){
+                            $('#modalProyecto').modal('show')
+                        })
+                        tableFechasActividad = $("#datatable-reprogramarActividad").DataTable({
+                            "lengthMenu": [ 5, 10],
+                            "language" : {
+                                "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                            },
+                            "autoWidth": false,
+                            "order": [], //Initial no order
+                            "processing" : true,
+                            "serverSide": true,
+                            "ajax": {
+                                "url": '{{ url("/actividades/datatablesfechasactividades") }}',
+                                "type": "post",
+                                "data": function (d){
+                                    d.idactividad = $("input[name=idactividad]").val();
+                                    d._token = $("input[name=_token]").val();
+                                }
+                            },
+                            "columns": [
+                                {width: '10%',data: 'IDACTIVIDADFECHAFINAL'},
+                                {width: '25%',data: 'FECHAINICIALACTIVIDAD'},
+                                {width: '25%',data: 'FECHAFINALACTIVIDAD'},
+                                {width: '25%',data: 'ESTADOFECHA'},
+                            
+                                {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+                            
+                            ]
+                        })
+                        tableResponsableActividad = $("#datatable-responsableActividad").DataTable({
+                            "lengthMenu": [ 5, 10],
+                            "language" : {
+                                "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                            },
+                            "autoWidth": false,
+                            "order": [], //Initial no order
+                            "processing" : true,
+                            "serverSide": true,
+                            "ajax": {
+                                "url": '{{ url("/actividades/ObtenerResponsablesDeActividad") }}',
+                                "type": "post",
+                                "data": function (d){
+                                    d.idactividad = $("input[name=idactividad]").val();
+                                    d._token = $("input[name=_token]").val();
+                                }
+                            },
+                            "columns": [
+                                {width: '8%',data: 'SERIAL_EPL'},
+                                {width: '10%',data: 'DOCUMENTOIDENTIDAD_EPL'},
+                                {width: '17%',data: 'NOMBRE_EPL'},
+                                {width: '20%',data: 'APELLIDO_EPL'},
+                                {width: '20%',data: 'EMAIL_EPL'},
+                                {width: '10%',data: 'CELULAR_EPL'},
+                                {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+                            
+                            ]
+                        })
+                    })
+                </script>
                 @endpush('PageScript')
 @endsection('principal')

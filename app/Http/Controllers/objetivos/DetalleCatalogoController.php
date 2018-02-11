@@ -12,6 +12,7 @@ class DetalleCatalogoController extends Controller
     public function home($id){
         
         $catalogo = ObjetivoHelper::obtenerCatalogo($id);
+        var_dump($catalogo);
         $arrayCatalogo = ObjetivoHelper::obtenerArrayCatalogo($catalogo);
         return view('objetivos.detalleCatalogo')->with($arrayCatalogo);
     }

@@ -16,7 +16,9 @@
                     </div>   
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <div class="col-lg-12">
+                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar<span class="fa fa-ban"></span></button>
+                    </div>
                 </div>
             </div>
         </div>

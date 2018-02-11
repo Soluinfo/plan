@@ -87,5 +87,5 @@ class ProyectoHelper {
     
         return $actividad;
     }
-//fin de funcion obtener
+    //fin de funcion obtener
 }

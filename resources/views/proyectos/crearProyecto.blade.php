@@ -22,6 +22,7 @@
                                 <ul class="nav nav-tabs" role="tablist">
                                     <li class="active"><a href="#tab-informacion" role="tab" data-toggle="tab">Información</a></li>
                                     <li><a href="#tab-objetivo" role="tab" data-toggle="tab">Objetivos estrategicos</a></li>
+                                    <li><a href="#tab-indicador" role="tab" data-toggle="tab">Indicadores</a></li>
                                     <li><a href="#tab-supervisor" role="tab" data-toggle="tab">Supervisores</a></li>
                                 </ul>
                                 <div class="panel-body tab-content">
@@ -119,6 +120,25 @@
                                         <!-- END RESPONSIVE TABLES --> 
                                         
                                     </div>
+                                    <div class="tab-pane" id="tab-indicador">
+                                        <button id="btnAgregarIndicador" class="btn btn-block btn-primary"><span class="fa fa-plus"></span>Agregar supervisor</button>
+                                        <!-- START RESPONSIVE TABLES -->
+                                        @component('componentes.dataTable')
+                                            @slot('titleComponent')
+                                            Indicadores del proyecto
+                                            @endslot
+                                            @slot('idcomponent')
+                                            datatable-indicadorProyecto
+                                            @endslot
+                                            <tr>
+                                                <th width="50">id</th>
+                                                <th width="100" >Indicador</th>
+                                                <th width="100">actions</th>
+                                            </tr>
+
+                                        @endcomponent
+                                        <!-- END RESPONSIVE TABLES --> 
+                                    </div>
                                     <div class="tab-pane" id="tab-supervisor">
                                         <button id="btnAgregarSupervisor" class="btn btn-block btn-primary"><span class="fa fa-plus"></span>Agregar supervisor</button>
                                         <!-- START RESPONSIVE TABLES -->
@@ -169,105 +189,87 @@
                     @slot('titulomodal')
                         Agregar objetivos
                     @endslot
-                    <div class="block">
-                        <div class="panel panel-default">
-                            <div class="panel-body">
-                                <div class=".form-group">
-                                    <label class="col-lg-2 col-md-2 col-sm-3 col-xs-12 control-label">Catalogo objetivos :</label>
-                                    <div class="col-lg-10 col-md-10 col-sm-9 col-xs-12">                                                                                       
-                                        <select class="form-control select" name="slcatalogo" id="slcatalogo" data-live-search="true">
-                                            <option value="">Seleccione catalogo</option>
-                                            @foreach($catalogo as $c)
-                                                <option value="{{ $c->IDCATALOGOOBJETIVO }}">{{ $c->NOMBRE }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-actions" id="datatableOb
-                            jetivos">
-                                <thead>
-                                    <tr>
-                                        <th width="50">id</th>
-                                        <th>literal</th>
-                                        <th>Descripcion</th>
-                                        <th width="100">seleccionar</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="tablaObjetivoSeleccionar">
-                                                                                    
-                                </tbody>
-                            </table>
-                        </div>   
-                    </div>
+                                        
+                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Seleccion catalogo :</label>
+                    <select class="form-control select" name="slcatalogo" id="slcatalogo" data-live-search="true">
+                        <option value="">Seleccione catalogo</option>
+                        @foreach($catalogo as $c)
+                            <option value="{{ $c->IDCATALOGOOBJETIVO }}">{{ $c->NOMBRE }}</option>
+                        @endforeach
+                    </select>
+                    <div style="height:20px"></div>
+                    
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped table-actions" id="datatableObjetivos">
+                            <thead>
+                                <tr>
+                                    <th width="50">id</th>
+                                    <th>literal</th>
+                                    <th>Descripcion</th>
+                                    <th width="100">seleccionar</th>
+                                </tr>
+                            </thead>
+                            <tbody id="">
+                                                                                
+                            </tbody>
+                        </table>
+                    </div>   
+                    
 
                     @endcomponent  
                     
                 <!-- END MODALS --> 
-                <!-- MODALS -->        
-                    <div class="modal" id="modalSupervisor" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                                    <h4 class="modal-title" id="defModalHead">Agregar supervisor</h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            
-                                           
-                                                <div class="panel-body panel-body-table">
+                <!-- MODALS -->  
+                    @component('componentes.modal')
+                        @slot('idmodal')
+                            modalSupervisor
+                        @endslot
+                        @slot('tamanomodal')
+                            modal-lg
+                        @endslot
+                        @slot('titulomodal')
+                            Agregar supervisor
+                        @endslot
+                        <div class="col-md-12">     
+                            <div class="panel-body panel-body-table">
 
-                                                    <div class="table-responsive">
-                                                        <table class="table table-bordered table-striped table-actions datatable">
-                                                            <thead>
-                                                                <tr>
-                                                                    <th width="50">id</th>
-                                                                    <th>Cedula</th>
-                                                                    <th>Nombres</th>
-                                                                    <th width="100">Apellidos</th>
-                                                                    <th width="100">Email</th>
-                                                                    <th width="100">Celular</th>
-                                                                    <th width="100">seleccionar</th>
-                                                                </tr>
-                                                            </thead>
-                                                            <tbody>
-                                                                @foreach($supervisores as $s)                                          
-                                                                    <tr id="trow_{{$s->SERIAL_EPL}}">
-                                                                        <td class="text-center">{{$s->SERIAL_EPL}}</td>
-                                                                        <td>{{$s->DOCUMENTOIDENTIDAD_EPL}}</td>
-                                                                        <td>{{$s->NOMBRE_EPL}}</td>
-                                                                        <td>{{$s->APELLIDO_EPL}}</td>
-                                                                        <td>{{$s->EMAIL_EPL}}</td>
-                                                                        <td>{{$s->CELULAR_EPL}}</td>
-                                                                        <td>
-                                                                            <a class="btn btn-primary btn-xs" onclick="asignarSupervisor({{$s->SERIAL_EPL}});" ><i class="fa fa-plus"></i>Agregar</a>
-    
-                                                                        </td>
-                                                                    </tr>
-                                                                @endforeach
-                                                               
-                                                            </tbody>
-                                                        </table>
-                                                    </div>                                
+                                <div class="table-responsive">
+                                    <table class="table table-bordered table-striped table-actions datatable">
+                                        <thead>
+                                            <tr>
+                                                <th width="50">id</th>
+                                                <th>Cedula</th>
+                                                <th>Nombres</th>
+                                                <th width="100">Apellidos</th>
+                                                <th width="100">Email</th>
+                                                <th width="100">Celular</th>
+                                                <th width="100">seleccionar</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($supervisores as $s)                                          
+                                                <tr id="trow_{{$s->SERIAL_EPL}}">
+                                                    <td class="text-center">{{$s->SERIAL_EPL}}</td>
+                                                    <td>{{$s->DOCUMENTOIDENTIDAD_EPL}}</td>
+                                                    <td>{{$s->NOMBRE_EPL}}</td>
+                                                    <td>{{$s->APELLIDO_EPL}}</td>
+                                                    <td>{{$s->EMAIL_EPL}}</td>
+                                                    <td>{{$s->CELULAR_EPL}}</td>
+                                                    <td>
+                                                        <a class="btn btn-primary btn-xs" onclick="asignarSupervisor({{$s->SERIAL_EPL}});" ><i class="fa fa-plus"></i>Agregar</a>
 
-                                                </div>
-                                           
+                                                    </td>
+                                                </tr>
+                                            @endforeach
                                             
-                                        </div>
-                                    </div>   
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                </div>
+                                        </tbody>
+                                    </table>
+                                </div>                                
+
                             </div>
                         </div>
-                    </div>
+                    @endcomponent      
+                    
                 <!-- END MODALS -->
                 <!-- MODALS -->   
                     @component('componentes.modal')
@@ -284,7 +286,49 @@
                         </div>
 
                     @endcomponent
-                <!-- END MODALS -->  
+                <!-- END MODALS -->
+                <!-- MODALS -->  
+                    @component('componentes.modal')
+                        @slot('idmodal')
+                            modalIndicador
+                        @endslot
+                        @slot('tamanomodal')
+                            modal-lg
+                        @endslot
+                        @slot('titulomodal')
+                            Agregar indicador
+                        @endslot
+                                            
+                        <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Seleccion catalogo :</label>
+                        <select class="form-control select" name="slcatalogoindicador" id="slcatalogoindicador" data-live-search="true">
+                            <option value="">Seleccione catalogo</option>
+                            @foreach($catalogoindicador as $c)
+                                <option value="{{ $c->IDCATALOGOINDICADORES }}">{{ $c->NOMBRE }}</option>
+                            @endforeach
+                        </select>
+                        <div style="height:20px"></div>
+                        
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-actions" id="datatableIndicador">
+                                <thead>
+                                    <tr>
+                                        <th width="50">id</th>
+                                      
+                                        <th>Descripcion</th>
+                                        <th width="100">seleccionar</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="">
+                                                                                    
+                                </tbody>
+                            </table>
+                        </div>   
+                    
+
+                    @endcomponent  
+                    
+                <!-- END MODALS -->
+
                 @push('PageScript')
         
                 <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-datepicker.js') }}"></script>
@@ -332,6 +376,7 @@
                                 }
                             });
                     }
+
                     function agregarObjetivos(IDOBJETIVOESTRATEGICO){
                         IDPROYECTO = $("input[name=idproyecto]").val();
                         _token = $("input[name=_token]").val();
@@ -378,34 +423,95 @@
                         })
                         
                     }
+
+                    function eliminarSupervisorProyecto(IDSUPERVISOR,IDPROYECTO){
+                        _token = $("input[name=_token]").val();
+                        noty({
+                            text: 'Esta seguro que desea eliminar el supervisor del proyecto?',
+                            layout: 'topRight',
+                            buttons: [
+                                    {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                        $noty.close();
+                                        $.post("{{ url('/proyectos/eliminarSupervisorObjetivos') }}",{IDSUPERVISOR:IDSUPERVISOR,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                            if(data == 'eliminado'){
+                                                noty({text: 'El supervisor a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                tableSupervisoresProyectos.ajax.reload();
+                                            }else{
+                                                noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
+                                            }
+                                        })
+                                        
+                                        
+                                    }
+                                    },
+                                    {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                        $noty.close();
+                                        noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                        }
+                                    }
+                                ]
+                        })
+                        
+                    }
                
                     $(function (){
                         table = $("#datatableObjetivos").DataTable({
-                                "lengthMenu": [ 5, 10],
-                                "language" : {
-                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
-                                },
-                                "autoWidth": false,
-                                "order": [], //Initial no order
-                                "processing" : true,
-                                "serverSide": true,
-                                "ajax": {
-                                    "url": '{{url("/proyectos/objetivos")}}',
-                                    "type": "post",
-                                    "data": function (d){
-                                        d.idcatalogo = $("#slcatalogo").val();
-                                        d._token = $("input[name=_token]").val();
-                                    }
-                                },
+                            "lengthMenu": [ 5, 10],
+                            "language" : {
+                                "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                            },
+                            "autoWidth": false,
+                            "order": [], //Initial no order
+                            "processing" : true,
+                            "serverSide": true,
+                            "ajax": {
+                                "url": '{{url("/proyectos/objetivos")}}',
+                                "type": "post",
+                                "data": function (d){
+                                    d.idcatalogo = $("#slcatalogo").val();
+                                    d._token = $("input[name=_token]").val();
+                                }
+                            },
+                            
+                            "columns": [
+                                {width: '8%',data: 'IDOBJETIVOESTRATEGICO'},
+                                {width: '8%',data: 'LITERAL'},
+                                {width: '70%',data: 'DESCRIPCION'},
+                                {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
+                            
+                            ]
+                        });
+                        tableindicador = $("#datatableIndicador").DataTable({
+                            "lengthMenu": [ 5, 10],
+                            "language" : {
+                                "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                            },
+                            "autoWidth": false,
+                            "order": [], //Initial no order
+                            "processing" : true,
+                            "serverSide": true,
+                            "ajax": {
+                                "url": '{{url("/proyectos/indicador")}}',
+                                "type": "post",
+                                "data": function (d){
+                                    d.idcatalogo = $("#slcatalogoindicador").val();
+                                    d._token = $("input[name=_token]").val();
+                                }
+                            },
+                            
+                            "columns": [
+                                {width: '10%',data: 'IDINDICADORES'},
                                
-                                "columns": [
-                                    {width: '8%',data: 'IDOBJETIVOESTRATEGICO'},
-                                    {width: '8%',data: 'LITERAL'},
-                                    {width: '70%',data: 'DESCRIPCION'},
-                                    {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
-                                
-                                ]
-                            });
+                                {width: '70%',data: 'DESCRIPCION'},
+                                {width: '20%',data: 'action', name: 'action', orderable: false, searchable: false},
+                            
+                            ]
+                        });
+                        $("#slcatalogoindicador").on("change",function(){
+                            $("#slcatalogoindicador option:selected").each(function(){
+                                tableindicador.ajax.reload();
+                            })
+                        })
                         $("#btnAgregarObjetivo").on("click",function(){
                             IDPROYECTO = $("input[name=idproyecto]").val();
                             if(IDPROYECTO > 0){
@@ -431,6 +537,29 @@
                                 
                             }
                             
+                        })
+                        $("#btnAgregarIndicador").on("click", function(){
+                            IDPROYECTO = $("input[name=idproyecto]").val();
+                            if(IDPROYECTO > 0){
+                                $('#modalIndicador').modal('show')
+                            }else{
+                                /* MESSAGE BOX */
+                                var box = $("#message-box-sound-1");
+                                    if(box.length > 0){
+                                        box.toggleClass("open");
+                                        
+                                        var sound = box.data("sound");
+                                        
+                                        if(sound === 'alert')
+                                            playAudio('alert');
+                                        
+                                        if(sound === 'fail')
+                                            playAudio('fail');
+                                        
+                                    }        
+                                   
+                                /* END MESSAGE BOX */
+                            }
                         })
                         $("#btnAgregarSupervisor").on("click",function(){
                             IDPROYECTO = $("input[name=idproyecto]").val();
@@ -666,6 +795,7 @@
                                     table.ajax.reload();
                                 })
                             })
+                            
                         //end tab agregar objetivos estrategicos
                         //tap para agregar supervisores al proyecto
                             tableSupervisoresProyectos = $("#datatable-supervisorProyecto").DataTable({
@@ -693,6 +823,32 @@
                                     {width: '20%',data: 'EMAIL_EPL'},
                                     {width: '10%',data: 'CELULAR_EPL'},
                                     {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                
+                                ]
+                            })
+                        //end tap para agregar supervisores al proyecto
+                        //tap para agregar supervisores al proyecto
+                        tableIndicadorProyectos = $("#datatable-indicadorProyecto").DataTable({
+                                "lengthMenu": [ 5, 10],
+                                "language" : {
+                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
+                                "order": [], //Initial no order
+                                "processing" : true,
+                                "serverSide": true,
+                                "ajax": {
+                                    "url": '{{ url("/proyectos/obtenerIndicadorProyectos") }}',
+                                    "type": "post",
+                                    "data": function (d){
+                                        d.idproyecto = $("input[name=idproyecto]").val();
+                                        d._token = $("input[name=_token]").val();
+                                    }
+                                },
+                                "columns": [
+                                    {width: '10%',data: 'IDINDICADORES'},
+                                    {width: '70%',data: 'DESCRIPCION'},
+                                    {width: '20%',data: 'action', name: 'action', orderable: false, searchable: false},
                                 
                                 ]
                             })

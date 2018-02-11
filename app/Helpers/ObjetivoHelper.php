@@ -194,4 +194,13 @@ class ObjetivoHelper {
         return $datosDeCatalogo;
     }
 
+    public static function obtenerObjetivosDeProyecto($idproyecto){
+        $objetivosProyecto = Objetivo::join('proyectosobjetivos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','proyectosobjetivos.IDOBJETIVOESTRATEGICO')
+                                    ->where('proyectosobjetivos.IDPROYECTO', $idproyecto)
+                                    ->select('objetivosestrategicos.*','proyectosobjetivos.*')
+                                    ->get();
+        return $objetivosProyecto;
+        
+    }
+
 }
