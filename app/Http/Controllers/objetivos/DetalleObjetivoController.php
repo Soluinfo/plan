@@ -23,9 +23,9 @@ class DetalleObjetivoController extends Controller
         }
     }*/
 
-    public function obtenerDetalleAmbito(Request $r){
+    public function editarDetalleAmbito(Request $r){
         if($r->ajax()){
-            $tabla = ObjetivoHelper::obtenerAmbito($r->IDOBJETIVOESTRATEGICO);
+            $tabla = ObjetivoHelper::editarAmbito($r->IDAMBITOINFLUENCIA);
             echo $tabla;
         }
     }

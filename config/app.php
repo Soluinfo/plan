@@ -123,7 +123,8 @@ return [
     'log' => env('APP_LOG', 'single'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
-
+    
+    
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -163,6 +164,8 @@ return [
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
 
+        
+
         /*
          * Package Service Providers...
          */
@@ -170,6 +173,8 @@ return [
         Laraveles\Spanish\SpanishServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+       
+        
         /*
          * Application Service Providers...
          */
@@ -178,6 +183,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        //Elibyy\TCPDF\ServiceProvider::class,
+       
 
     ],
 
@@ -193,6 +202,7 @@ return [
     */
 
     'aliases' => [
+        
 
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
@@ -230,7 +240,10 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-       
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        //'PDF' => Elibyy\TCPDF\Facades\TCPDF::class,
+        
+        
     ],
 
 ];

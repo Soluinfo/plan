@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Catalogoobjetivo;
+use App\Objetivo;
 
 
 class CatalogoController extends Controller
@@ -117,7 +118,26 @@ class CatalogoController extends Controller
            
           Session::flash('message','Catalogo eliminado correctamente');
           return view('objetivos.objetivos');
-            }*/
+        }*/
+
+        public function datatablesCataObjetivos(Request $r){
+            if($r->ajax()){
+                $datoscatalogo = Objetivo::join('catalogoobjetivos', 'catalogoobjetivos.IDCATALOGOOBJETIVO', '=', 'objetivosestrategicos.IDCATALOGOOBJETIVO')
+                                                    ->where('objetivosestrategicos.IDCATALOGOOBJETIVO', '=' ,$r->idcatalogoobjetivo)
+                                                    ->select('objetivosestrategicos.IDOBJETIVOESTRATEGICO', 
+                                                    'objetivosestrategicos.DESCRIPCION',
+                                                    'objetivosestrategicos.LITERAL')
+                                                    ->get();
+                                                
+                return Datatables($datoscatalogo)
+                 ->addColumn('action', function ($datoscatalogo) {
+                    return '<a onclick="obtenerDetalleActividad('.$datoscatalogo->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                            <a onclick=class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
+                            <a onclick="agregarObjetivos('.$datoscatalogo->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                })
+                ->make(true);
+            }
+        }
                     
     }
 

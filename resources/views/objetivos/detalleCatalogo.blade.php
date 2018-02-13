@@ -20,12 +20,13 @@
                         <div class="col-md-12">
                             <div class="panel panel-default tabs">                            
                                 <ul class="nav nav-tabs" role="tablist">
-                                    <li class="active"><a href="#tab-informacion" role="tab" data-toggle="tab">Información de Catalogo</a></li>
-                                   
+                                <li class="active"><a href="#tab-informacion" role="tab" data-toggle="tab">Información de Catalogo</a></li>
+                                    <li><a href="#tab-informacion-objetivo" role="tab" data-toggle="tab">Objetivos del Catalogo</a></li>
+
                                 </ul>
                                 <div class="panel-body tab-content">
                                     <div class="tab-pane active" id="tab-informacion">
-                                        <div class="col-md-4">
+                                        <div class="col-md-6">
 
                                             <!-- DEFAULT LIST GROUP -->
                                             <div class="panel panel-default">
@@ -37,7 +38,6 @@
                                                         <li class="list-group-item"><strong>codigo : </strong> {{$IDCATALOGOOBJETIVO}}</li>
                                                         <li class="list-group-item"><strong>Nombre de Catalogo : </strong> {{$NOMBRE}}</li>
                                                         <li class="list-group-item"><strong>Fecha : </strong> {{$FECHA}}</li>
-                                                        <li class="list-group-item"><strong>Objetivos : </strong> {{$DESCRIPCION}}</li>
 
 
                                                         <li class="list-group-item"><strong>Estado : </strong>
@@ -52,9 +52,9 @@
                                             </div>
                                             <!-- END DEFAULT LIST GROUP -->
                                             {{ csrf_field() }}
-                                            <input type="hidden" name="idcatalogo" value="{{$IDCATALOGOOBJETIVO or 0}}">
+                                            <input type="hidden" name="idcatalogoobjetivo" value="{{$IDCATALOGOOBJETIVO or 0}}">
                                         </div>
-                                        <div class="col-md-4">                                          
+                                        <div class="col-md-6">                                          
 
                                         </div>
                                         <div class="col-lg-4">
@@ -69,19 +69,32 @@
                                                         <li class="list-group-item"><strong>Nombre : </strong> Diego</li>
                                                         <li class="list-group-item"><strong>Apellidos : </strong> Bermudez Saenz</li>
                                                        
-                                                        <li class="list-group-item"><strong>Fecha de creacion :</strong>{{$created_at}}</li>
-                                                        <li class="list-group-item"><strong>Fecha de actualizacion :</strong>{{$updated_at}}</li>
+                                                        <li class="list-group-item"><strong>Fecha de creacion : </strong>{{$created_at}}</li>
+                                                        <li class="list-group-item"><strong>Fecha de actualizacion : </strong>{{$updated_at}}</li>
                                                     </ul>                                
                                                 </div>
                                             </div>
                                             <!-- END DEFAULT LIST GROUP -->
                                         </div>
                                     </div>
-                                   
-                                   
+                                    <div class="tab-pane" id="tab-informacion-objetivo">
+                                    
+                                        @component('componentes.dataTable')
+                                            @slot('titleComponent')
+                                            Objetivos del Catalogo
+                                            @endslot
+                                            @slot('idcomponent')
+                                            datatableObjetivosCatalogo
+                                            @endslot
+                                            <tr>
+                                            <th width="50">id</th>
+                                            <th>Objetivo</th>
+                                            <th>Literal</th>
+                                            <th width="100">Accion</th>
+                                            </tr>
 
-                                    
-                                    
+                                        @endcomponent  
+                                    </div>  
                                 </div>
                             </div>   
                         </div>
@@ -103,28 +116,36 @@
                         
                         
                         $(function(){
-                            var $input = $("#progreso");
                             
-
-                            var knobEnabled = false;
-                            var knobPreviousValue = $input.val();
-
-                            $input.knob({
-                                draw: function () { 
-                                    if (knobPreviousValue === $input.val()) {
-                                    return;
-                                    }
-
-                                    if (!knobEnabled) {
-                                    $input.val(knobPreviousValue).trigger("change");
-                                    return;
-                                    }
-
-                                    knobPreviousValue = $input.val();
-
-                                },
-                            });
-
+//tap para agregar objetivos estrategicos
+                                tableCatalogoObjetivos = $("#datatableObjetivosCatalogo").DataTable({
+                                    "lengthMenu": [ 5, 10],
+                                    "language" : {
+                                        "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                    },
+                                    "autoWidth": false,
+                                    "order": [], //Initial no order
+                                    "processing" : true,
+                                    "serverSide": true,
+                                    "ajax": {
+                                        "url": '{{ url("/catalogo/datatableCataloObjetivos") }}',
+                                        "type": "post",
+                                        "data": function (d){
+                                            d.idcatalogoobjetivo = $("input[name=idcatalogoobjetivo]").val();
+                                            d._token = $("input[name=_token]").val();
+                                        }
+                                    },
+                                    //"columnDefs": [{ targets: [3], "orderable": false}],
+                                    "columns": [
+                                        {width: '15%',data: 'IDOBJETIVOESTRATEGICO'},
+                                        {width: '50%',data: 'DESCRIPCION'},
+                                        {width: '20%',data: 'LITERAL'}, 
+                                        {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                    
+                                    ]
+                                });
+                            //end tap para agregar ambitos de objetivos estrategicos
+                            
                            
                             
                             

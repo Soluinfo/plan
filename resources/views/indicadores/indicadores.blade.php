@@ -45,7 +45,7 @@
                                         <tr>      
                                             <td width="8%">{{ $p->IDINDICADORES }}</td>
                                             <td width="8%">{{ $p->LITERAL }}</td>
-                                            <td width="40%">{{ $p->DESCRIPCION }}</td>
+                                            <td width="40%">{{ $p->DESCRIPCIONINDICADOR }}</td>
                                             <td width="34%">{{ $p->NOMBRE }}</td>
                                             
                                             <td width="10%">

@@ -22,4 +22,11 @@ class DetalleProyectoController extends Controller
             echo $tabla;
         }
     }
+    public function Exportarpdf($id){
+        $arrayProyectoPDF = array();
+        $ProyectosPDF = ProyectoHelper::obtenerProyectos($id);
+        $arrayProyectoPDF = ProyectoHelper::obtenerArrayProyecto($ProyectosPDF);
+        return view('proyectos.reportepdf')->with($arrayProyectoPDF);
+    }
+
 }

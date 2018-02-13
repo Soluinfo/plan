@@ -55,6 +55,8 @@ Route::get('/crearobjetivos/{id?}', 'objetivos\ObjetivosController@crear');
 Route::post('/objetivos/guardar', 'objetivos\ObjetivosController@guardar');
 Route::get('/objetivos/eliminar{id}', 'objetivos\ObjetivosController@destroy');
 
+Route::post('/ambito/editar', 'objetivos\DetalleObjetivoController@editarDetalleAmbito');
+
 Route::post('/ambito/guardara', 'objetivos\ObjetivosController@guardarambito');
 Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralcance');
 
@@ -66,14 +68,16 @@ Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
 Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
 
 Route::get('/catalogo/detalleCatalogo/{id}','objetivos\DetalleCatalogoController@home');
+Route::post('/catalogo/datatableCataloObjetivos','objetivos\CatalogoController@datatablesCataObjetivos');
 
 //rutas de indicadores
 Route::get('/indicadores', 'indicadores\IndicadorController@home');
 Route::get('/crearindicadores/{id?}', 'indicadores\IndicadorController@crear');
 Route::post('/crearindicadores/guardar', 'indicadores\IndicadorController@guardar');
 Route::get('/indicadores/detalleIndicador/{id}','indicadores\DetalleIndicadorController@home');
+Route::post('/indicadores/datatableIndicadorActividad','proyectos\ActividadController@datatablesIndicador');
 
-Route::post('/indicadores/datatableActividadesIndicadores','indicadores\IndicadorController@datatableActividadesIndicadores');
+Route::post('/indicadores/datatableActividadIndicador','indicadores\IndicadorController@datatablesActividades');
 
 Route::get('/catalogoindicadores', 'indicadores\CatalogoIndicadorController@home');
 Route::get('/catalogo/crear{id?}', 'indicadores\CatalogoIndicadorController@crear');
@@ -82,13 +86,18 @@ Route::post('/crearcatalogoindicador/guardar', 'indicadores\CatalogoIndicadorCon
 Route::get('/actividades', 'proyectos\ActividadController@inicio');
 Route::get('/crearactividad/{id?}', 'proyectos\ActividadController@crear');
 Route::post('/crearactividades/guardar', 'proyectos\ActividadController@guardar');
+Route::post('/actividad/reprogramar', 'proyectos\ActividadController@guardaractividadFechas');
+Route::post('/indicadores/reproActividades','proyectos\ActividadController@datatablesReproActividad');
 
-Route::post('/actividades/obtenerResponsableActividades','proyectos\ActividadController@obtenerResponsablesDeActividad');
+Route::get('/proyectos/reporteexcel','proyectos\ProyectoController@ExportarExcel');
+Route::get('/proyectos/reporteexcelid/{id?}','proyectos\ProyectoController@ExportarExcelId');
+Route::get('/proyectos/reportepdf/{id}','proyectos\ProyectoController@Exportarpdf');
 
-Route::post('/actividades/datatableActividad','proyectos\ActividadController@datatableActividad');
+
+//Route::post('/actividades/datatableActividad','proyectos\ActividadController@datatableActividad');
 Route::post('/actividades/asignarResponsableActividad','proyectos\ActividadController@asignarResponsable');
 Route::post('/actividades/ObtenerResponsablesDeActividad','proyectos\ActividadController@obtenerResponsablesDeActividad');
-
+Route::get('/actividades/detalleActividad/{id}','proyectos\DetalleActividadController@home');
 
 
 
@@ -103,5 +112,9 @@ Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
 Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
 
 Route::get('/catalogo/detalleCatalogo/{id}','objetivos\DetalleCatalogoController@home');
+
+Route::get('/proyectos/pdf', 'proyectos\ProyectoController@reportepdfcompleto');
+
+
 
 

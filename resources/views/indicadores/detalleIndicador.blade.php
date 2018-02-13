@@ -36,14 +36,15 @@
                                                     <ul class="list-group border-bottom">
                                                         <li class="list-group-item"><strong>codigo : </strong> {{$IDINDICADORES}}</li>
                                                         <li class="list-group-item"><strong>Literal : </strong> {{$LITERAL}}</li>
-                                                        <li class="list-group-item"><strong>Indicador : </strong> {{$DESCRIPCION}}</li>
+                                                        
                                                         <li class="list-group-item"><strong>Catalogo : </strong> {{$NOMBRE}}</li>
 
                                                     </ul>                                
                                                 </div>
                                             </div>
                                             <!-- END DEFAULT LIST GROUP -->
-                                          
+                                            {{ csrf_field() }}
+                                        <input type="hidden" name="idindicador" value="{{ $IDINDICADORES or '0'}}"> 
                                         </div>
 
                                         <div class="col-lg-4">
@@ -76,6 +77,7 @@
                                             @endslot
                                             <tr>
                                                 <th width="50">id</th>
+                                                
                                                 <th>Nombre Actividad</th>
                                                 <th width="100">Accion</th>
                                             </tr>
@@ -97,7 +99,7 @@
                            
 
                             //tap para agregar objetivos estrategicos
-                                tableActividadesIndicadores = $("#datatableActividadesIndicadores").DataTable({
+                                tableActividadesIndicador = $("#datatableActividadesIndicadores").DataTable({
                                     "lengthMenu": [ 5, 10],
                                     "language" : {
                                         "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
@@ -107,18 +109,19 @@
                                     "processing" : true,
                                     "serverSide": true,
                                     "ajax": {
-                                        "url": '{{ url("/indicadores/datatableActividadesIndicadores") }}',
+                                        "url": '{{ url("/indicadores/datatableActividadIndicador") }}',
                                         "type": "post",
                                         "data": function (d){
-                                            d.idindicador= $("input[name=idindicador]").val();
+                                            d.idindicador = $("input[name=idindicador]").val();
                                             d._token = $("input[name=_token]").val();
                                         }
                                     },
-                                    //"columnDefs": [{ targets: [3], "orderable": false}],
+                                   // "columnDefs": [{ targets: [3], "orderable": false}],
                                     "columns": [
-                                        {width: '8%',data: 'IDACTIVIDAD'},                                      
-                                        {width: '78%',data: 'NOMBREACTIVIDAD'}, 
-                                        {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                        {width: '10%',data: 'IDACTIVIDAD'}, 
+                                                                           
+                                        {width: '75%',data: 'NOMBREACTIVIDAD'}, 
+                                        {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
                                     
                                     ]
                                 });

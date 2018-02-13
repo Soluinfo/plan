@@ -25,7 +25,7 @@ class IndicadorController extends Controller
                 foreach($Indicador as $p){
                     $datosDeIndicador['IDINDICADORES'] = $p->IDINDICADORES;
                     $datosDeIndicador['LITERAL'] = $p->LITERAL;
-                    $datosDeIndicador['DESCRIPCION'] = $p->DESCRIPCION;
+                    $datosDeIndicador['DESCRIPCIONINDICADOR'] = $p->DESCRIPCIONINDICADOR;
                     //$datosDeObjetivo['ALCANCE'] = $p->ALCANCE;
                     $datosDeIndicador['IDCATALOGOINDICADORES'] = $p->IDCATALOGOINDICADORES;
                 }
@@ -50,7 +50,7 @@ class IndicadorController extends Controller
                                     ->update([
                                     'IDCATALOGOINDICADORES' => $r->slidcatalogo,
                                     'LITERAL' => $r->txtLiteral,
-                                    'DESCRIPCION' => $r->txtDescripcion
+                                    'DESCRIPCIONINDICADOR' => $r->txtDescripcion
                                    
                                     ]);
                 $datos['respuesta'] = 'ok';
@@ -60,7 +60,7 @@ class IndicadorController extends Controller
                     $indicador = new Indicador(array(
                         'IDCATALOGOINDICADORES' => $r->slidcatalogo,
                         'LITERAL' => $r->txtLiteral,
-                        'DESCRIPCION' => $r->txtDescripcion
+                        'DESCRIPCIONINDICADOR' => $r->txtDescripcion
                         
                     ));
                     $indicador->save();
@@ -86,23 +86,23 @@ public function obtener($id = null){
     return $indicadores;
 }
 
-public function datatableActividadesIndicadores(Request $r){
+public function datatablesActividades(Request $r){
     if($r->ajax()){
         $datosactividad = Actividad::join('indicadores', 'indicadores.IDINDICADORES', '=', 'actividades.IDINDICADORES')
                                             ->where('actividades.IDINDICADORES', '=' ,$r->idindicador)
-                                            ->select('actividades.IDACTIVIDAD','indicadores.DESCRIPCION','actividades.NOMBREACTIVIDAD')
+                                            ->select('actividades.IDACTIVIDAD', 'actividades.NOMBREACTIVIDAD')
                                             ->get();
                                         
         return Datatables($datosactividad)
          ->addColumn('action', function ($datosactividad) {
-            return '<a onclick="obtenerDetalleSupervisor('.$datosactividad->IDACTIVIDAD.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+            return '<a onclick="obtenerDetalleActividad('.$datosactividad->IDACTIVIDAD.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
                     <a onclick=class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
-                    <a onclick="agregarObjetivos('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                    <a onclick="agregarObjetivos('.$datosactividad->IDACTIVIDAD.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
         })
         ->make(true);
     }
 }
-
+//actividades del indicador
 
 
 }

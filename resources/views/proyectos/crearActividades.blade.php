@@ -34,31 +34,31 @@
                                         <div class="form-group">
                                             <label class="col-md-3 col-xs-12 control-label">Nombre</label>
                                             <div class="col-md-6 col-xs-12">                                                                                                                                                        
-                                                <input type="text" class="form-control" name="txtNombre" placeholder="Ejemplo A" value="<?php if(isset($LITERAL)){echo $LITERAL;} ?>"/>                                                    
+                                                <input type="text" class="form-control" name="txtNombre" placeholder="Ejemplo A" value="<?php if(isset($NOMBREACTIVIDAD)){echo $NOMBREACTIVIDAD;} ?>"/>                                                    
                                             </div>
                                         </div>
 
                                         <div class="form-group">                                        
                                             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha:</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" name="dpFechaActividad" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>">
+                                                <input type="text" name="dpFechaActividad" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHACREACIONACTIVIDAD)){echo $FECHACREACIONACTIVIDAD;} ?>">
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Indicador</label>
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Catalogo de Indicadores</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                
                                                 <select class="form-control select" name="slIndicador" data-live-search="true">
-                                                    <option value="">seleccione un Indicador</option>
-                                                    @foreach($indicadores as $d)
-                                                        @if( isset($IDINDICADORES))
-                                                            @if($d->IDINDICADORES == $IDINDICADORES)
-                                                            <option selected="selected" value="{{$d->IDINDICADORES}}">{{$d->DESCRIPCION}}</option>
+                                                    <option value="">seleccione catalogo de Indicadores</option>
+                                                    @foreach($catalogoindicadores as $d)
+                                                        @if( isset($IDCATALOGOINDICADORES))
+                                                            @if($d->IDCATALOGOINDICADORES == $IDCATALOGOINDICADORES)
+                                                            <option selected="selected" value="{{$d->IDCATALOGOINDICADORES}}">{{$d->NOMBRE}}</option>
                                                             @else
-                                                            <option value="{{$d->IDINDICADORES}}">{{$d->DESRIPCION}}</option>
+                                                            <option value="{{$d->IDCATALOGOINDICADORES}}">{{$d->NOMBRE}}</option>
                                                             @endif
                                                             @else
-                                                        <option value="{{$d->IDINDICADORES}}">{{$d->DESCRIPCION}}</option>
+                                                        <option value="{{$d->IDCATALOGOINDICADORES}}">{{$d->NOMBRE}}</option>
                                                         @endif
                                                     @endforeach
                                                 </select>
@@ -75,7 +75,7 @@
                                                             @if($d->IDOBJETIVOESTRATEGICO == $IDOBJETIVOESTRATEGICO)
                                                             <option selected="selected" value="{{$d->IDOBJETIVOESTRATEGICO}}">{{$d->DESCRIPCION}}</option>
                                                             @else
-                                                            <option value="{{$d->IDOBJETIVOESTRATEGICO}}">{{$d->DESRIPCION}}</option>
+                                                            <option value="{{$d->IDOBJETIVOESTRATEGICO}}">{{$d->DESCRIPCION}}</option>
                                                             @endif
                                                         @else
                                                         <option value="{{$d->IDOBJETIVOESTRATEGICO}}">{{$d->DESCRIPCION}}</option>
@@ -106,10 +106,10 @@
                                             @endslot
                                             <tr>
                                             <th width="50">id</th>
-                                            <th width="100">Actividad</th>
+                                            
                                             <th width="100" >Fecha de Inicio</th>
                                             <th width="100">Fecha de Entrega</th>
-                                            <th width="100">Progeso Actividad</th>
+                                            
                                             <th width="100">Estado</th>
                                             <th width="100">Accion</th>
                                             </tr>
@@ -208,26 +208,61 @@
                         </div>
                         <div class="modal-body">
                             <div class="row">
-                                <div class="col-md-12">
-                                    <div class="form-group">                                        
-                                        <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha de inicio:</label>
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" name="dpFechaActividad" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>">
+                                <div class="block">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+                                        {!! Form::open(['url' => 'actividad/reprogramar', "name" => "formReprogramacion", "id" => "formReprogramacion","class" => "form-horizontal", "role" => "form"])!!}
+
+                                            <div class="form-group">                                        
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha de inicio:</label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" name="dpFechaInicialActividad" id="dpFechaInicialActividad" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAINICIALACTIVIDAD)){echo $FECHAINICIALACTIVIDAD;} ?>">
+                                                </div>
+                                            </div>
+
+                                            <div class="form-group">                                        
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha final:</label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                    <input type="text" name="dpFechaFinalActividad" id="dpFechaFinalActividad" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAFINALACTIVIDAD)){echo $FECHAFINALACTIVIDAD;} ?>">
+                                                </div>
+                                            </div>
+
+                                                <div class="form-group">
+                                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Estado Actividad:</label>
+                                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                            
+                                                    <select class="form-control select" name="slEstado" id="slEstado" value="<?php if(isset($ESTADOACTIVIDADFECHA)){echo $ESTADOACTIVIDADFECHA;}?>">
+                                                        <option value="">Seleccione estado</option>
+                                                        @if( isset($ESTADOACTIVIDADFECHA))
+                                                            @if($ESTADOACTIVIDADFECHA == 1)
+                                                            <option selected="selected" value="1">RETRASADO</option>
+                                                            <option value="2">EN PROGRESO</option>
+                                                            @else
+                                                            <option value="1">RETRASADO</option>
+                                                            <option selected="selected" value="2">EN PROGRESO</option>
+                                                            @endif
+                                                        @else
+                                                        <option value="1">RETRASADO</option>
+                                                        <option value="2">EN PROGRESO</option>
+                                                        @endif
+                                                        
+                                                    </select>
+                                                    
+                                                </div>
+                                            
+
+                                            </div>
+                                           
+                                       
+                                        </form>
                                         </div>
                                     </div>
-
-                                    <div class="form-group">                                        
-                                        <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha final:</label>
-                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                            <input type="text" name="dpFechaActividad" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>">
-                                        </div>
-
-                                    </div>
-                                    <button id="btnGuardarActividad" class="btn btn-primary pull-right">Guardar Actividad<span class="fa fa-floppy-o fa-right"></span></button>
-
-                                </div>
+                                </div> 
                             </div>   
                         </div>
+                        <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                                                <button id="btnGuardarReprogramacionActividad" class="btn btn-primary pull-right">Guardar Actividad<span class="fa fa-floppy-o fa-right"></span></button>
+                                            </div>
                     </div>
                 </div>   
             </div>
@@ -265,9 +300,7 @@
      /////////////////////////////////////////////////////////////////////////////
 //inicio de la funcion para validar el formulario de crear catalogo de objetivos///
 //////////////////////////////////////////////////////////////////////////////
-
-$(document).ready(function(){
-    $("#btnAgregarResponsable").on("click",function(){
+$("#btnAgregarResponsable").on("click",function(){
         IDACTIVIDAD = $("input[name=idactividad]").val();
         if(IDACTIVIDAD > 0){
             $('#modalResponsable').modal('show')
@@ -291,8 +324,37 @@ $(document).ready(function(){
         }
         
     })
+//tap para reprogramar actividades
+tableResprogramarActividades = $("#datatable-reprogramarActividad").DataTable({
+        "lengthMenu": [ 5, 10],
+        "language" : {
+            "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+        },
+        "autoWidth": false,
+        "order": [], //Initial no order
+        "processing" : true,
+        "serverSide": true,
+        "ajax": {
+            "url": '{{ url("/actividad/reprogramar") }}',
+            "type": "post",
+            "data": function (d){
+                d.idactividad = $("input[name=idactividad]").val();
+                d._token = $("input[name=_token]").val();
+            }
+        },
+        //"columnDefs": [{ targets: [5], "orderable": false}],
+        "columns": [
+            {width: '10%',data: 'IDACTIVIDADFECHAFINAL'},
+            {width: '25%',data: 'FECHAINICIALACTIVIDAD'},
+            {width: '25%',data: 'FECHAFINALACTIVIDAD'},
+            {width: '25%',data: 'ESTADOACTIVIDADFECHA'},
+            {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+        
+        ]
+    });
+//end tap para agregar objetivos estrategicos
 
-    $("#btnProgramarActividad").on("click",function(){
+$("#btnProgramarActividad").on("click",function(){
         IDACTIVIDAD = $("input[name=idactividad]").val();
         if(IDACTIVIDAD > 0){
             $('#modalReprogramarActividad').modal('show')
@@ -316,8 +378,8 @@ $(document).ready(function(){
         }
         
     })
-            //tap para agregar supervisores al proyecto
-        tableResponsableActividad = $("#datatable-responsableActividad").DataTable({
+     //tap para agregar supervisores al proyecto
+     tableResponsableActividad = $("#datatable-responsableActividad").DataTable({
                                 "lengthMenu": [ 5, 10],
                                 "language" : {
                                     "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
@@ -345,8 +407,8 @@ $(document).ready(function(){
                                 
                                 ]
                             })
-                        //end tap para agregar supervisores al proyecto       
-                   
+                        //end tap para agregar supervisores al proyecto 
+                        
                         function asignarResponsable(IDRESPONSABLE){
                             IDACTIVIDAD = $("input[name=idactividad]").val();
                             _token = $("input[name=_token]").val();
@@ -365,7 +427,12 @@ $(document).ready(function(){
                                     noty({text: '!Error: Fallo la transaccion', layout: 'topRight', type: 'error'});
                                 }
                             });
-                    }
+                    }      
+
+   
+
+           
+                   
    //variables para el wizard
    $("#btnGuardarActividad").on("click",function(){
     datos = $("#formActividad").validate({
@@ -375,7 +442,7 @@ $(document).ready(function(){
             txtNombre: {
                 required: true,
                 
-                maxlength:50
+                maxlength:500
     
             },
             dpFechaActividad : {
@@ -493,11 +560,142 @@ $("#formActividad").on("submit", function(e) {
         })
     })
 
+   //variables para el wizard
+$("#btnGuardarReprogramacionActividad").on("click",function(){
+       datos = $("#formReprogramacion").validate({
+           ignore: ":hidden:not(select)",
+           
+           rules: {
+               
+            dpFechaInicialActividad: {
+                   required: true,                
+           },
+           dpFechaFinalActividad: {
+                   required: true,                
+           },
+           slEstado : {
+            required: true
+            }
+           },
+           highlight: function (element) {
+                                        $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+                                        
+                                
+                                    },
+                                    unhighlight: function (element) {
+                                        $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+                                        
+
+                                    },
+           messages: {
+              
+            dpFechaInicialActividad: {
+                   required: "El campo Fecha inicial es requerido",
+               },
+               dpFechaFinalActividad: {
+                   required: "El campo Fecha final es requerido",
+               },
+               slEstado: {
+                required: "El campo [Estado] es requerido"
+                }
+               
+           },
+           success: function ( label, element ) {
+               
+               var element2 = label.siblings('div'); 
+                                 
+               if(element2.hasClass('btn-group')){
+                   element2.attr("class","btn-group bootstrap-select form-control select valid");
+               }
+               
+           },
+           errorPlacement: function (error, element) {
+               console.log('error');
+               var element2 = element.siblings('div'); 
+               var element3 = element.siblings('span'); 
+               
+               if (element2.hasClass('btn-group')) {
+                   element2.attr("class","btn-group bootstrap-select form-control select error");
+                   error.insertAfter(element2);
+               } else {
+                   
+                   element3.hide();
+                   error.insertAfter(element);
+                   
+               }
+               
+           }
+           
+       });
+       $('select.select').on('change', function () {
+           datos.element($(this));
+           element = $(this);
+           var element2 = element.siblings('div'); 
+           if(element.val() > 0){
+               console.log('mayor a cero');
+           }else{
+               if (element2.hasClass('btn-group')) {
+                   element2.attr("class","btn-group bootstrap-select form-control select error");
+                   error.insertAfter(element2);
+               }
+           }
+           
+       })
+      
+      
+       if(datos.form() == true){
+           $("#formReprogramacion").submit(); 
+       }
+       
+   })
+   
+  
+   //ajax guardar informacion proyecto
+       $("#formReprogramacion").on("submit", function(e) {
+           var idactividad = $("input[name=idactividad]").val();
+           var dpFechaInicialActividad =   $("#dpFechaInicialActividad").val();
+           var dpFechaFinalActividad =   $("#dpFechaFinalActividad").val();
+           var slEstado =   $("#slEstado").val();
+           var _token = $("input[name=_token]").val();
+           e.preventDefault();
+           $.ajax({
+               url: $(this).attr("action"),
+               type: $(this).attr("method"),
+               data: {idactividad:idactividad, dpFechaInicialActividad:dpFechaInicialActividad, dpFechaFinalActividad:dpFechaFinalActividad, slEstado:slEstado, _token:_token },
+               dataType : 'json',
+               beforeSend : function(){
+                   $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
+               },
+               success : function(data){
+                   if(data.respuesta == 'ok'){
+                       $("input[name=idactividadfechafinal]").val(data.codigo);
+                       if(data.transaccion == 'guardar'){
+                           noty({text: 'Fechas de Actividad creadas con exito', layout: 'topRight', type: 'success'});
+                       }else{
+                           noty({text: 'Fechas de Actividad actualizadas con exito', layout: 'topRight', type: 'success'});
+                       }
+                       tableResprogramarActividades.ajax.reload();
+                   }
+                   $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                   $.mpb('destroy');
+               },
+               error : function(xhr,estado){
+                   $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                   $.mpb('destroy');
+                   alert("!Error "+xhr.status+", reportelo al centro de computo");
+                   
+               }
+           })
+       });
+
        //ALCANCE 
+
+   
+//end ajax
 
  
 
-});
+
 </script>   
 
 

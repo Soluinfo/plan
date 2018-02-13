@@ -105,6 +105,13 @@ class ObjetivoHelper {
                                             ->get();
         return $ambitoinfluencia;
     }
+    public static function editarAmbito($IDAMBITOINFLUENCIA){
+        $ambitoinfluencia = Ambitoinfluencia::where('IDAMBITOINFLUENCIA',$IDAMBITOINFLUENCIA)
+                                            ->select('ambitosinfluencias.NOMBREAMBITO')
+                                            ->get();
+                                            
+        return $ambitoinfluencia;
+    }
 
     public static function obtenerAlcance($IDOBJETIVOESTRATEGICO){
         $alcance = Alcance::where('IDOBJETIVOESTRATEGICO',$IDOBJETIVOESTRATEGICO)

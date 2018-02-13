@@ -42,20 +42,21 @@
                                                 <th>Nombre de Actividad</th>
                                                 <th>Fecha creacion</th>
                                                 <th>Indicador</th>
+                                                <th>Objetivo</th>
                                                 <th>Accion</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                         @foreach($actividades as $p)
                                             <tr>
-                                                <td>{{ $p->IDACTIVIDAD }}</td>
-                                                <td>{{ $p->NOMBREACTIVIDAD }}</td>
-                                                <td>{{ $p->FECHACREACIONACTIVIDAD }}</td>
-                                               
-                                                <td>{{ $p->DESCRIPCION }}</td>
+                                            <td width="10%">{{ $p->IDACTIVIDAD }}</td>
+                                            <td width="15%">{{ $p->NOMBREACTIVIDAD }}</td>
+                                            <td width="15%">{{ $p->FECHACREACIONACTIVIDAD }}</td>  
+                                            <td width="20%">{{ $p->DESCRIPCIONINDICADOR }}</td>
+                                            <td width="25%">{{ $p->DESCRIPCION }}</td>
                                               
                                                 <td>
-                                                    <a href="{{ action('proyectos\DetalleProyectoController@home',$p->IDPROYECTO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
+                                                    <a href="{{ action('proyectos\DetalleActividadController@home',$p->IDACTIVIDAD) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
                                                     <a href="{{ action('proyectos\ActividadController@crear',$p->IDACTIVIDAD) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
                                                     <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
                                                 </td>

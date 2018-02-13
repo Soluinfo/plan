@@ -39,7 +39,7 @@
                                         <div class="form-group">
                                             <label class="col-md-3 col-xs-12 control-label">Descripcion</label>
                                             <div class="col-md-6 col-xs-12">                                            
-                                                <input type="text" class="form-control" name="txtDescripcion" value="<?php if(isset($DESCRIPCION)){echo $DESCRIPCION;} ?>"/>
+                                                <input type="text" class="form-control" name="txtDescripcion" value="<?php if(isset($DESCRIPCIONINDICADOR)){echo $DESCRIPCIONINDICADOR;} ?>"/>
                                             </div>
                                         </div> 
 

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\proyectos;
 
 use Illuminate\Support\Facades\DB;
+use Mpdf\Mpdf;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Actividad;
@@ -11,6 +12,10 @@ use App\Empleado;
 use App\Helpers\ProyectoHelper;
 use App\Catalogoindicador;
 use App\Objetivo;
+use App\Proyecto;
+use App\Indicador;
+use App\Ambitoinfluencia;
+use App\ActividadFechaFinal;
 
 class ActividadController extends Controller
 {
@@ -41,11 +46,11 @@ class ActividadController extends Controller
                 }
             }
             
-            $indicador = DB::table('indicadores')->get();
+            $indicador = DB::table('catalogoindicadores')->get();
             $supervisores = $this->obtenerSupervisores(null);
             //$catalogo = $this->obtenerCatalogoIndicador(null);
             $objetivo = $this->obtenerObjetivo(null);
-            return view('proyectos.crearActividades')->with(['indicadores' => $indicador,
+            return view('proyectos.crearActividades')->with(['catalogoindicadores' => $indicador,
                                                             'supervisores' => $supervisores,
                                                             'objetivosestrategicos' => $objetivo])
                                                             ->with($datosDeActividad);
@@ -85,6 +90,41 @@ class ActividadController extends Controller
             echo json_encode($datos);
         }
     }
+    public function guardaractividadFechas(Request $r){
+        if($r->ajax()){
+            $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
+            $idActividadFechaFinal = $r->idactividadfechafinal;
+    
+            if($idActividadFechaFinal > 0){
+                $actividadfechafinal = ActividadFechaFinal::where('IDACTIVIDADFECHAFINAL', $idActividadFechaFinal)
+                                    ->update([
+                                    'IDACTIVIDAD' => $r->idactividad,   
+                                    'FECHAINICIALACTIVIDAD' => $r->dpFechaInicialActividad,
+                                    'FECHAFINALACTIVIDAD'=> $r->dpFechaFinalActividad,
+                                    'ESTADOACTIVIDADFECHA'=> $r->slEstado
+                                    
+                                    
+                                    ]);
+                $datos['respuesta'] = 'ok';
+                $datos['codigo'] = $idActividadFechaFinal;
+                $datos['transaccion'] = 'actualizar';
+                }else{
+                    $actividadfechafinal = new ActividadFechaFinal(array(
+                        'IDACTIVIDAD' => $r->idactividad,   
+                        'FECHAINICIALACTIVIDAD' => $r->dpFechaInicialActividad,
+                        'FECHAFINALACTIVIDAD'=> $r->dpFechaFinalActividad,
+                        'ESTADOACTIVIDADFECHA'=> $r->slEstado
+                        
+                    ));
+                    $actividadfechafinal->save();
+                    $id = $actividadfechafinal->id;
+                    $datos['respuesta'] = 'ok';
+                    $datos['codigo'] = $id;
+                    $datos['transaccion'] = 'guardar';
+                }
+                echo json_encode($datos);
+            }
+        }
 //incion funcion para asignar un supervisor a un proyecto
 public function asignarResponsable(Request $r){
     if($r->ajax()){
@@ -123,17 +163,36 @@ public function asignarResponsable(Request $r){
     }
 }
 //final de funcion verificarSupervisorProyectoExiste
+public function datatablesReproActividad(Request $r){
+    if($r->ajax()){
+        $datosreproactividad = ActividadFechaFinal::join('actividades', 'actividades.IDACTIVIDAD', '=', 'actividadesfechasfinales.IDACTIVIDAD')
+                                            ->where('actividadesfechasfinales.IDACTIVIDAD', '=' ,$r->idactividad)
+                                            ->select('actividadesfechasfinales.IDACTIVIDADFECHAFINAL',
+                                             'actividadesfechasfinales.FECHAINICIALACTIVIDAD',
+                                             'actividadesfechasfinales.FECHAFINALACTIVIDAD',
+                                             'actividadesfechasfinales.ESTADOACTIVIDADFECHA')
+                                            ->get();
+                                        
+        return Datatables($datosreproactividad)
+         ->addColumn('action', function ($datosreproactividad) {
+            return '<a onclick="obtenerDetalleActividad('.$datosreproactividad->IDACTIVIDAD.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                    <a onclick=class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
+                    <a onclick="agregarObjetivos('.$datosreproactividad->IDACTIVIDAD.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+        })
+        ->make(true);
+    }
+}
 
 public function obtener($id = null){
     if($id == null){
-        $actividad = Actividad::join('objetivosestrategicos', 'actividades.IDOBJETIVOESTRATEGICO', '=', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', 'AND', 'actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
+        $actividad = Actividad::join('objetivosestrategicos', 'actividades.IDOBJETIVOESTRATEGICO', '=', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO')
                             
-                            ->select('actividades.*','objetivosestrategicos.*','indicadores')
+                            ->select('actividades.*','objetivosestrategicos.*')
                             ->get();
     }else{
-        $actividad = Actividad::join('objetivosestrategicos', 'actividades.IDOBJETIVOESTRATEGICO', '=', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', 'AND', 'actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
+        $actividad = Actividad::join('objetivosestrategicos', 'actividades.IDOBJETIVOESTRATEGICO', '=', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO')
                             ->where('IDACTIVIDAD',$id)
-                            ->select('actividades.*','objetivosestrategicos.*','indicadores')
+                            ->select('actividades.*','objetivosestrategicos.*')
                             ->get();
     }
    
@@ -187,4 +246,37 @@ public function datatableActividad(Request $r){
                 ->make(true);
 }
 
+public function datatablesIndicador(Request $r){
+    $indicadoractividad = Indicador::join('actividades','actividades.IDINDICADORES','=','indicadores.IDINDICADORES')
+                                            ->where('indicadores.IDINDICADORES', $r->idactividad)
+                                            ->select('indicadores.IDINDICADORES',
+                                                    'indicadores.LITERAL',
+                                                    'indicadores.DESCRIPCION')
+                                                    ->get();
+        return Datatables($indicadoractividad)
+                ->addColumn('action', function ($indicadoractividad) {
+                    return '<a onclick="obtenerDetalleObjetivo('.$indicadoractividad->IDINDICADORES.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                            <a onclick="eliminarObjetivoProyecto('.$indicadoractividad->IDINDICADORES.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                })
+                ->make(true);
 }
+//indicadores de la actividad
+
+    
+    //$supervisor = ProyectoHelper::obtenerSupervisoresDeProyectos(null);
+    //$datos = array_collapse([$proyectos, $supervisor]);
+    //$pdf = $dompdf>page_text(1,1, "{PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
+    //$pdf = App::make('dompdf.wrapper');
+    
+    //$pdf = PDF::get_canvas();
+    //PDF::page_text(1,1, "{PAGE_NUM} of {PAGE_COUNT}", array(0,0,0));
+    //tipo de hoja y orientación
+    //$pdf->page_text(510, 18, "Pág. {PAGE_NUM}/{PAGE_COUNT}", $font, 6, array(0,0,0));
+    //$pdf=PDF::render();
+   
+    //PDF::AddPage();
+    //$pdf->render();
+    //$pdf->setPaper('L', 'landscape');
+    //$pdf = $this->PageNo();
+    
+

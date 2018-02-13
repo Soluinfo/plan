@@ -17,17 +17,36 @@
                     <div class="row">
                         <div class="col-lg-4">
                             <a class="btn btn-block btn-primary" href="{{ url('/proyectos/crear') }}"><span class="fa fa-plus"></span> Nuevo proyecto</a>
+
                         </div>
                         <div class="col-md-12">
                             <!-- START DEFAULT DATATABLE -->
                             <div class="panel panel-default">
                                 <div class="panel-heading">                                
                                     <h3 class="panel-title">Listas de proyectos</h3>
+
                                     <ul class="panel-controls">
                                         <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
                                         <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                                         <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
-                                    </ul>                                
+                                    </ul> 
+                                    <div class="btn-group">
+                                        <button type="button" class="btn btn-info">Seleccione Accion</button>
+                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" id="export-menu">
+                                            <li id="export-to-excel"><a href="{{ url('/proyectos/reporteexcel') }}">Exportar a Excel</a></li>
+                                            
+                                            <li><a target="_blank" href="{{ url('/proyectos/pdf') }}">Exportar a PDF</a></li>
+                                        </ul>
+                                    </div> 
+                                    <!--<a href="{{ url('/proyectos/reporteexcel') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Reporte en Excel <span class="fa fa-plus fa-right"></span></a>
+                                    <a href="{{ url('/actividad/pdf') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">PDF<span class="fa fa-plus fa-right"></span></a>-->
+
+                                    
+
                                 </div>
                                 <div class="panel-body">
                                     <table class="table datatable">
@@ -67,6 +86,9 @@
                                                     <a href="{{ action('proyectos\DetalleProyectoController@home',$p->IDPROYECTO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
                                                     <a href="{{ action('proyectos\ProyectoController@crear',$p->IDPROYECTO) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
                                                     <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
+                                                    <!--<a href="{{ action('proyectos\ProyectoController@ExportarExcelId',$p->IDPROYECTO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Excel!"><span class="fa fa-file-excel-o"></span></a>-->
+                                                    <a href="{{ action('proyectos\ProyectoController@Exportarpdf',$p->IDPROYECTO) }}" target="_blank" type="button" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Reporte PDF!"><span class="fa fa-file-pdf-o"></span></a>
+
                                                 </td>
                                             </tr>
                                             @endforeach

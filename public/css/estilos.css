@@ -1,0 +1,25 @@
+table{
+    color: #333;
+    font-family: Helvetica, Arial, sans-serif;
+    width: 90%;
+    margin:0 auto;
+    border-collapse:
+    collapse; border-spacing: 0;
+    
+}
+    td{ 
+    border: 1px solid #dddddd; height: 10px;
+    
+    } /* Make cells a bit taller */
+
+    th {
+    border: 1px solid #dddddd;
+    
+    /*background-color:#ddd;
+    /*background: #F3F3F3;*/
+    font-weight: bold;
+    height: 12px;
+}
+
+
+

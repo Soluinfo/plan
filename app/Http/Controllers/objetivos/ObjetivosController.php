@@ -127,13 +127,15 @@ public function guardarambito(Request $r){
             if($r->ajax()){
                 $datosambitos = Ambitoinfluencia::join('objetivosestrategicos', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', '=', 'ambitosinfluencias.IDOBJETIVOESTRATEGICO')
                                                     ->where('ambitosinfluencias.IDOBJETIVOESTRATEGICO', '=' ,$r->idobjetivo)
-                                                    ->select('ambitosinfluencias.IDAMBITOINFLUENCIA','objetivosestrategicos.DESCRIPCION','ambitosinfluencias.NOMBREAMBITO')
+                                                    ->select('ambitosinfluencias.IDAMBITOINFLUENCIA',
+                                                    'objetivosestrategicos.DESCRIPCION',
+                                                    'ambitosinfluencias.NOMBREAMBITO')
                                                     ->get();
-                                                
+                                                                                                
                 return Datatables($datosambitos)
                  ->addColumn('action', function ($datosambitos) {
                     return '<a onclick="obtenerDetalleSupervisor('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                            <a onclick=class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
+                            <a onclick="editarDetalleAmbito('.$datosambitos->IDAMBITOINFLUENCIA.')"class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
                             <a onclick="agregarObjetivos('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                 })
                 ->make(true);

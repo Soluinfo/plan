@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\proyectos;
 
 use Illuminate\Support\Facades\DB;
+use Excel;
+use Mpdf\Mpdf;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Proyecto;
@@ -271,4 +273,183 @@ class ProyectoController extends Controller
             echo 'eliminado';          
         }
     }
+    public function ExportarExcel(){
+        
+                   Excel::create('Proyectos', function($excel) {
+                    
+                           $excel->sheet('proyecto', function($sheet)  {
+                           
+                                //$sheet->mergeCells('A1:E1');
+                                
+                                   $sheet->setBorder('A1:F1', 'thin');
+                                
+                                   $sheet->cells('A1:F1', function($cells)
+                                   {
+                                 $cells->setBackground('#C0C0C0');
+                                 $cells->setFontColor('#800000');
+                                 $cells->setAlignment('center');
+                                 $cells->setValignment('center');
+                                });
+                                $sheet->setWidth(array
+                                (
+                                    'A' => '25',
+                                    'B' => '35',
+                                    'C' => '25',
+                                    'D' => '25',
+                                    'E' => '25',
+                                    'F' => '25',
+                                    
+                                )
+                               );
+                            
+                               $sheet->setHeight(array
+                                (
+                                 '1' => '25'
+                                )
+                               ); 
+                            //$sheet->mergeCells('A1:E1');
+                            //$sheet->row(1, ['ejemplo']);
+                            $sheet->row(1, ['Proyecto', 'Departamento', 'Fecha', 'Estado', 'Supervisor']);
+                               //$datos = Proyectosupervisor::all();
+                               $datos = ProyectoHelper::obtenerSupervisoresDeProyecto(null);
+                               $supervisor = ProyectoHelper::obtenerSupervisoresDeProyectos(null);
+                               $datosf = array_collapse([$datos,$supervisor]);
+                               //$obtiene = $datos->$obtiene;
+                               //$datos = $this->obtenerSupervisoresDeProyecto(null);
+                              
+                               
+                               
+                                                                    
+                               foreach ($datosf as $p){
+                                   $row = [];
+                                   $row[0] = $p->NOMBREPROYECTO;
+                                   $row[1] = $p->DESCRIPCION_DEP;
+                                   $row[2] = $p->FECHAPROYECTO;
+                                   $row[3] = $p->ESTADOPROYECTO;
+                                   //$row[4] = $p->NOMBRE_EPL;
+                                   //$row[5] = $p->IDOBJETIVOESTRATEGICO;
+                                   //$row[6] = $p->DESCRIPCION;
+                                   
+                                $sheet->appendRow($row);
+                               }
+                              
+                               
+                               //$datos = Proyecto::select('IDPROYECTO', 'NOMBREPROYECTO', 'FECHAPROYECTO', 'ESTADOPROYECTO', 'IDDEPARTAMENTO')->get();
+                               //$sheet->fromArray($datos);
+        
+                              
+                            
+                           });
+                       })->export('xls');
+                    
+        }
+        public function ExportarExcelId($id){
+            
+                       Excel::create('Proyecto', function($excel) {
+                        
+                               $excel->sheet('proyecto', function($sheet)  {
+                               
+                                    //$sheet->mergeCells('A1:E1');
+                                    
+                                       $sheet->setBorder('A1:F1', 'thin');
+                                    
+                                       $sheet->cells('A1:F1', function($cells)
+                                       {
+                                     $cells->setBackground('#C0C0C0');
+                                     $cells->setFontColor('#800000');
+                                     $cells->setAlignment('center');
+                                     $cells->setValignment('center');
+                                    });
+                                    $sheet->setWidth(array
+                                    (
+                                        'A' => '25',
+                                        'B' => '35',
+                                        'C' => '25',
+                                        'D' => '25',
+                                        'E' => '25',
+                                        'F' => '25',
+                                        
+                                    )
+                                   );
+                                
+                                   $sheet->setHeight(array
+                                    (
+                                     '1' => '25'
+                                    )
+                                   ); 
+                                //$sheet->mergeCells('A1:E1');
+                                //$sheet->row(1, ['ejemplo']);
+                                $sheet->row(1, ['Proyecto', 'Departamento', 'Fecha', 'Estado', 'Supervisor', 'idObjetivo', 'objetivo']);
+                                   //$datos = Proyectosupervisor::all();
+                                   
+                                   $datos = ProyectoHelper::obtenerProyectos($id=null);
+                                   $objetivos = ProyectoHelper::obtenerArrayProyecto($datos);
+                                   $datosfinales = array_collapse([$datos,$objetivos]);
+                                   //$obtiene = $datos->$obtiene;
+                                   //$datos = $this->obtenerSupervisoresDeProyecto(null);
+                                  
+                                    
+                                                                        
+                                   foreach ($datosfinales as $p){
+                                       $row = [];
+                                       $row[0] = $p->NOMBREPROYECTO;
+                                       $row[1] = $p->FECHAPROYECTO;
+                                       $row[2] = $p->DESCRIPCION_DEP;
+                                       
+                                       
+                                    $sheet->appendRow($row);
+                                   }
+                                   
+                                   //$datos = Proyecto::select('IDPROYECTO', 'NOMBREPROYECTO', 'FECHAPROYECTO', 'ESTADOPROYECTO', 'IDDEPARTAMENTO')->get();
+                                   //$sheet->fromArray($datos);  
+                               });
+                           })->export('xls');
+                        
+            }
+//FUNCION PARA EXPORTAR EN FORMATO PDF UN SOLO PROYECTO
+public function Exportarpdf($id){
+    //$arrayProyecto = array();
+    $mpdf = new mPDF();
+    $proyectos = ProyectoHelper::obtenerProyectos($id);
+    //$supervisor = ProyectoHelper::obtenerSupervisores($id);
+    $datosdeproyecto = ProyectoHelper::obtenerObjetivosDeProyecto($id);
+    $datosf = array_collapse([$proyectos,$datosdeproyecto]);
+    //$obtiene = $datos->$obtiene;
+    //$mpdf->SetHeader('Colegio Nacional Cristo Rey|Center Text|');
+    $mpdf->SetFooter('<img src="img/direccion.png" width="700" height="80"/>{PAGENO}');
+    $mpdf->SetTitle('Reportes');
+    //$arrayProyecto = ProyectoHelper::obtenerArrayProyecto($Proyectos);
+   $accion = view('proyectos.reportepdf',['datosf' => $datosf])->render();
+if($accion=='html'){
+    return view('proyectos.reportepdf',['datosf' => $datosf]);
+}else{
+    $html = view('proyectos.reportepdf',['datosf' => $datosf])->render();
 }
+//$html = view('proyectos.reportepdf',['proyectos' => $proyectos])->render();
+$mpdf->writeHTML($html);
+$mpdf->Output("prueba.pdf","I");
+//return view('proyectos.reportepdf',['proyectos' => $proyectos]);
+   
+}
+//FIN DE LA FUNCION PARA EXPORTAR EN PDF UN SOLO PROYECTO
+
+//FUNCION PARA EXPORTAR EN FORMATO PDF LOS PROYECTOS DE FORMA GNERAL
+public function  reportepdfcompleto(){
+    $proyectos = Proyecto::all();
+    $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto(null);
+    $mpdf = new mPDF();
+    //$mpdf->SetHeader('<img src="img/colegio.jpg" width="700" height="80"/>|Center Text|');
+    
+    $mpdf->SetFooter('<img src="img/direccion.png" width="700" height="80"/>{PAGENO}');
+    $mpdf->SetTitle('Reportes');
+$accion = view('proyectos.reportepdfgeneral',['proyectos' => $proyectos])->render();
+if($accion=='html'){
+    return view('proyectos.reportepdfgeneral',['proyectos' => $proyectos]);
+}else{
+    $html = view('proyectos.reportepdfgeneral',['proyectos' => $proyectos])->render();
+}
+    $mpdf->writeHTML($html);
+    $mpdf->Output("Reporte-Proyecto.pdf","I");
+}
+}
+
