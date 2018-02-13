@@ -10,6 +10,7 @@ class Actividad extends Model
     protected $fillable = ['IDACTIVIDAD',
                             'IDOBJETIVOESTRATEGICO',
                             'IDINDICADORES',
+                            'IDPROYECTO',
                             'NOMBREACTIVIDAD',
                             'FECHACREACIONACTIVIDAD',
                             'created_at',

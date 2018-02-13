@@ -13,6 +13,8 @@ use App\Proyectosupervisor;
 use App\Catalogoobjetivo;
 use App\Objetivo;
 use App\Proyectosobjetivos;
+use App\Catalogoindicador;
+use App\Indicador;
 use App\Helpers\ProyectoHelper;
 
 
@@ -36,6 +38,7 @@ class ProyectoController extends Controller
                         $datosDeProyecto['IDPROYECTO'] = $p->IDPROYECTO;
                         $datosDeProyecto['NOMBREPROYECTO'] = $p->NOMBREPROYECTO;
                         $datosDeProyecto['FECHAPROYECTO'] = $p->FECHAPROYECTO;
+                        $datosDeProyecto['FECHAFINAL'] = $p->FECHAFINAL;
                         $datosDeProyecto['ESTADOPROYECTO'] = $p->ESTADOPROYECTO;
                         $datosDeProyecto['SERIAL_DEP'] = $p->SERIAL_DEP;
                     }
@@ -45,9 +48,12 @@ class ProyectoController extends Controller
             $departamentos = DB::table('departamento')->get();
             $supervisores = $this->obtenerSupervisores(null);
             $catalogo = $this->obtenerCatalogoObjetivo(null);
+            $catalogoindicador = $this->obtenerCatalogoIndicador(null);
             return view('proyectos.crearProyecto')->with(['departamento' => $departamentos,
                                                             'supervisores' => $supervisores,
-                                                            'catalogo' => $catalogo])
+                                                            'catalogo' => $catalogo,
+                                                            'catalogoindicador' => $catalogoindicador
+                                                            ])
                                                             ->with($datosDeProyecto);
         }
     //fin de funcion crear
@@ -181,6 +187,13 @@ class ProyectoController extends Controller
             return $catalogoObjetivos;
         }
     //final de funcion obtenerCatalgoObjetivos
+        public function obtenerCatalogoIndicador($id = null){
+            $catalogoIndicador = Catalogoindicador::all();
+            return $catalogoIndicador;
+        }
+    //inicio funcion para obtener catalogos indicadores
+
+    //final funcion para obtener catalogos indicadores
   
     public function datatableObjetivo(Request $r){
         $obtenerObjetivos = Objetivo::where('IDCATALOGOOBJETIVO',$r->idcatalogo)
@@ -192,6 +205,19 @@ class ProyectoController extends Controller
         return Datatables($obtenerObjetivos)
                     ->addColumn('action', function ($obtenerObjetivos) {
                         return '<a onclick="agregarObjetivos('.$obtenerObjetivos->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Agregar</a>';
+                    })
+                    ->make(true);
+    }
+
+    public function datatableIndicador(Request $r){
+        $obtenerIndicador = Indicador::where('IDCATALOGOINDICADORES',$r->idcatalogo)
+                                                        ->select('IDINDICADORES',
+                                                            'DESCRIPCION'
+                                                        );
+                                                    
+        return Datatables($obtenerIndicador)
+                    ->addColumn('action', function ($obtenerIndicador) {
+                        return '<a onclick="agregarObjetivos('.$obtenerIndicador->IDINDICADORES.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Agregar</a>';
                     })
                     ->make(true);
     }
@@ -209,6 +235,23 @@ class ProyectoController extends Controller
                     ->addColumn('action', function ($objetivosProyeto) {
                         return '<a onclick="obtenerDetalleObjetivo('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
                                 <a onclick="eliminarObjetivoProyecto('.$objetivosProyeto->IDOBJETIVOESTRATEGICO.','.$objetivosProyeto->IDPROYECTO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                    })
+                    ->removeColumn('IDPROYECTO')
+                    ->make(true);
+    }
+
+    public function datatableIndicadorProyectos(Request $r){
+        $idProyecto = $r->idproyecto;
+        $indicadorProyeto = Indicador::join('proyectosindicadores','indicadores.IDINDICADORES','=','proyectosindicadores.IDINDICADOR')
+                                                ->where('proyectosindicadores.IDPROYECTO', $r->idproyecto)
+                                                ->select('indicadores.IDINDICADORES',
+                                                        'indicadores.DESCRIPCION',
+                                                        'proyectosindicadores.IDPROYECTO'
+                                                    );
+            return Datatables($indicadorProyeto)
+                    ->addColumn('action', function ($indicadorProyeto) {
+                        return '<a onclick="obtenerDetalleIndicador('.$indicadorProyeto->IDINDICADORES.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                                <a onclick="eliminarIndicadorProyecto('.$indicadorProyeto->IDINDICADORES.','.$indicadorProyeto->IDPROYECTO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                     })
                     ->removeColumn('IDPROYECTO')
                     ->make(true);

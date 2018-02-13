@@ -90,6 +90,11 @@ class ProyectoHelper {
     
         return $actividad;
     }
+   //diego voy  conservar ambos cambios , revisa 
+   //yo tb tengo funciones redundantes, esque asi trabajo hasta que me salga lo que estoy haciendo,
+   // aya pues entonces una vez que ya termines eliminas las que esten redundatne , 
+   //voy a consevear ambos cambios ok
+    //diegao si sabes que hemos sido redundante , yo esta funcion obtenerArrayActividad la tengo en un helper aparte
 //fin de funcion obtener
 public static function obtenerArrayActividad($objetoActividad){
     $datosDeActividad = array();
@@ -176,3 +181,5 @@ $datosdeproyecto = Proyectosobjetivos::join('objetivosestrategicos', 'proyectoso
     }
 }
 
+    //fin de funcion obtener
+}
