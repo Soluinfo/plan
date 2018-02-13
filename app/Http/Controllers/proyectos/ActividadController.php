@@ -260,23 +260,4 @@ public function datatablesIndicador(Request $r){
                 })
                 ->make(true);
 }
-//indicadores de la actividad
-
-    
-    //$supervisor = ProyectoHelper::obtenerSupervisoresDeProyectos(null);
-    //$datos = array_collapse([$proyectos, $supervisor]);
-    //$pdf = $dompdf>page_text(1,1, "{PAGE_NUM} of {PAGE_COUNT}", $font, 10, array(0,0,0));
-    //$pdf = App::make('dompdf.wrapper');
-    
-    //$pdf = PDF::get_canvas();
-    //PDF::page_text(1,1, "{PAGE_NUM} of {PAGE_COUNT}", array(0,0,0));
-    //tipo de hoja y orientación
-    //$pdf->page_text(510, 18, "Pág. {PAGE_NUM}/{PAGE_COUNT}", $font, 6, array(0,0,0));
-    //$pdf=PDF::render();
-   
-    //PDF::AddPage();
-    //$pdf->render();
-    //$pdf->setPaper('L', 'landscape');
-    //$pdf = $this->PageNo();
-    
-
+}
