@@ -13,6 +13,7 @@ class Actividad extends Model
                             'IDPROYECTO',
                             'NOMBREACTIVIDAD',
                             'FECHACREACIONACTIVIDAD',
+                            'IDDIRECTORIOACTIVIDAD',
                             'created_at',
                             'updated_at',
                             'idusuario'

@@ -170,6 +170,7 @@ return [
         Laraveles\Spanish\SpanishServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        App\Providers\GoogleDriveServiceProvider::class,
         /*
          * Application Service Providers...
          */

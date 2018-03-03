@@ -41,6 +41,13 @@
                                     <div class="input-group-addon"><span class="fa fa-search"></span></div>
                                     <input type="text" class="form-control" placeholder="keyword..."/>
                                 </div>
+                                
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-12">
+                                    <label>Default</label>
+                                    <input id="fileprueba" name="fileprueba" type="file" class="file-loading">
+                                </div>
                             </div>
                             <div class="form-group">
                                 <h4>Grupos de Actividades:</h4>
@@ -312,6 +319,11 @@
                 <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-select.js')}}"></script>
                 <script type="text/javascript" src="{{ url('js/demo_tasks.js')}}"></script> 
                 <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>
+                <link href="{{ url('fileinput/css/fileinput.min.css')}}" media="all" rel="stylesheet" type="text/css" />
+                <script src="{{ url('fileinput/js/plugins/canvas-to-blob.js')}}"></script>
+                <script src="{{ url('fileinput/js/fileinput.min.js')}}"></script>
+                <script src="{{ url('fileinput/js/locate/es.js')}}"></script>
+                
                 <script>
                     function cargarActividadesDeProyecto(IDPROYECTO){
                         _token = $("input[name=_token]").val();
@@ -365,6 +377,38 @@
                     }
                     
                     $(document).ready(function(){
+
+                        
+                        /*datos = $("#file-prueba").fileinput({
+                            language: "es",
+                            showUpload: true,
+                            showCaption: true,
+                            browseClass: "btn btn-danger",
+                            fileType: "any",
+                            uploadUrl: "{{ url('/ProgresoActividad/subirDocumentoRecurso')}}",
+                            uploadAsync: false,
+                            minFileCount: 1,
+                            maxImageWidth: 1200,
+                            /*uploadExtraData: {
+                                idrecurso: 1,
+                                _token: $("input[name=_token]").val(),
+                            },
+                        });*/
+                        $("#fileprueba").fileinput({
+                            language: "es",
+                            uploadUrl: "{{ url('/ProgresoActividad/subirDocumentoRecurso')}}", // server upload action
+                            uploadAsync: false,
+                            minFileCount: 1,
+                            maxImageWidth: 1200,
+                            overwriteInitial: false,
+                            initialPreviewAsData: true,
+                            initialPreviewFileType: 'image',
+                            resizeImage: true,
+                            uploadExtraData: {
+                                idrecurso: 1,
+                                _token: $("input[name=_token]").val(),
+                            },
+                        });
                        
                         $("#btnSeleccionarProyecto").on("click", function(){
                             $('#modalProyecto').modal('show')

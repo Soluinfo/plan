@@ -1,10 +1,12 @@
 <?php
 
 namespace App\Http\Controllers\proyectos;
-
+use Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Validation\Rule;
 use App\Actividad;
 use App\Actividadresponsable;
 use App\Empleado;
@@ -16,6 +18,8 @@ use App\Objetivo;
 use App\Indicador;
 use App\Actividadfechafinal;
 use App\Recurso;
+use App\Providers\GoogleDriveServiceProvider;
+use App\Recursofechafinal;
 
 class ActividadController extends Controller
 {
@@ -78,7 +82,7 @@ class ActividadController extends Controller
             $id = $r->IDACTIVIDAD;
             $Actividades = ActividadHelper::obtener($id);
             $datosDeActividad = ActividadHelper::obtenerArrayActividad($Actividades);
-            
+            //var_dump($datosDeActividad);
             if($datosDeActividad['IDACTIVIDAD'] != null){
                 $datos .= '<a class="list-group-item"><strong>codigo : </strong> '.$datosDeActividad['IDACTIVIDAD'].'</a>';
             }else{
@@ -132,9 +136,10 @@ class ActividadController extends Controller
                 $datos .= '<a class="list-group-item"><strong>Fecha de final : </strong></a>';
             }
             
-          
+            $datos .= '<a class="list-group-item"><strong>Estado : </strong>'.$datosDeActividad['ESTADO'].'</a>';
+           
             $datos .= '
-                <a class="list-group-item">
+                <a class="list-group-item"><strong>Avance</strong>
                     <div class="progress">
                         <div class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" style="width: '.$datosDeActividad['progreso'].'%">'.$datosDeActividad['progreso'].'% Complete</div>
                     </div> 
@@ -176,8 +181,37 @@ class ActividadController extends Controller
         if($r->ajax()){
             $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
             $idActividad = $r->idactividad;
-            
+
+            $infoproyecto = ProyectoHelper::obtenerProyectos($r->slProyecto);
+            $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto($infoproyecto);
+            //obtener datos de actividad
+            $Actividades = ActividadHelper::obtener($idActividad);
+            $datosDeActividad = ActividadHelper::obtenerArrayActividad($Actividades);
+
+            $messages = [
+                'txtNombre.unique' => 'El nombre de la activadad ya esta en uso',
+            ];
+
+            $nombreActividad = $r->txtNombre;
+            $nombretemp = str_ireplace(" ", "_", $nombreActividad);
             if($idActividad > 0){
+                if($r->txtNombre == $datosDeActividad['NOMBREACTIVIDAD']){
+                    $rule = [
+                        
+                    ];
+                    $validator = Validator::make($r->all(),$rule,$messages)->validate();
+                }else{
+                    $rule = [
+                        'txtNombre' => 'unique:actividades,NOMBREACTIVIDAD',
+                    ];
+                    $validator = Validator::make($r->all(),$rule,$messages)->validate();
+                    $nombresinespacion = str_ireplace(" ", "_", $datosDeActividad['NOMBREACTIVIDAD']);
+                    $dir1 = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/';
+                    $dir2 = '/'.$datosDeProyecto['IDDIRECTORIO'].'/'.$nombretemp.'/';
+                    
+                    Storage::cloud()->move($dir1, $dir2);
+                }
+
                 $actividad = Actividad::where('IDACTIVIDAD', $idActividad)
                                     ->update([
                                     'NOMBREACTIVIDAD' => $r->txtNombre,
@@ -189,17 +223,45 @@ class ActividadController extends Controller
                 $datos['codigo'] = $idActividad;
                 $datos['transaccion'] = 'actualizar';
             }else{
-                $actividad = new Actividad(array(
-                    'NOMBREACTIVIDAD' => $r->txtNombre,
-                    'IDINDICADORES' => $r->slIndicador,
-                    'IDOBJETIVOESTRATEGICO' => $r->slObjetivo,
-                    'IDPROYECTO' => $r->slProyecto
-                ));
-                $actividad->save();
-                $id = $actividad->id;
-                $datos['respuesta'] = 'ok';
-                $datos['codigo'] = $id;
-                $datos['transaccion'] = 'guardar';
+                
+                //reglas de validacion
+                $rule = [
+                    'txtNombre' => 'unique:actividades,NOMBREACTIVIDAD',
+                ];
+                //validacion enviara un json con un error 422
+                $validator = Validator::make($r->all(),$rule,$messages)->validate();
+                
+                $iddirectorio2 = '/'.$datosDeProyecto['IDDIRECTORIO'].'/'.$nombretemp.'/';
+                $info = Storage::cloud()->makeDirectory($iddirectorio2);
+
+                if($info){
+                    $dir = '/'.$datosDeProyecto['IDDIRECTORIO'].'/';
+                    $recursive = false; // Get subdirectories also?
+                    $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+
+                    $directory = $contents
+                    ->where('type', '=', 'dir')
+                    ->where('filename', '=', $nombretemp)
+                    ->first();
+                    $iddirectorioactividad = $directory['path'];
+                    
+                    $actividad = new Actividad(array(
+                        'NOMBREACTIVIDAD' => $r->txtNombre,
+                        'IDINDICADORES' => $r->slIndicador,
+                        'IDOBJETIVOESTRATEGICO' => $r->slObjetivo,
+                        'IDDIRECTORIOACTIVIDAD' => $iddirectorioactividad,
+                        'IDPROYECTO' => $r->slProyecto,
+                        'ESTADO' => '1',
+                        'progreso' => 0,
+                    ));
+                    $actividad->save();
+                    $id = $actividad->id;
+                    $datos['respuesta'] = 'ok';
+                    $datos['codigo'] = $id;
+                    $datos['transaccion'] = 'guardar';
+                }else{
+                    $datos['respuesta'] = 'no';
+                }
             }
             
             echo json_encode($datos);
@@ -443,20 +505,50 @@ class ActividadController extends Controller
         if($r->ajax()){
             $datos = array('respuesta' => 'no','transaccion' => 'guardar');
             $idActividad = $r->idactividad;
-            
+
+            $Actividades = ActividadHelper::obtener($idActividad);
+            $datosDeActividad = ActividadHelper::obtenerArrayActividad($Actividades);
+
+            $nombreRecurso = $r->txtnombrerecurso;
+            $nombretemp = str_ireplace(" ", "_", $nombreRecurso);
+
             if($idActividad > 0){
+
+                $iddirectorio2 = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/'.$nombretemp.'/';
+                $info = Storage::cloud()->makeDirectory($iddirectorio2);
+
+                if($info){
+                    $dir = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/';
+                    $recursive = false; // Get subdirectories also?
+                    $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+
+                    $directory = $contents
+                    ->where('type', '=', 'dir')
+                    ->where('filename', '=', $nombretemp)
+                    ->first();
+                    $iddirectoriorecurso = $directory['path'];
+                    $agregarrecurso = new Recurso(array(
+                        'NOMBRERECURSO' => $r->txtnombrerecurso,
+                        'ESTADO' => '1',
+                        'IDACTIVIDAD' => $idActividad,
+                        'IDDIRECTORIORECURSO' => $iddirectoriorecurso,
+                        'PORCENTAJERECURSO' => $r->txtporcentaje,
+                    ));
+                    $agregarrecurso->save();
+                    $agregarrecursofechafinal = new Recursofechafinal(array(
+                        'FECHAINICIALRECURSO' => $r->dpFechaInicialRecurso,
+                        'FECHAFINALRECURSO' => $r->dpFechaFinalRecurso,
+                        'ESTADOFECHASFINALES' => '1',
+                        'IDRECURSO' => $agregarrecurso->id,
+                    ));
+                    $agregarrecursofechafinal->save();
+                    $datos['respuesta'] = 'ok';
                 
-                $agregarrecurso = new Recurso(array(
-                    'NOMBRERECURSO' => $r->txtnombrerecurso,
-                    'RUTA' => $r->txtruta,
-                    'ESTADO' => '1',
-                    'IDACTIVIDAD' => $idActividad,
-                ));
-                $agregarrecurso->save();
-            
-                $datos['respuesta'] = 'ok';
-            
-                $datos['transaccion'] = 'guardar';
+                    $datos['transaccion'] = 'guardar';
+                }else{
+                    $datos['respuesta'] = 'no';
+                }
+                
             }
             
             echo json_encode($datos);
@@ -511,7 +603,7 @@ class ActividadController extends Controller
                     $datoshtmlrecursos .= '         </a>
                                                     <span class="label label-';
                     if($dr->ESTADO == '1'){
-                        $datoshtmlrecursos .= 'primary">CREADO</span>';
+                        $datoshtmlrecursos .= 'primary">ABIERTO</span>';
                     }else if($dr->ESTADO == '2'){
                         $datoshtmlrecursos .= 'warning">PENDIENTE</span>';
                     }else if($dr->ESTADO == '3'){
@@ -522,6 +614,31 @@ class ActividadController extends Controller
                     $datoshtmlrecursos .= '</h4>
                                             </div>';
                     $datoshtmlrecursos .= '<div class="panel-body panel-body-open" id="acordion'.$dr->IDRECURSO.'">';
+                    $datoshtmlrecursos .= '<div class="form-group">
+                                                <div class="col-md-12">
+                                                    <label>Subir documento</label>
+                                                    <input id="file-'.$dr->IDRECURSO.'" type="file" multiple class="file" data-preview-file-type="any"/>
+                                                </div>
+                                            </div>';
+                    $datoshtmlrecursos .= '<script>
+                                                _token : $("input[name=_token]").val();
+                                                datos = $("#file-'.$dr->IDRECURSO.'").fileinput({
+                                                    language: "es",
+                                                    showUpload: true,
+                                                    showCaption: true,
+                                                    browseClass: "btn btn-danger",
+                                                    fileType: "any",
+                                                    uploadUrl: "'.url('/ProgresoActividad/subirDocumentoRecurso').'",
+                                                    uploadAsync: false,
+                                                    minFileCount: 1,
+                                                    maxImageWidth: 1200,
+                                                    uploadExtraData: {
+                                                        idrecurso:'.$dr->IDRECURSO.',
+                                                        _token: _token,
+                                                    },
+                                                });
+                                                
+                                            </script>';
                     $datoshtmlrecursos .= '</div>                                
                                         </div>';
                 }

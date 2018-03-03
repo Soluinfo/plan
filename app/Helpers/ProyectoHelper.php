@@ -39,8 +39,10 @@ class ProyectoHelper {
                 $datosDeProyecto['IDPROYECTO'] = $p->IDPROYECTO;
                 $datosDeProyecto['NOMBREPROYECTO'] = $p->NOMBREPROYECTO;
                 $datosDeProyecto['FECHAPROYECTO'] = $p->FECHAPROYECTO;
+                $datosDeProyecto['FECHAFINAL'] = $p->FECHAFINAL;
                 $datosDeProyecto['ESTADOPROYECTO'] = $p->ESTADOPROYECTO;
                 $datosDeProyecto['DESCRIPCION_DEP'] = $p->DESCRIPCION_DEP;
+                $datosDeProyecto['IDDIRECTORIO'] = $p->IDDIRECTORIO;
                 $datosDeProyecto['progreso'] = $p->progreso;
                 $datosDeProyecto['created_at'] = $p->created_at;
                 $datosDeProyecto['updated_at'] = $p->updated_at;

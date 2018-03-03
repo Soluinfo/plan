@@ -16,7 +16,9 @@
         <script>
             var baseUrl = "{{ url('/') }}";
             
-        </script>                               
+        </script> 
+        <script type="text/javascript" src="{{ url('js/plugins/jquery/jquery.min.js') }}"></script>
+                                  
     </head>
     <body>
         <!-- START PAGE CONTAINER -->
@@ -66,7 +68,7 @@
         
     <!-- START SCRIPTS -->
         <!-- START PLUGINS -->
-        <script type="text/javascript" src="{{ url('js/plugins/jquery/jquery.min.js') }}"></script>
+        
         <script type="text/javascript" src="{{ url('js/plugins/jquery/jquery-ui.min.js') }}"></script>
         <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap.min.js') }}"></script>        
         <!-- END PLUGINS -->

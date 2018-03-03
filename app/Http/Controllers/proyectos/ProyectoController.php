@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers\proyectos;
 
+use Validator;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
+
 use App\Http\Controllers\Controller;
 use App\Proyecto;
 use App\Empleado;
@@ -13,7 +17,9 @@ use App\Objetivo;
 use App\Proyectosobjetivos;
 use App\Catalogoindicador;
 use App\Indicador;
+use App\Proyectoindicador;
 use App\Helpers\ProyectoHelper;
+use App\Providers\GoogleDriveServiceProvider;
 
 
 class ProyectoController extends Controller
@@ -30,17 +36,8 @@ class ProyectoController extends Controller
             if($id == null){
 
             }else{
-                $Proyecto = $this->obtener($id);
-                if(isset($Proyecto)){
-                    foreach($Proyecto as $p){
-                        $datosDeProyecto['IDPROYECTO'] = $p->IDPROYECTO;
-                        $datosDeProyecto['NOMBREPROYECTO'] = $p->NOMBREPROYECTO;
-                        $datosDeProyecto['FECHAPROYECTO'] = $p->FECHAPROYECTO;
-                        $datosDeProyecto['FECHAFINAL'] = $p->FECHAFINAL;
-                        $datosDeProyecto['ESTADOPROYECTO'] = $p->ESTADOPROYECTO;
-                        $datosDeProyecto['SERIAL_DEP'] = $p->SERIAL_DEP;
-                    }
-                }
+                $Proyecto = ProyectoHelper::obtenerProyectos($id);
+                $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto($Proyecto);
             }
             
             $departamentos = DB::table('departamento')->get();
@@ -61,8 +58,36 @@ class ProyectoController extends Controller
             if($r->ajax()){
                 $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
                 $idProyecto = $r->idproyecto;
+                /* Se obtiene la informacion del proyecto */
+                $infoproyecto = ProyectoHelper::obtenerProyectos($idProyecto);
+                $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto($infoproyecto);
+
+                $messages = [
+                    'txtnombreProyecto.unique' => 'El nombre de proyecto ya esta en uso',
+                ];
                 
                 if($idProyecto > 0){
+                    if($r->txtnombreProyecto == $datosDeProyecto['NOMBREPROYECTO']){
+                        $rule = [
+                            
+                        ];
+                        $validator = Validator::make($r->all(),$rule,$messages)->validate();
+                    }else{
+                        $rule = [
+                            'txtnombreProyecto' => 'unique:proyectos,NOMBREPROYECTO',
+                        ];
+                        $validator = Validator::make($r->all(),$rule,$messages)->validate();
+
+                        $dir = '/';
+                        $recursive = false; // Get subdirectories also?
+                        $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+                        $directory = $contents
+                            ->where('type', '=', 'dir')
+                            ->where('filename', '=', $datosDeProyecto['NOMBREPROYECTO'])
+                            ->first(); // there can be duplicate file names!
+                        Storage::cloud()->move($directory['path'], $r->txtnombreProyecto);
+                    }
+                    
                     $proyecto = Proyecto::where('IDPROYECTO', $idProyecto)
                                         ->update([
                                         'NOMBREPROYECTO' => $r->txtnombreProyecto,
@@ -75,20 +100,46 @@ class ProyectoController extends Controller
                     $datos['codigo'] = $idProyecto;
                     $datos['transaccion'] = 'actualizar';
                 }else{
-                    $proyecto = new Proyecto(array(
-                        'NOMBREPROYECTO' => $r->txtnombreProyecto,
-                        'FECHAPROYECTO' => $r->dpFechaProyecto,
-                        'FECHAFINAL' => $r->dpFechaFinalProyecto,
-                        'ESTADOPROYECTO' => $r->slEstado,
-                        'IDDEPARTAMENTO' => $r->slDepartamento
-                    ));
-                    $proyecto->save();
-                    $id = $proyecto->id;
-                    $datos['respuesta'] = 'ok';
-                    $datos['codigo'] = $id;
-                    $datos['transaccion'] = 'guardar';
-                }
-                
+                    //reglas de validacion
+                    $rule = [
+                        'txtnombreProyecto' => 'unique:proyectos,NOMBREPROYECTO',
+                    ];
+                    //validacion enviara un json con un error 422
+                    $validator = Validator::make($r->all(),$rule,$messages)->validate();
+
+                    $iddirectorio = '';
+                    $nombreProyecto = $r->txtnombreProyecto;
+                    $info = Storage::cloud()->makeDirectory($nombreProyecto);
+                    if($info){
+                        $dir = '/';
+                        $recursive = false; // Get subdirectories also?
+                        $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+
+                        $directory = $contents
+                        ->where('type', '=', 'dir')
+                        ->where('filename', '=', $nombreProyecto)
+                        ->first();
+                        $iddirectorio = $directory['path'];
+                        $proyecto = new Proyecto(array(
+                            'NOMBREPROYECTO' => $nombreProyecto,
+                            'FECHAPROYECTO' => $r->dpFechaProyecto,
+                            'FECHAFINAL' => $r->dpFechaFinalProyecto,
+                            'ESTADOPROYECTO' => $r->slEstado,
+                            'IDDEPARTAMENTO' => $r->slDepartamento,
+                            'IDDIRECTORIO' => $iddirectorio,
+                        ));
+                        $proyecto->save();
+                        $id = $proyecto->id;
+                        $datos['respuesta'] = 'ok';
+                        $datos['codigo'] = $id;
+                        $datos['path'] = $directory['path'];
+                       
+                        
+                    }else{
+
+                    }
+                    
+                }                
                 echo json_encode($datos);
             }
         }
@@ -215,7 +266,7 @@ class ProyectoController extends Controller
                                                     
         return Datatables($obtenerIndicador)
                     ->addColumn('action', function ($obtenerIndicador) {
-                        return '<a onclick="agregarObjetivos('.$obtenerIndicador->IDINDICADORES.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Agregar</a>';
+                        return '<a onclick="asignarIndicador('.$obtenerIndicador->IDINDICADORES.')" class="btn btn-xs btn-primary"><i class="fa fa-plus"></i>Agregar</a>';
                     })
                     ->make(true);
     }
@@ -275,6 +326,28 @@ class ProyectoController extends Controller
             echo json_encode($datos);
         }
     }
+
+    public function asignarIndicadorProyecto(Request $r){
+        if($r->ajax()){
+            $datos = array('respuesta' => 'no','mensaje' => '');
+            $verificarIndicador = $this->verficarIndicadorProyectoExiste($r->IDPROYECTO,$r->IDINDICADOR);
+            if($verificarIndicador == true){
+                $datos['respuesta'] = 'existe';
+                $datos['mensaje'] = 'El Indicador seleccionado ya se encuentra asignado a este proyecto';
+            }else{
+                $Proyectosindicador = new Proyectoindicador(array(
+                    'IDPROYECTO' => $r->IDPROYECTO,
+                    'IDINDICADOR' => $r->IDINDICADOR,
+                ));
+                $Proyectosindicador->save();
+                $datos['respuesta'] = 'ok';
+                $datos['mensaje'] = 'Indicador asignado al proyecto';
+            }
+            
+            echo json_encode($datos);
+        }
+    }
+
     //inicio de funcion para validar si existe objetivo asignado a proyecto
         public function verificarObjetivoProyectoExiste($idproyecto,$idobjetivo){
             $datosdeobjetivo = Proyectosobjetivos::where([
@@ -289,7 +362,18 @@ class ProyectoController extends Controller
             }
         }
     //final de funcion verificarSupervisorProyectoExiste
-
+        public function verficarIndicadorProyectoExiste($idproyecto,$idindicador){
+            $datosdeindicadores = Proyectoindicador::where([
+                                                            ['IDPROYECTO','=',$idproyecto],
+                                                            ['IDINDICADOR','=',$idindicador]
+                                                        ])
+                                                        ->count();
+            if($datosdeindicadores > 0){
+                return true;
+            }else{
+                return false;
+            }
+        }
     //funcion de validacion si existe proyecto
         public function validarExisteProyecto(Request $r){
             if($r->ajax()){
@@ -312,6 +396,15 @@ class ProyectoController extends Controller
                                             ->delete();
             
             echo 'eliminado';          
+        }
+    }
+
+    public function eliminarIndicadorProyecto(Request $r){
+        if($r->ajax()){
+            $eliminar = Proyectoindicador::where(['IDINDICADOR' => $r->IDINDICADOR, 'IDPROYECTO' => $r->IDPROYECTO])
+                                            ->delete();
+            
+            echo 'eliminado';   
         }
     }
 }

@@ -86,7 +86,8 @@
                                         <input type="text" name="idactividad" value="{{ $IDACTIVIDAD or '0'}}"/>
                                         
                                     </form>
-                                    <button id="btnGuardarActividad" class="btn btn-primary pull-right">Guardar Actividad<span class="fa fa-floppy-o fa-right"></span></button>
+                                    <a href="{{ url('/actividades/crear/') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Actividad <span class="fa fa-plus fa-right"></span></a>
+                                    <button id="btnGuardarActividad" class="btn btn-primary pull-right"><?php if(isset($IDACTIVIDAD)){echo 'Actualizar Actividad';}else{ echo 'Guardar Actividad';} ?><span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 
                                 <div class="tab-pane" id="tab-reprogramar-actividad">
@@ -276,20 +277,33 @@
                             <div class="form-group">
                                 <label class="col-md-3 col-xs-12 control-label">Nombre de recurso</label>
                                 <div class="col-md-6 col-xs-12">                                            
-                                    <div class="form-group">
-                                        
-                                        <input type="text" name="txtnombrerecurso" id="txtnombrerecurso" class="form-control"/>
-                                    </div>                                            
-                                    
+                                     
+                                    <input type="text" name="txtnombrerecurso" id="txtnombrerecurso" class="form-control"/>
+                                     
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">Ruta (opcional)</label>
+                                <label class="col-md-3 col-xs-12 control-label">Valor del recurso %</label>
                                 <div class="col-md-6 col-xs-12">                                            
-                                    <div class="form-group">
-                                        
-                                        <input type="text" id="txtruta" name="txtruta" class="form-control"/>
-                                    </div>                                            
+                                    
+                                    <input type="number" id="txtporcentaje" name="txtporcentaje" class="form-control"/>
+                                      
+                                </div>
+                            </div>
+                            <div class="form-group">                                        
+                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha de inicio:</label>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    
+                                    <input type="text" name="dpFechaInicialRecurso" id="dpFechaInicialRecurso" class="form-control datepicker" placeholder="aaaa-mm-dd" value="">
+                                   
+                                </div>
+                            </div>
+
+                            <div class="form-group">                                        
+                                <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha entrega:</label>
+                                <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                    
+                                    <input type="text" name="dpFechaFinalRecurso" id="dpFechaFinalRecurso" class="form-control datepicker" placeholder="aaaa-mm-dd" value="">
                                     
                                 </div>
                             </div>
@@ -319,6 +333,7 @@
                 <script type="text/javascript" src="{{ url('js/plugins/jquery-validation/jquery.validate.js') }}"></script> 
 
                 <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+                
                 <script>
         /////////////////////////////////////////////////////////////////////////////
         //inicio de la funcion para validar el formulario de crear catalogo de objetivos///
@@ -416,6 +431,7 @@
         }
         
 $(document).ready(function(){
+    
     if($("input[name=idactividad]").val() > 0){
         obtenerObjetivosIndicadoresDeActividades();
     }
@@ -713,7 +729,15 @@ $(document).ready(function(){
             error : function(xhr,estado){
                 $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                 $.mpb('destroy');
-                alert("!Error "+xhr.status+", reportelo al centro de computo");
+                //alert("!Error "+xhr.status+", reportelo al centro de computo");
+                if(xhr.status == 422){
+                                            
+                    if(xhr.responseJSON.txtNombre){
+                        noty({text: xhr.responseJSON.txtNombre[0], layout: 'topRight', type: 'warning'});
+                    }
+                    
+                }
+                console.log("!Error "+xhr.status+", reportelo al centro de computo");
                 
             }
         })
@@ -815,19 +839,40 @@ $(document).ready(function(){
             rules: {
                 txtnombrerecurso: {
                     required: true,
+                    maxlength: 150,
                 },
-                txtruta: {
-                    maxlength: 50,
-                },             
+                txtporcentaje: {
+                    required: true,
+                    max: 100,
+                    number: true,
+                },
+                dpFechaInicialRecurso: {
+                    required: true,
+                    date: true,
+                },
+                dpFechaFinalRecurso: {
+                    required: true,
+                    date: true,
+                },    
             },
             messages: {
                 txtnombrerecurso: {
                     required: "El campo nombre de recurso es requerido",
+                    maxlength: "El campo nombre de recurso no puede exceder los 150 caracteres",
                 },
-                txtruta: {
-                    maxlength: "El campo ruta no debe exceder los 500 caracteres",
+                txtporcentaje: {
+                    required: "El campo porcentaje es requerido",
+                    number: "El campo porcentaje debe ser un número",
+                    max: "El campo porcetaje no puede exceder de 100",
                 },
-                
+                dpFechaInicialRecurso: {
+                    required: "El campo fecha inicial es requerido",
+                    date: "El campo fecha inicial debe contener una fecha valida"
+                },
+                dpFechaFinalRecurso: {
+                    required: "El campo fecha de entrega es requerido",
+                    date: "El campo fecha inicial debe contener una fecha valida",
+                },
             },
             success: function ( label, element ) {
                 
@@ -866,14 +911,16 @@ $(document).ready(function(){
 
     $("#formRecursosActividad").on("submit", function(e) {
         txtnombrerecurso = $("#txtnombrerecurso").val();
-        txtruta = $("#txtruta").val();
+        txtporcentaje = $("#txtporcentaje").val();
+        dpFechaInicialRecurso = $("#dpFechaInicialRecurso").val();
+        dpFechaFinalRecurso = $("#dpFechaFinalRecurso").val();
         _token = $("input[name=_token]").val();
         idactividad = $("input[name=idactividad]").val();
         e.preventDefault();
         $.ajax({
             url: $(this).attr("action"),
             type: $(this).attr("method"),
-            data: { txtnombrerecurso:txtnombrerecurso,txtruta:txtruta,idactividad:idactividad,_token:_token},
+            data: { txtnombrerecurso:txtnombrerecurso,txtporcentaje:txtporcentaje,dpFechaInicialRecurso:dpFechaInicialRecurso,dpFechaFinalRecurso:dpFechaFinalRecurso,idactividad:idactividad,_token:_token},
             dataType : 'json',
             beforeSend : function(){
                 $.mpb('show',{value: [0,40],speed: 10,state: 'success'});

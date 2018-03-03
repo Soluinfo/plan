@@ -95,7 +95,7 @@
                                             
                                         </form>
                                         <a href="{{ url('/proyectos/crear') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo proyecto <span class="fa fa-plus fa-right"></span></a>
-                                        <button id="btnGuardarProyecto" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Guardar proyecto <span class="fa fa-floppy-o fa-right"></span></button>
+                                        <button id="btnGuardarProyecto" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right"><?php if(isset($IDPROYECTO)){echo 'Actualizar Proyecto';}else{ echo 'Guardar Proyecto';} ?> <span class="fa fa-floppy-o fa-right"></span></button>
                                     </div>
                                     <div class="tab-pane" id="tab-objetivo">
 
@@ -377,6 +377,26 @@
                             });
                     }
 
+                    function asignarIndicador(IDINDICADOR){
+                            IDPROYECTO = $("input[name=idproyecto]").val();
+                            _token = $("input[name=_token]").val();
+                            
+                            $.post("{{ url('/proyectos/asignarIndicadorProyectos') }}",{IDPROYECTO:IDPROYECTO,IDINDICADOR:IDINDICADOR,_token:_token},function(data){
+                                
+                                var data2 = JSON.parse(data);
+                                
+                                if(data2.respuesta == 'ok'){
+                                    noty({text: data2.mensaje, layout: 'topRight', type: 'success'});
+                                    tableIndicadorProyectos.ajax.reload();
+                                }else if(data2.respuesta == 'existe'){
+                                    noty({text: data2.mensaje , layout: 'topRight', type: 'warning'});
+                                }else{
+                                    console.log(data2.respuesta);
+                                    noty({text: '!Error: Fallo la transaccion', layout: 'topRight', type: 'error'});
+                                }
+                            });
+                    }
+
                     function agregarObjetivos(IDOBJETIVOESTRATEGICO){
                         IDPROYECTO = $("input[name=idproyecto]").val();
                         _token = $("input[name=_token]").val();
@@ -436,6 +456,35 @@
                                             if(data == 'eliminado'){
                                                 noty({text: 'El supervisor a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
                                                 tableSupervisoresProyectos.ajax.reload();
+                                            }else{
+                                                noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
+                                            }
+                                        })
+                                        
+                                        
+                                    }
+                                    },
+                                    {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                        $noty.close();
+                                        noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                        }
+                                    }
+                                ]
+                        })
+                        
+                    }
+                    function eliminarIndicadorProyecto(IDINDICADOR,IDPROYECTO){
+                        _token = $("input[name=_token]").val();
+                        noty({
+                            text: 'Esta seguro que desea eliminar el indicador del proyecto?',
+                            layout: 'topRight',
+                            buttons: [
+                                    {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                        $noty.close();
+                                        $.post("{{ url('/proyectos/eliminarIndicadorProyecto') }}",{IDINDICADOR:IDINDICADOR,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                            if(data == 'eliminado'){
+                                                noty({text: 'El indicador a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                tableIndicadorProyectos.ajax.reload();
                                             }else{
                                                 noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
                                             }
@@ -614,7 +663,7 @@
                                             required: true,
                                             minlength: 2,
                                             maxlength: 250,
-                                            remote: {
+                                            /*remote: {
                                                 url: "{{ url('/proyectos/validacion/proyectoExiste') }}",
                                                 type: "post",
                                                 dataType: "json",
@@ -630,7 +679,7 @@
                                                     }
                                                   
                                                 },
-                                            },
+                                            },*/
                                         },
                                         dpFechaProyecto: {
                                             required: true,
@@ -734,29 +783,51 @@
                                     data: $(this).serialize(),
                                     dataType : 'json',
                                     beforeSend : function(){
-                                        $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
+                                        $.mpb('show',{value: [0,80],speed: 40,state: 'success'});
                                     },
                                     success : function(data){
                                         if(data.respuesta == 'ok'){
                                             $("input[name=idproyecto]").val(data.codigo);
                                             if(data.transaccion == 'guardar'){
+                                                $("#btnGuardarProyecto").html('Actualizar proyecto');
                                                 noty({text: 'Proyecto creado con exito', layout: 'topRight', type: 'success'});
-                                                $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                                                $.mpb('show',{value: [80,100],speed: 80,state: 'success'});
                                                 $.mpb('destroy');
                                             }else{
                                                 noty({text: 'Proyecto actualizado con exito', layout: 'topRight', type: 'success'});
-                                                $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                                                $.mpb('show',{value: [80,100],speed: 80,state: 'success'});
                                                 $.mpb('destroy');
                                             }
                                             //se cargan los supervisores del proyecto
                                            
+                                        }else if(data.respuesta == 'validacion'){
+                                            
+                                            if(data.validate.txtnombreProyecto){
+                                                noty({text: data.validate.txtnombreProyecto[0], layout: 'topRight', type: 'warning'});
+                                            }
+                                            
+                                            $.mpb('show',{value: [80,100],speed: 80,state: 'success'});
+                                            $.mpb('destroy');
+                                        }else if(data.respuesta == 'no'){
+                                            noty({text: 'Lo sentimos!, hubo un error intenta nuevamente', layout: 'topRight', type: 'error'});
+                                            $.mpb('show',{value: [80,100],speed: 80,state: 'success'});
+                                            $.mpb('destroy');
                                         }
                                         
                                     },
-                                    error : function(xhr,estado){
+                                    error : function(xhr,data){
                                         $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                                         $.mpb('destroy');
-                                        alert("!Error "+xhr.status+", reportelo al centro de computo");
+                                        
+                                        //alert("!Error "+xhr.status+", reportelo al centro de computo");
+                                        if(xhr.status == 422){
+                                            
+                                            if(xhr.responseJSON.txtnombreProyecto){
+                                                noty({text: xhr.responseJSON.txtnombreProyecto[0], layout: 'topRight', type: 'warning'});
+                                            }
+                                            
+                                        }
+                                        console.log("!Error "+xhr.status+", reportelo al centro de computo");
                                         
                                     }
                                 })

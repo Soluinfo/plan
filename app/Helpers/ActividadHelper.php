@@ -26,6 +26,7 @@ class ActividadHelper {
                 $datosDeActividad['ESTADO'] = $p->ESTADO;
                 $datosDeActividad['created_at'] = $p->created_at;
                 $datosDeActividad['updated_at'] = $p->updated_at;
+                $datosDeActividad['IDDIRECTORIOACTIVIDAD'] = $p->IDDIRECTORIOACTIVIDAD;
                 
             }
         }
@@ -36,15 +37,15 @@ class ActividadHelper {
         if($id == null){
             $actividad = Actividad::join('objetivosestrategicos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','actividades.IDOBJETIVOESTRATEGICO')
                                     ->join('indicadores','actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
-                                    ->join('proyectos','proyectos.IDPROYECTO','=','actividades.IDACTIVIDAD')
-                                    ->select('actividades.*','objetivosestrategicos.DESCRIPCION as nombreobjetivo','indicadores.DESCRIPCION as nombreindicador','proyectos.NOMBREPROYECTO')
+                                    ->join('proyectos','proyectos.IDPROYECTO','=','actividades.IDPROYECTO')
+                                    ->select('actividades.*','objetivosestrategicos.DESCRIPCION as nombreobjetivo','indicadores.DESCRIPCION as nombreindicador','proyectos.NOMBREPROYECTO','proyectos.IDDIRECTORIO')
                                     ->get();
         }else{
             $actividad = Actividad::join('objetivosestrategicos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','actividades.IDOBJETIVOESTRATEGICO')
                                 ->join('indicadores','actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
-                                ->join('proyectos','proyectos.IDPROYECTO','=','actividades.IDACTIVIDAD')                 
+                                ->join('proyectos','proyectos.IDPROYECTO','=','actividades.IDPROYECTO')                 
                                 ->where('IDACTIVIDAD',$id)
-                                ->select('actividades.*','objetivosestrategicos.DESCRIPCION as nombreobjetivo','indicadores.DESCRIPCION as nombreindicador','proyectos.NOMBREPROYECTO')
+                                ->select('actividades.*','objetivosestrategicos.DESCRIPCION as nombreobjetivo','indicadores.DESCRIPCION as nombreindicador','proyectos.NOMBREPROYECTO','proyectos.IDDIRECTORIO')
                                 ->get();
         }
         return $actividad;

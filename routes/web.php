@@ -25,7 +25,8 @@ Route::get('/actividadesprogreso', 'proyectos\ActividadController@home');
 Route::post('/proyectos/guardar', 'proyectos\ProyectoController@guardar');
 Route::post('/proyectos/asignarSupervisorProyecto','proyectos\ProyectoController@asignarSupervisor');
 Route::post('/proyectos/obtenerSupervisorProyecto','proyectos\ProyectoController@obtenerSupervisores');
-
+Route::post('/proyectos/asignarIndicadorProyectos','proyectos\ProyectoController@asignarIndicadorProyecto');
+Route::post('/proyectos/eliminarIndicadorProyecto','proyectos\ProyectoController@eliminarIndicadorProyecto');
 Route::post('/objetivos/detalles', 'proyectos\DetalleProyectoController@obtenerDetalleObjetivo');
 Route::post('/supervisor/detalles','proyectos\DetalleProyectoController@obtenerDetalleSupervisor');
 
@@ -82,7 +83,7 @@ Route::get('/catalogo/crear{id?}', 'indicadores\CatalogoIndicadorController@crea
 Route::post('/crearcatalogoindicador/guardar', 'indicadores\CatalogoIndicadorController@guardar');
 
 Route::get('/actividades', 'proyectos\ActividadController@inicio');
-Route::get('/crearactividad/{id?}', 'proyectos\ActividadController@crear');
+Route::get('/actividades/crear/{id?}', 'proyectos\ActividadController@crear');
 Route::post('/crearactividades/guardar', 'proyectos\ActividadController@guardar');
 
 Route::post('/actividades/obtenerResponsableActividades','proyectos\ActividadController@obtenerResponsablesDeActividad');
@@ -119,3 +120,26 @@ Route::post('/ProgresoActividad/obtenerActividadesDeProyecto','proyectos\Activid
 Route::post('/ProgresoActividad/obtenerDetalleActividadesEnModal','proyectos\ActividadController@obtenerDetalleActividadesEnModal');
 Route::post('/ProgresoActividad/obtenerAvanceActividadmodal','proyectos\ActividadController@obtenerAvanceActividadmodal');
 Route::post('/ProgresoActividad/obtenerRecursosActividadesEnModal','proyectos\ActividadController@obtenerRecursosActividadesEnModal');
+Route::post('/ProgresoActividad/subirDocumentoRecurso','proyectos\ProgresoActividadController@subirDocumentoRecurso');
+
+Route::get('test', function() {
+    Storage::disk('google')->put('test.txt', 'Hello World');
+});
+Route::get('createdir/{directoryName?}', function($directoryName) {
+    $iddirectorio = '';
+    $datos = Storage::cloud()->makeDirectory($directoryName);
+    if($datos){
+        $dir = '/';
+        $recursive = false; // Get subdirectories also?
+        $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+
+        $directory = $contents
+        ->where('type', '=', 'dir')
+        ->where('filename', '=', $directoryName)
+        ->first();
+        $iddirectorio = $directory['path'];
+    }else{
+
+    }
+    return $iddirectorio;
+});

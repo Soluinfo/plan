@@ -27,14 +27,15 @@
                                 <div class="panel-body tab-content">
                                     <div class="tab-pane active" id="tab-informacion">
                                         <div class="col-md-4">
-
                                             <!-- DEFAULT LIST GROUP -->
                                             <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h3 class="panel-title">Informacion del proyecto</h3>
+                                                <div class="panel-body profile bg-info">
+                                                    <div class="profile-data">
+                                                        <div class="profile-data-name">Información de Proyecto</div>
+                                                        
+                                                    </div>
                                                 </div>
-                                                <div class="panel-body">
-                                                    <ul class="list-group border-bottom">
+                                                <div class="panel-body list-group">
                                                         <li class="list-group-item"><strong>codigo : </strong> {{$IDPROYECTO}}</li>
                                                         <li class="list-group-item"><strong>Nombre : </strong> {{$NOMBREPROYECTO}}</li>
                                                         <li class="list-group-item"><strong>Fecha : </strong> {{$FECHAPROYECTO}}</li>
@@ -50,7 +51,7 @@
                                                         @endif
                                                         </li>
                                                         <li class="list-group-item"><strong>Departamento :</strong>{{$DESCRIPCION_DEP}}</li>
-                                                    </ul>                                
+                                                        <li class="list-group-item"><strong>Directorio drive :</strong> <a href="{{$IDDIRECTORIO}}">link</a></li>
                                                 </div>
                                             </div>
                                             <!-- END DEFAULT LIST GROUP -->
@@ -61,8 +62,11 @@
 
                                             <!-- DEFAULT LIST GROUP -->
                                             <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h3 class="panel-title">Avance del proyecto %</h3>
+                                                <div class="panel-body profile bg-info">
+                                                    <div class="profile-data">
+                                                        <div class="profile-data-name">Avance del Proyecto %</div>
+                                                        
+                                                    </div>
                                                 </div>
                                                 <div class="panel-body text-center">
                                                     <input id="progreso" class="knob" data-width="200" data-min="0" data-fgColor="
@@ -84,10 +88,13 @@
                                         <div class="col-lg-4">
                                             <!-- DEFAULT LIST GROUP -->
                                             <div class="panel panel-default">
-                                                <div class="panel-heading">
-                                                    <h3 class="panel-title">Usuario y registro</h3>
+                                                <div class="panel-body profile bg-info">
+                                                    <div class="profile-data">
+                                                        <div class="profile-data-name">Información adicional</div>
+                                                        
+                                                    </div>
                                                 </div>
-                                                <div class="panel-body">
+                                                <div class="panel-body list-group">
                                                     <ul class="list-group border-bottom">
                                                         <li class="list-group-item"><strong>Usuario : </strong> dbermudez1349@hotmail.com</li>
                                                         <li class="list-group-item"><strong>Nombre : </strong> Diego</li>
