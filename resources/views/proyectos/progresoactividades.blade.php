@@ -320,6 +320,8 @@
                 <script type="text/javascript" src="{{ url('js/demo_tasks.js')}}"></script> 
                 <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>
                 <link href="{{ url('fileinput/css/fileinput.min.css')}}" media="all" rel="stylesheet" type="text/css" />
+                <script src="{{ url('fileinput/js/plugins/sortable.min.js')}}"></script>
+                <script src="{{ url('fileinput/js/plugins/purify.min.js')}}"></script>
                 <script src="{{ url('fileinput/js/plugins/canvas-to-blob.js')}}"></script>
                 <script src="{{ url('fileinput/js/fileinput.min.js')}}"></script>
                 <script src="{{ url('fileinput/js/locate/es.js')}}"></script>
@@ -377,24 +379,16 @@
                     }
                     
                     $(document).ready(function(){
-
+                        var btnCust = '<button type="button" class="btn btn-secondary" title="Add picture tags" ' + 
+                            'onclick="alert(\'Call your custom code here.\')">' +
+                            '<i class="fa fa-cloud-download"></i>' +
+                            '</button>'; 
                         
-                        /*datos = $("#file-prueba").fileinput({
-                            language: "es",
-                            showUpload: true,
-                            showCaption: true,
-                            browseClass: "btn btn-danger",
-                            fileType: "any",
-                            uploadUrl: "{{ url('/ProgresoActividad/subirDocumentoRecurso')}}",
-                            uploadAsync: false,
-                            minFileCount: 1,
-                            maxImageWidth: 1200,
-                            /*uploadExtraData: {
-                                idrecurso: 1,
-                                _token: $("input[name=_token]").val(),
-                            },
-                        });*/
-                        $("#fileprueba").fileinput({
+                        
+                        var direccion = "{{ url('fileinput/img/pdf.png') }}";
+                        var url1 = 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/631px-FullMoon2010.jpg',
+                        url2 = 'http://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/Earth_Eastern_Hemisphere.jpg/600px-Earth_Eastern_Hemisphere.jpg';
+                        /*$("#fileprueba").fileinput({
                             language: "es",
                             uploadUrl: "{{ url('/ProgresoActividad/subirDocumentoRecurso')}}", // server upload action
                             uploadAsync: false,
@@ -409,15 +403,32 @@
                                 _token: $("input[name=_token]").val(),
                             },
                             initialPreview: [
-                                '<img src="https://placeimg.com/800/460/any" class="kv-preview-data file-preview-image">',
+                                direccion
                             ],
                             initialPreviewConfig: [
                               
-                                {type: "pdf", caption: "cedula2.pdf", downloadUrl: '', tamaño: 1218822, ancho: "120px", clave: 2}
+                                {caption: "Moon.jpg", downloadUrl: url1, size: 930321, width: "120px", key: 1},
                                
                             ],
-                        });
+                            deleteUrl: "/site/file-delete",
+                        });*/
                        
+                    $("#fileprueba").fileinput({
+                        language: "es",
+                        initialPreview: [direccion, direccion],
+                        initialPreviewDownloadUrl: 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/631px-FullMoon2010.jpg',
+                        initialPreviewAsData: true,
+                        initialPreviewConfig: [
+                            {caption: "Moon.jpg", downloadUrl: 'http://upload.wikimedia.org/wikipedia/commons/thumb/e/e1/FullMoon2010.jpg/631px-FullMoon2010.jpg', size: 930321, width: "120px", key: 1},
+                            {caption: "Earth.jpg", downloadUrl: direccion, size: 1218822, width: "120px", key: 2},
+                        ],
+                        deleteUrl: "/site/file-delete",
+                        overwriteInitial: false,
+                        maxFileSize: 100,
+                        initialCaption: "The Moon and the Earth",
+                        filename: 'KrajeeSample.mp4'
+                    });
+                                     
                         $("#btnSeleccionarProyecto").on("click", function(){
                             $('#modalProyecto').modal('show')
                         })

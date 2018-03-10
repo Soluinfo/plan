@@ -622,12 +622,14 @@ class ActividadController extends Controller
                                             </div>';
                     $datoshtmlrecursos .= '<script>
                                                 _token : $("input[name=_token]").val();
+                                                
                                                 datos = $("#file-'.$dr->IDRECURSO.'").fileinput({
                                                     
                                                     language: "es",
                                                     uploadUrl: "'.url('/ProgresoActividad/subirDocumentoRecurso').'",
                                                     uploadAsync: false,
                                                     minFileCount: 1,
+                                                    maxFileCount: 1,
                                                     maxImageWidth: 1200,
                                                     overwriteInitial: false,
                                                     initialPreviewAsData: true,
@@ -637,10 +639,21 @@ class ActividadController extends Controller
                                                         idrecurso:'.$dr->IDRECURSO.',
                                                         _token: _token,
                                                         nombreInput: "file-'.$dr->IDRECURSO.'",
-                                                    },
-                                                });
-                                                
-                                            </script>';
+                                                    },';
+                    if($dr->ESTADO == '1'){
+                        
+                    }else if($dr->ESTADO == '2'){
+                        $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
+                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".url('fileinput/img/pdf.png')."', tamaño: 1218822, ancho: '20px', clave: 2}],";
+                    }else if($dr->ESTADO == '3'){
+                        $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
+                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".url('fileinput/img/pdf.png')."', tamaño: 1218822, ancho: '20px', clave: 2}],";
+                    }else{
+                       $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
+                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".url('fileinput/img/pdf.png')."', tamaño: 1218822, ancho: '20px', clave: 2}],";
+                    }
+                    $datoshtmlrecursos .= '});    
+                                        </script>';
                     $datoshtmlrecursos .= '</div>                                
                                         </div>';
                 }
