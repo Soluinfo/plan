@@ -561,13 +561,13 @@ class ActividadController extends Controller
             $datosrecurso = Recurso::where('IDACTIVIDAD', $r->idactividad)
                                                     ->select('recursos.IDRECURSO',
                                                             'recursos.NOMBRERECURSO',
-                                                            'recursos.RUTA',
+                                                            'recursos.IDDIRECTORIORECURSO',
                                                             'recursos.ESTADO'
                                                         )
                                                         ->get();
             
                 return Datatables($datosrecurso)
-                        ->removeColumn('RUTA')
+                        ->removeColumn('IDDIRECTORIORECURSO')
                        
                         ->addColumn('action', function ($datosrecurso) {
                             return '<a onclick="obtenerDetalleObjetivo()" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
@@ -617,24 +617,26 @@ class ActividadController extends Controller
                     $datoshtmlrecursos .= '<div class="form-group">
                                                 <div class="col-md-12">
                                                     <label>Subir documento</label>
-                                                    <input id="file-'.$dr->IDRECURSO.'" type="file" multiple class="file" data-preview-file-type="any"/>
+                                                    <input id="file-'.$dr->IDRECURSO.'" name="file-'.$dr->IDRECURSO.'" type="file" class="file-loading"/>
                                                 </div>
                                             </div>';
                     $datoshtmlrecursos .= '<script>
                                                 _token : $("input[name=_token]").val();
                                                 datos = $("#file-'.$dr->IDRECURSO.'").fileinput({
+                                                    
                                                     language: "es",
-                                                    showUpload: true,
-                                                    showCaption: true,
-                                                    browseClass: "btn btn-danger",
-                                                    fileType: "any",
                                                     uploadUrl: "'.url('/ProgresoActividad/subirDocumentoRecurso').'",
                                                     uploadAsync: false,
                                                     minFileCount: 1,
                                                     maxImageWidth: 1200,
+                                                    overwriteInitial: false,
+                                                    initialPreviewAsData: true,
+                                                    initialPreviewFileType: "image",
+                                                    resizeImage: true,
                                                     uploadExtraData: {
                                                         idrecurso:'.$dr->IDRECURSO.',
                                                         _token: _token,
+                                                        nombreInput: "file-'.$dr->IDRECURSO.'",
                                                     },
                                                 });
                                                 

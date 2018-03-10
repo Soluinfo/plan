@@ -399,15 +399,23 @@
                             uploadUrl: "{{ url('/ProgresoActividad/subirDocumentoRecurso')}}", // server upload action
                             uploadAsync: false,
                             minFileCount: 1,
-                            maxImageWidth: 1200,
+                            maxFileCount: 1,
                             overwriteInitial: false,
                             initialPreviewAsData: true,
                             initialPreviewFileType: 'image',
                             resizeImage: true,
                             uploadExtraData: {
-                                idrecurso: 1,
+                                idrecurso: 8,
                                 _token: $("input[name=_token]").val(),
                             },
+                            initialPreview: [
+                                '<img src="https://placeimg.com/800/460/any" class="kv-preview-data file-preview-image">',
+                            ],
+                            initialPreviewConfig: [
+                              
+                                {type: "pdf", caption: "cedula2.pdf", downloadUrl: '', tamaño: 1218822, ancho: "120px", clave: 2}
+                               
+                            ],
                         });
                        
                         $("#btnSeleccionarProyecto").on("click", function(){

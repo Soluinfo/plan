@@ -12,9 +12,10 @@ use Illuminate\Validation\Rule;
 use App\Actividad;
 use App\Actividadresponsable;
 use App\Empleado;
-use App\Helpers\ProyectoHelper;
-use App\Helpers\ObjetivoHelper;
-use App\Helpers\ActividadHelper;
+//use App\Helpers\ProyectoHelper;
+//use App\Helpers\ObjetivoHelper;
+//use App\Helpers\ActividadHelper;
+use App\Helpers\RecursoHelper;
 use App\Catalogoindicador;
 use App\Objetivo;
 use App\Indicador;
@@ -27,24 +28,29 @@ class ProgresoActividadController extends Controller
 {
     public function subirDocumentoRecurso(Request $r){
         if($r->ajax()){
-            $data = array('existe' => false);
-            $files = $r->file('fileprueba');
+            $data = array();
+            $idrecurso = $r->idrecurso;
+            
+            $objetorecurso = RecursoHelper::obtener($idrecurso);
+            $arrayRecurso = RecursoHelper::obtenerarrayRecurso($objetorecurso);
+            
+            $ruta = $arrayRecurso['IDDIRECTORIORECURSO'].'/';
+            
+            $files = $r->file($r->nombreInput);
+            
             $fileName = $files->getClientOriginalName();
             
-            $ruta = '1m7usmOVAJlrWdmkhfh-NZ-TpmpOyr5pI/16Zi4oB-p8IlzVSupro9ooRujwiTCcUXZ/1GvRPaT1V1pHtbLfGwhDq2vKaaGGtF1Tu/';
-           // $data['nombre'] = $r->fileprueba->filename();
-          
-            $extension = $r->fileprueba->extension();
-            Storage::cloud()->put($ruta.$fileName,file_get_contents($files->getRealPath()));
-            if ($r->hasFile('fileprueba')) {
-                $data['existe'] = true;
+            //$extension = $r->fileprueba->extension();
+            $uploaded = Storage::cloud()->put($ruta.$fileName,file_get_contents($files->getRealPath()));
+            if($uploaded){
+                
+                Recurso::where('IDRECURSO','=',$idrecurso)
+                        ->update(['ESTADO' => '2']);
             }else{
-                $data['existe'] = false;
+                $data['error'] = 'Error: al subir el documento, por favor intente de nuevo';
             }
-            echo json_encode($data);      
-            /*//dd($files);
-            //$path = Storage::cloud()->putFile($files->fileName,$r->file('file-prueba'));*/
             
+            echo json_encode($data);
         }
     }
 }

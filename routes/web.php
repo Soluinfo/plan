@@ -125,21 +125,48 @@ Route::post('/ProgresoActividad/subirDocumentoRecurso','proyectos\ProgresoActivi
 Route::get('test', function() {
     Storage::disk('google')->put('test.txt', 'Hello World');
 });
-Route::get('createdir/{directoryName?}', function($directoryName) {
+Route::get('obtenerpath', function() {
+   
     $iddirectorio = '';
-    $datos = Storage::cloud()->makeDirectory($directoryName);
-    if($datos){
-        $dir = '/';
-        $recursive = false; // Get subdirectories also?
-        $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+    $filename = "cedula2.pdf";
+    $dir = '/1m7usmOVAJlrWdmkhfh-NZ-TpmpOyr5pI/16Zi4oB-p8IlzVSupro9ooRujwiTCcUXZ/1GvRPaT1V1pHtbLfGwhDq2vKaaGGtF1Tu';
+    $recursive = false; // Get subdirectories also?
+    $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+    
+    $file = $contents
+        ->where('type', '=', 'file')
+        ->where('filename', '=', pathinfo($filename, PATHINFO_FILENAME))
+        ->where('extension', '=', pathinfo($filename, PATHINFO_EXTENSION))
+        ->first(); // there can be duplicate file names!
+    //return $file; // array with file info
+    dd($file);
+    /*$rawData = Storage::cloud()->get($file['path']);
+    return response($rawData, 200)
+    ->header('ContentType', $file['mimetype'])
+    ->header('Content-Disposition', "attachment; filename='$filename'");
+    //return $file['path'];*/
+});
+Route::get('list', function() {
+    $dir = '/';
+    $recursive = false; // Get subdirectories also?
+    $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+    //return $contents->where('type', '=', 'dir'); // directories
+    return $contents->where('type', '=', 'file'); // files
+});
 
-        $directory = $contents
-        ->where('type', '=', 'dir')
-        ->where('filename', '=', $directoryName)
-        ->first();
-        $iddirectorio = $directory['path'];
-    }else{
-
-    }
-    return $iddirectorio;
+Route::get('get', function() {
+    $filename = 'cedula2.pdf';
+    $dir = '/';
+    $recursive = false; // Get subdirectories also?
+    $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+    $file = $contents
+        ->where('type', '=', 'file')
+        ->where('filename', '=', pathinfo($filename, PATHINFO_FILENAME))
+        ->where('extension', '=', pathinfo($filename, PATHINFO_EXTENSION))
+        ->first(); // there can be duplicate file names!
+    //return $file; // array with file info
+    $rawData = Storage::cloud()->get($file['path']);
+    return response($rawData, 200)
+        ->header('ContentType', $file['mimetype'])
+        ->header('Content-Disposition', "attachment; filename='$filename'");
 });
