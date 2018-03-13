@@ -425,6 +425,7 @@
                         deleteUrl: "/site/file-delete",
                         overwriteInitial: false,
                         maxFileSize: 100,
+                        showUpload: false,
                         initialCaption: "The Moon and the Earth",
                         filename: 'KrajeeSample.mp4'
                     });

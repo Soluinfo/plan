@@ -585,7 +585,7 @@ class ActividadController extends Controller
                                         ->get();
             if(isset($datosrecursos)){
                 foreach($datosrecursos as $dr){
-                    $datoshtmlrecursos .= '<div class="panel panel-';
+                    $datoshtmlrecursos .= '<div id="panel'.$dr->IDRECURSO.'" class="panel panel-';
                     if($dr->ESTADO == '1'){
                         $datoshtmlrecursos .= 'primary';
                     }else if($dr->ESTADO == '2'){
@@ -600,19 +600,34 @@ class ActividadController extends Controller
                                                 <h4 class="panel-title">
                                                     <a href="#acordion'.$dr->IDRECURSO.'">';
                     $datoshtmlrecursos .= $dr->NOMBRERECURSO;
-                    $datoshtmlrecursos .= '         </a>
-                                                    <span class="label label-';
+                    $datoshtmlrecursos .= '         </a> 
+                                                    <span id="span'.$dr->IDRECURSO.'" class="label label-';
                     if($dr->ESTADO == '1'){
                         $datoshtmlrecursos .= 'primary">ABIERTO</span>';
                     }else if($dr->ESTADO == '2'){
                         $datoshtmlrecursos .= 'warning">PENDIENTE</span>';
+                        $datoshtmlrecursos .= ' Accion : <div class="btn-group btn-group-md">
+                            <button onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i>Aprobar</butto>
+                            <button onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i>Desaprobar</button>                                                                                                                                                                          
+                        </div>';
                     }else if($dr->ESTADO == '3'){
                         $datoshtmlrecursos .= 'success">APROBADO</span>';
+                        $datoshtmlrecursos .= ' Accion : <div class="btn-group btn-group-md">
+                            <button onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i>Aprobar</butto>
+                            <button onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i>Desaprobar</button>                                                                                     
+                        </div>';
                     }else{
                         $datoshtmlrecursos .= 'danger">DESAPROBADO</span>';
+                        $datoshtmlrecursos .= ' Accion : <div class="btn-group btn-group-md">
+                            <button onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i>Aprobar</butto>
+                            <button onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i>Desaprobar</button>                                                                                     
+                        </div>';
                     }
-                    $datoshtmlrecursos .= '</h4>
-                                            </div>';
+                    
+                   
+                                            
+                    $datoshtmlrecursos .= '</h4>';
+                    $datoshtmlrecursos .= '</div>';
                     $datoshtmlrecursos .= '<div class="panel-body panel-body-open" id="acordion'.$dr->IDRECURSO.'">';
                     $datoshtmlrecursos .= '<div class="form-group">
                                                 <div class="col-md-12">
@@ -623,6 +638,30 @@ class ActividadController extends Controller
                     $datoshtmlrecursos .= '<script>
                                                 _token : $("input[name=_token]").val();
                                                 
+                                                function aprobarDocumentoRecurso(IDRECURSO){
+                                                    $.post("'.url('/ProgresoActividad/aprobarRecursoActividad').'",{IDRECURSO:IDRECURSO,_token:_token},function(data){
+                                                        if(data = "aprobado"){
+                                                            var element = $("#span" + IDRECURSO);
+                                                            var element2 = $("#panel" + IDRECURSO);
+                                                            element.attr("class","label label-success").html("APROBADO");
+                                                            element2.attr("class","panel panel-success");
+                                                            noty({text: "El recurso fue aprobado", layout: "topRight", type: "success"});
+                                                        }
+                                                    });
+                    
+                                                }
+                                                function desaprobarDocumentoRecurso(IDRECURSO){
+                                                    $.post("'.url('/ProgresoActividad/desaprobarRecursoActividad').'",{IDRECURSO:IDRECURSO,_token:_token},function(data){
+                                                        if(data = "desaprobado"){
+                                                            var element = $("#span" + IDRECURSO);
+                                                            var element2 = $("#panel" + IDRECURSO);
+                                                            element.attr("class","label label-danger").html("DESAPROBADO");
+                                                            element2.attr("class","panel panel-danger");
+                                                            noty({text: "El recurso fue aprobado", layout: "topRight", type: "error"});
+                                                        }
+                                                    });
+                                                    
+                                                }
                                                 datos = $("#file-'.$dr->IDRECURSO.'").fileinput({
                                                     
                                                     language: "es",
@@ -635,6 +674,7 @@ class ActividadController extends Controller
                                                     initialPreviewAsData: true,
                                                     initialPreviewFileType: "image",
                                                     resizeImage: true,
+                                                   
                                                     uploadExtraData: {
                                                         idrecurso:'.$dr->IDRECURSO.',
                                                         _token: _token,
@@ -643,14 +683,18 @@ class ActividadController extends Controller
                     if($dr->ESTADO == '1'){
                         
                     }else if($dr->ESTADO == '2'){
+                        //$url = url('/ProgresoActividad/descargarDocumentoRecurso/');
+                        
                         $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
-                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".url('fileinput/img/pdf.png')."', tamaño: 1218822, ancho: '20px', clave: 2}],";
+                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: '".$dr->NOMBREARCHIVO."', downloadUrl: '".action('proyectos\ProgresoActividadController@descargarDocumentoRecurso',['id' => $dr->IDRECURSO])."', size: ".$dr->PESODEARCHIVO.", ancho: '20px', clave: ".$dr->IDRECURSO."}],";
                     }else if($dr->ESTADO == '3'){
+                        /*$url = '/ProgresoActividad/descargarDocunmentoRecurso/'.$dr->IDRECURSO;
                         $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
-                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".url('fileinput/img/pdf.png')."', tamaño: 1218822, ancho: '20px', clave: 2}],";
+                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".$url."', tamaño: 1218822, ancho: '20px', clave: ".$dr->IDRECURSO."}],";*/
                     }else{
-                       $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
-                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".url('fileinput/img/pdf.png')."', tamaño: 1218822, ancho: '20px', clave: 2}],";
+                        /*$url = '/ProgresoActividad/descargarDocunmentoRecurso/'.$dr->IDRECURSO;
+                        $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
+                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".$url."', tamaño: 1218822, ancho: '20px', clave: ".$dr->IDRECURSO."}],";*/
                     }
                     $datoshtmlrecursos .= '});    
                                         </script>';

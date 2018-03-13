@@ -38,19 +38,58 @@ class ProgresoActividadController extends Controller
             
             $files = $r->file($r->nombreInput);
             
-            $fileName = $files->getClientOriginalName();
+            $fileNameTemp = $files->getClientOriginalName();
+            $fileName = str_ireplace(" ", "_", $fileNameTemp);
+            $fileSize = $files->getClientSize();
             
             //$extension = $r->fileprueba->extension();
             $uploaded = Storage::cloud()->put($ruta.$fileName,file_get_contents($files->getRealPath()));
             if($uploaded){
                 
                 Recurso::where('IDRECURSO','=',$idrecurso)
-                        ->update(['ESTADO' => '2']);
+                        ->update(['ESTADO' => '2','NOMBREARCHIVO' => $fileName,'PESODEARCHIVO' => $fileSize]);
             }else{
                 $data['error'] = 'Error: al subir el documento, por favor intente de nuevo';
             }
             
             echo json_encode($data);
+        }
+    }
+
+    public function descargarDocumentoRecurso($id = null){
+        $idrecurso = $id;
+        $objetorecurso = RecursoHelper::obtener($idrecurso);
+        $arrayRecurso = RecursoHelper::obtenerarrayRecurso($objetorecurso);
+        
+        $filename = $arrayRecurso['NOMBREARCHIVO'];
+        $dir = '/'.$arrayRecurso['IDDIRECTORIORECURSO'];
+        $recursive = false; // Get subdirectories also?
+        $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+        $file = $contents
+            ->where('type', '=', 'file')
+            ->where('filename', '=', pathinfo($filename, PATHINFO_FILENAME))
+            ->where('extension', '=', pathinfo($filename, PATHINFO_EXTENSION))
+            ->first(); // there can be duplicate file names!
+        //return $file; // array with file info
+        $rawData = Storage::cloud()->get($file['path']);
+        return response($rawData, 200)
+            ->header('ContentType', $file['mimetype'])
+            ->header('Content-Disposition', "attachment; filename=".$filename."");
+    }
+
+    public function aprobarRecursoActividad(Request $r){
+        if($r->ajax()){
+            $idrecurso = $r->IDRECURSO;
+            $datos = Recurso::where('IDRECURSO','=',$idrecurso)->update(['ESTADO' => '3']);
+            echo "aprobado";
+        }
+    }
+
+    public function desaprobarRecursoActividad(Request $r){
+        if($r->ajax()){
+            $idrecurso = $r->IDRECURSO;
+            $datos = Recurso::where('IDRECURSO','=',$idrecurso)->update(['ESTADO' => '4']);
+            echo "desaprobado";
         }
     }
 }

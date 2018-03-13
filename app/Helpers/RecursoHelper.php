@@ -23,14 +23,17 @@ class RecursoHelper {
             foreach($objetorecurso as $p){
                 $datosDeRecurso['IDRECURSO'] = $p->IDRECURSO;
                 $datosDeRecurso['NOMBRERECURSO'] = $p->NOMBRERECURSO;
-                $datosDeRecurso['RUTA'] = $p->RUTA;
                 $datosDeRecurso['ESTADO'] = $p->ESTADO;
                 $datosDeRecurso['IDACTIVIDAD'] = $p->IDACTIVIDAD;
+                $datosDeRecurso['IDDIRECTORIORECURSO'] = $p->IDDIRECTORIORECURSO;
+                $datosDeRecurso['PORCENTAJERECURSO'] = $p->PORCENTAJERECURSO;
+                $datosDeRecurso['NOMBREARCHIVO'] = $p->NOMBREARCHIVO;
+                $datosDeRecurso['PESODEARCHIVO'] = $p->PESODEARCHIVO;
+                $datosDeRecurso['IDDIRECTORIOARCHIVO'] = $p->IDDIRECTORIOARCHIVO;
                 $datosDeRecurso['created_at'] = $p->created_at;
                 $datosDeRecurso['updated_at'] = $p->updated_at;
                 $datosDeRecurso['idusuario'] = $p->idusuario;
-                $datosDeRecurso['IDDIRECTORIORECURSO'] = $p->IDDIRECTORIORECURSO;
-                $datosDeRecurso['PORCENTAJERECURSO'] = $p->PORCENTAJERECURSO;
+                
             }
         }
         return $datosDeRecurso;

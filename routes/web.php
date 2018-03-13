@@ -122,6 +122,10 @@ Route::post('/ProgresoActividad/obtenerAvanceActividadmodal','proyectos\Activida
 Route::post('/ProgresoActividad/obtenerRecursosActividadesEnModal','proyectos\ActividadController@obtenerRecursosActividadesEnModal');
 Route::post('/ProgresoActividad/subirDocumentoRecurso','proyectos\ProgresoActividadController@subirDocumentoRecurso');
 
+Route::get('/ProgresoActividad/descargarDocumentoRecurso/{id}','proyectos\ProgresoActividadController@descargarDocumentoRecurso');
+Route::post('/ProgresoActividad/aprobarRecursoActividad','proyectos\ProgresoActividadController@aprobarRecursoActividad');
+Route::post('/ProgresoActividad/desaprobarRecursoActividad','proyectos\ProgresoActividadController@desaprobarRecursoActividad');
+
 Route::get('test', function() {
     Storage::disk('google')->put('test.txt', 'Hello World');
 });
