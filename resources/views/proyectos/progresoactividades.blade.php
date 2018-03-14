@@ -318,7 +318,16 @@
                 <script type="text/javascript" src="{{ url('js/plugins/moment.min.js')}}"></script>
                 <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-select.js')}}"></script>
                 <script type="text/javascript" src="{{ url('js/demo_tasks.js')}}"></script> 
+                
                 <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+
+                        
+                
+                <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
                 <link href="{{ url('fileinput/css/fileinput.min.css')}}" media="all" rel="stylesheet" type="text/css" />
                 <script src="{{ url('fileinput/js/plugins/sortable.min.js')}}"></script>
                 <script src="{{ url('fileinput/js/plugins/purify.min.js')}}"></script>

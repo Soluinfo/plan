@@ -605,7 +605,7 @@ class ActividadController extends Controller
                     if($dr->ESTADO == '1'){
                         $datoshtmlrecursos .= 'primary">ABIERTO</span>';
                     }else if($dr->ESTADO == '2'){
-                        $datoshtmlrecursos .= 'warning">PENDIENTE</span>';
+                        $datoshtmlrecursos .= 'warning">CARGADO</span>';
                         $datoshtmlrecursos .= ' Accion : <div class="btn-group btn-group-md">
                             <button onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i>Aprobar</butto>
                             <button onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i>Desaprobar</button>                                                                                                                                                                          
@@ -669,6 +669,7 @@ class ActividadController extends Controller
                                                     uploadAsync: false,
                                                     minFileCount: 1,
                                                     maxFileCount: 1,
+                                                    validateInitialCount: true,
                                                     maxImageWidth: 1200,
                                                     overwriteInitial: false,
                                                     initialPreviewAsData: true,
@@ -683,18 +684,15 @@ class ActividadController extends Controller
                     if($dr->ESTADO == '1'){
                         
                     }else if($dr->ESTADO == '2'){
-                        //$url = url('/ProgresoActividad/descargarDocumentoRecurso/');
-                        
+                                               
                         $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
                         $datoshtmlrecursos .= "initialPreviewConfig: [{caption: '".$dr->NOMBREARCHIVO."', downloadUrl: '".action('proyectos\ProgresoActividadController@descargarDocumentoRecurso',['id' => $dr->IDRECURSO])."', size: ".$dr->PESODEARCHIVO.", ancho: '20px', clave: ".$dr->IDRECURSO."}],";
                     }else if($dr->ESTADO == '3'){
-                        /*$url = '/ProgresoActividad/descargarDocunmentoRecurso/'.$dr->IDRECURSO;
                         $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
-                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".$url."', tamaño: 1218822, ancho: '20px', clave: ".$dr->IDRECURSO."}],";*/
+                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: '".$dr->NOMBREARCHIVO."', downloadUrl: '".action('proyectos\ProgresoActividadController@descargarDocumentoRecurso',['id' => $dr->IDRECURSO])."', size: ".$dr->PESODEARCHIVO.", ancho: '20px', clave: ".$dr->IDRECURSO."}],";
                     }else{
-                        /*$url = '/ProgresoActividad/descargarDocunmentoRecurso/'.$dr->IDRECURSO;
                         $datoshtmlrecursos .= "initialPreview: ['".url('fileinput/img/pdf.png')."'],";
-                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: 'hola', downloadUrl: '".$url."', tamaño: 1218822, ancho: '20px', clave: ".$dr->IDRECURSO."}],";*/
+                        $datoshtmlrecursos .= "initialPreviewConfig: [{caption: '".$dr->NOMBREARCHIVO."', downloadUrl: '".action('proyectos\ProgresoActividadController@descargarDocumentoRecurso',['id' => $dr->IDRECURSO])."', size: ".$dr->PESODEARCHIVO.", ancho: '20px', clave: ".$dr->IDRECURSO."}],";
                     }
                     $datoshtmlrecursos .= '});    
                                         </script>';
