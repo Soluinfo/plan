@@ -70,6 +70,8 @@
                                         {{ csrf_field() }}
                                         <input type="hidden" name="idobjetivo" value="{{ $IDOBJETIVOESTRATEGICO or '0'}}"/>
                                     </form>
+                                    <a href="{{ url('/crearobjetivos') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Objetivo<span class="fa fa-plus fa-right"></span></a>
+
                                     <button id="btnGuardarObjetivo" class="btn btn-primary pull-right">Guardar Objetivo <span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 
@@ -232,9 +234,73 @@
 
                 <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
                 <script>
-    /////////////////////////////////////////////////////////////////////////////
+ 
+ //Funcion para eliminar el ambito de influencia en la opcion de editar objetivos
+            function eliminarAmbito(IDAMBITOINFLUENCIA){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el ambito de influencia del objetivo?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/objetivos/eliminarAmbitoObjetivos') }}",{IDAMBITOINFLUENCIA:IDAMBITOINFLUENCIA,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El ambito de influencia a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableObjetivosambitos.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el ambito de influencia intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+                    //Fin de la Funcion para eliminar el ambito de influencia en la opcion de editar objetivos
+
+                     //Funcion para eliminar el alcance de objetivos en la opcion de editar objetivos
+                        function eliminarAlcance(IDALCANCE){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el alcance del objetivo?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/objetivos/eliminarAlcanceObjetivos') }}",{IDALCANCE:IDALCANCE,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El alcance a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableObjetivosalcance.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el alcance intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+                //Fin de la Funcion para eliminar el alcance de objetivos en la opcion de editar objetivos    
+
 //inicio de la funcion para validar el formulario de crear  objetivos///
-//////////////////////////////////////////////////////////////////////////////
+
 $(document).ready(function(){
      //tap para agregar objetivos estrategicos
      tableObjetivosambitos = $("#datatableAmbitosObjetivos").DataTable({

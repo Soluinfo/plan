@@ -32,14 +32,14 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Nombre de catálogo de indicadores</label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" name="txtnombreIndicador" placeholder="Catalogo de Indicadores"/>
+                                                <input type="text" class="form-control" name="txtnombreIndicador" placeholder="Catalogo de Indicadores"value="<?php if(isset($NOMBRE)){echo $NOMBRE;} ?>"/>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha creacion</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" name="dpFechaIndicador" class="form-control datepicker" placeholder="aaaa-mm-dd">
+                                                <input type="text" name="dpFechaIndicador" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHA)){echo $FECHA;} ?>"/>
                                             </div>
                                         </div>  
 
@@ -48,15 +48,26 @@
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <select class="form-control select" name="slEstadoIndicador">
                                                     <option value="">Seleccione un estado</option>
+                                                    @if( isset($ESTADO))
+                                                    @if($ESTADO == 1)
+                                                    <option selected="selected" value="1">PENDIENTE</option>
+                                                    <option value="2">APROBADO</option>
+                                                    @else
                                                     <option value="1">PENDIENTE</option>
-                                                    <option value="2">APROBADO</option> 
+                                                    <option selected="selected" value="2">APROBADO</option>
+                                                    @endif
+                                                    @else
+                                                    <option value="1">PENDIENTE</option>
+                                                    <option value="2">APROBADO</option>
+                                                    @endif
                                                 </select>
                                             </div>
                                         </div>
                                         {{ csrf_field() }}
-                                        <input type="text" name="idcatalogoindicadores" value="{{ $IDCATALOGOOBJETIVO or '0'}}"/>
+                                        <input type="hidden" name="idcatalogoindicadores" value="{{ $IDCATALOGOINDICADORES or '0'}}"/>
                                         
                                     </form>
+                                    <a href="{{ url('/catalogo/crear') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Catalogo<span class="fa fa-plus fa-right"></span></a>
                                     <button id="btnGuardarIndicador" class="btn btn-primary pull-right">Guardar Catalogo<span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 

@@ -11,6 +11,7 @@ use App\Alcance;
 
 
 
+
 class ObjetivosController extends Controller
 {
     public function home(){
@@ -125,6 +126,7 @@ public function guardarambito(Request $r){
     }
         public function datatablesAmbito(Request $r){
             if($r->ajax()){
+                $idObjetivo = $r->idobjetivo;
                 $datosambitos = Ambitoinfluencia::join('objetivosestrategicos', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', '=', 'ambitosinfluencias.IDOBJETIVOESTRATEGICO')
                                                     ->where('ambitosinfluencias.IDOBJETIVOESTRATEGICO', '=' ,$r->idobjetivo)
                                                     ->select('ambitosinfluencias.IDAMBITOINFLUENCIA',
@@ -134,11 +136,19 @@ public function guardarambito(Request $r){
                                                                                                 
                 return Datatables($datosambitos)
                  ->addColumn('action', function ($datosambitos) {
-                    return '<a onclick="obtenerDetalleSupervisor('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                            <a onclick="editarDetalleAmbito('.$datosambitos->IDAMBITOINFLUENCIA.')"class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
-                            <a onclick="agregarObjetivos('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                    return '<a onclick="editarDetalleAmbito('.$datosambitos->IDAMBITOINFLUENCIA.')"class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editareee!"><span class="fa fa-edit"></span></a>                   
+                            <a onclick="eliminarAmbito('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                 })
+                ->removeColumn('IDOBJETIVOESTRATEGICO')
                 ->make(true);
+            }
+        }
+        public function eliminarAmbitoObjetivo(Request $r){
+            if($r->ajax()){
+                $eliminar = Ambitoinfluencia::where(['IDAMBITOINFLUENCIA' => $r->IDAMBITOINFLUENCIA])
+                                                ->delete();
+                
+                echo 'eliminado';          
             }
         }
         public function guardaralcance(Request $r){
@@ -175,6 +185,7 @@ public function guardarambito(Request $r){
 }
 public function datatablesAlcance(Request $r){
     if($r->ajax()){
+        $idAlcance = $r->idalcance;
         $datosalcance = Alcance::join('objetivosestrategicos', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', '=', 'alcances.IDOBJETIVOESTRATEGICO')
                                             ->where('alcances.IDOBJETIVOESTRATEGICO', '=' ,$r->idobjetivo)
                                             ->select('alcances.IDALCANCE','objetivosestrategicos.DESCRIPCION','alcances.DESCRIPCIONALCANCE')
@@ -182,11 +193,29 @@ public function datatablesAlcance(Request $r){
                                         
         return Datatables($datosalcance)
         ->addColumn('action', function ($datosalcance) {
-            return '<a onclick="obtenerDetalleSupervisor('.$datosalcance->IDALCANCE.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                    <a onclick="agregarObjetivos('.$datosalcance->IDALCANCE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+            return '<a onclick="editarDetalleAmbito('.$datosalcance->IDALCANCE.')"class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
+                    <a onclick="eliminarAlcance('.$datosalcance->IDALCANCE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminarte!"><i class="fa fa-trash-o"></i></a>';
         })
+        ->removeColumn('IDOBJETIVOESTRATEGICO')
         ->make(true);
     }
+}
+public function eliminarAlcanceObjetivo(Request $r){
+    if($r->ajax()){
+        $eliminar = Alcance::where(['IDALCANCE' => $r->IDALCANCE])
+                                        ->delete();
+        
+        echo 'eliminado';          
+    }
+}
+public function eliminarObjetivo($id = null){
+
+        $eliminar = Objetivo::find($id);
+        
+        $eliminar->delete();
+        
+        echo 'Proyecto Eliminado';          
+    
 }
 /*public function obtenerAmbitos($id = null){
     $ambitos = Ambitoinfluencia::all();

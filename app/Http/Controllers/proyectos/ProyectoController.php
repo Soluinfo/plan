@@ -16,6 +16,8 @@ use App\Proyectosobjetivos;
 use App\Catalogoindicador;
 use App\Indicador;
 use App\Helpers\ProyectoHelper;
+use App\Helpers\ReporteHelper;
+use App\ReportesGeneral;
 
 
 class ProyectoController extends Controller
@@ -25,6 +27,7 @@ class ProyectoController extends Controller
         $proyectos = ProyectoHelper::obtenerProyectos(null);
         return view('proyectos.proyecto',['proyectos' => $proyectos]);
     }
+    
     //inicio de funcion crear que muestra la vista del formulario de creacion de proyecto
         public function crear($id = null){
             $datosDeProyecto = array();
@@ -316,6 +319,19 @@ class ProyectoController extends Controller
             echo 'eliminado';          
         }
     }
+    public function eliminarProyecto(Request $r){
+        if($r->ajax()){
+            
+            $eliminar = Proyecto::where(['IDPROYECTO',$id])
+            //$eliminar['mensaje'] = 'Esta seguro que desea eliminar el proyecto?';
+            
+                                            ->delete();
+            
+            echo 'Proyecto Eliminado';          
+        }
+    }
+        
+
     public function ExportarExcel(){
         
                    Excel::create('Proyectos', function($excel) {
@@ -352,25 +368,27 @@ class ProyectoController extends Controller
                                ); 
                             //$sheet->mergeCells('A1:E1');
                             //$sheet->row(1, ['ejemplo']);
-                            $sheet->row(1, ['Proyecto', 'Departamento', 'Fecha', 'Estado', 'Supervisor']);
+                            $sheet->row(1, ['Proyecto', 'Departamento', 'Fecha', 'Estado', 'Supervisor', 'Objetivo']);
                                //$datos = Proyectosupervisor::all();
-                               $datos = ProyectoHelper::obtenerSupervisoresDeProyecto(null);
+                               //$arrayProyecto = array();
+                               //$proyectos = ProyectoHelper::obtenerProyectos(null);
+                               $datosdesupervisor = ProyectoHelper::obtenerSupervisoresDeProyecto(null);
                                $supervisor = ProyectoHelper::obtenerSupervisoresDeProyectos(null);
-                               $datosf = array_collapse([$datos,$supervisor]);
-                               //$obtiene = $datos->$obtiene;
-                               //$datos = $this->obtenerSupervisoresDeProyecto(null);
+                               
+                               $datosf = array_collapse([$datosdesupervisor,$supervisor]);
+                               //$datosdeproyecto = ProyectoHelper::obtenerObjetivosDeProyecto(null);
                               
-                               
-                               
-                                                                    
-                               foreach ($datosf as $p){
+                               //$datosf = $supervisor->$proyectos;
+                               //$datos = $this->obtenerSupervisoresDeProyecto(null);
+                                     
+                               foreach ($datosf  as $p){
                                    $row = [];
                                    $row[0] = $p->NOMBREPROYECTO;
                                    $row[1] = $p->DESCRIPCION_DEP;
                                    $row[2] = $p->FECHAPROYECTO;
                                    $row[3] = $p->ESTADOPROYECTO;
-                                   //$row[4] = $p->NOMBRE_EPL;
-                                   //$row[5] = $p->IDOBJETIVOESTRATEGICO;
+                                   $row[4] = $p->NOMBRE_EPL;
+                                   $row[5] = $p->IDOBJETIVOESTRATEGICO;
                                    //$row[6] = $p->DESCRIPCION;
                                    
                                 $sheet->appendRow($row);
@@ -453,11 +471,14 @@ class ProyectoController extends Controller
 public function Exportarpdf($id){
     //$arrayProyecto = array();
     $mpdf = new mPDF();
+    $mpdf = new \Mpdf\Mpdf(['setAutoTopMargin' => 'stretch']);
     $proyectos = ProyectoHelper::obtenerProyectos($id);
-    //$supervisor = ProyectoHelper::obtenerSupervisores($id);
+    $datosDeReporte = ReporteHelper::obtenerReportes(null);
+    $supervisor = ProyectoHelper::obtenerSupervisoresDeProyectos($id);
     $datosdeproyecto = ProyectoHelper::obtenerObjetivosDeProyecto($id);
-    $datosf = array_collapse([$proyectos,$datosdeproyecto]);
-    //$obtiene = $datos->$obtiene;
+    $datosf = array_collapse([$datosDeReporte,$proyectos,$supervisor,$datosdeproyecto]);
+   
+    //$datosf = $proyectos->$supervisor->$datosdeproyecto;
     //$mpdf->SetHeader('Colegio Nacional Cristo Rey|Center Text|');
     $mpdf->SetFooter('<img src="img/direccion.png" width="700" height="80"/>{PAGENO}');
     $mpdf->SetTitle('Reportes');
@@ -478,21 +499,43 @@ $mpdf->Output("prueba.pdf","I");
 
 //FUNCION PARA EXPORTAR EN FORMATO PDF LOS PROYECTOS DE FORMA GNERAL
 public function  reportepdfcompleto(){
-    $proyectos = Proyecto::all();
-    $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto(null);
-    $mpdf = new mPDF();
-    //$mpdf->SetHeader('<img src="img/colegio.jpg" width="700" height="80"/>|Center Text|');
+    //$proyectos = Proyecto::all();
+    //$supervisor = ProyectoHelper::obtenerSupervisoresDeProyectos(null);
+    //$datosDeReporte = ReporteHelper::obtenerReportes(null);
+    //$datosdeproyecto = ProyectoHelper::obtenerdatosreportegeneral(null);
     
-    $mpdf->SetFooter('<img src="img/direccion.png" width="700" height="80"/>{PAGENO}');
-    $mpdf->SetTitle('Reportes');
-$accion = view('proyectos.reportepdfgeneral',['proyectos' => $proyectos])->render();
-if($accion=='html'){
-    return view('proyectos.reportepdfgeneral',['proyectos' => $proyectos]);
-}else{
-    $html = view('proyectos.reportepdfgeneral',['proyectos' => $proyectos])->render();
-}
-    $mpdf->writeHTML($html);
-    $mpdf->Output("Reporte-Proyecto.pdf","I");
-}
-}
+    $datosDeProyecto = ProyectoHelper::obtenerProyectos(null);
+    $Objetivos = ProyectoHelper::obtenerObjetivosDeProyecto(null);  
+    $datosfinales = array_collapse([$datosDeProyecto,$Objetivos]);
+    $mpdf = new mPDF();
+    $mpdf = new \Mpdf\Mpdf([
+        'setAutoTopMargin' => 'stretch',
+        'autoMarginPadding' => 5
+       
+    ]);
+         
+    $mpdf->SetHeader('<img src="img/colegio.jpg" width="300" height="50"/>');
+
+    //$mpdf->SetFooter('<img src="img/direccion.png" width="700" height="80"/>{PAGENO}/{nbpg}');
+    $mpdf->SetFooter('{PAGENO}/{nbpg}');
+       $mpdf->SetTitle('Reportes');
+       $mpdf->SetWatermarkText("Colegio Cristo Rey");//Marca de agua       
+       $mpdf->showWatermarkText = true; // activar/Desactivar marca de agua (True/false)
+       $mpdf->watermarkTextAlpha = 0.1;// Trasnparencia de la marca de agua (0-1)
+       $mpdf->AddPage('P'); // Orientacion de la pagina (P/L)
+       $mpdf->SetDisplayMode('fullpage'); // Modo de visualizacion a pantalla completa.
+
+       $accion = view('proyectos.reportepdfgeneral',['datosfinales' => $datosfinales])->render();
+       if($accion=='html'){
+           return view('proyectos.reportepdfgeneral',['datosfinales' => $datosfinales]);
+       }else{
+           $html = view('proyectos.reportepdfgeneral',['datosfinales' => $datosfinales])->render();
+       }
+
+       $mpdf->writeHTML($html);
+                $mpdf->Output("Reporte-Proyecto.pdf","I");
+            }
+        
+    }
+
 

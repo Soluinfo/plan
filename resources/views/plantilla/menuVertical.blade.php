@@ -16,6 +16,7 @@
                                 <div class="profile-data-name">John Doe</div>
                                 <div class="profile-data-title">Web Developer/Designer</div>
                             </div>
+                            
                             <div class="profile-controls">
                                 <a href="pages-profile.html" class="profile-control-left"><span class="fa fa-info"></span></a>
                                 <a href="pages-messages.html" class="profile-control-right"><span class="fa fa-envelope"></span></a>
@@ -42,7 +43,7 @@
                     <a href="#"><span class="fa fa-cogs"></span> <span class="xn-text">Objetivos</span></a>                        
                      <ul> 
                      <li><a href="{{ url('/objetivos') }}"><span class="fa fa-pencil"></span> <span class="xn-text">Agregar Objetivos</span></a></li>
-                     <li><a href="{{ url('/catalogo') }}"><span class="fa fa-pencil"></span> <span class="xn-text">Catalogo de Objetivos</span></a></li>
+                     <li><a href="{{ url('/catalogoObjetivos') }}"><span class="fa fa-pencil"></span> <span class="xn-text">Catalogo de Objetivos</span></a></li>
                      <li><a href="{{ url('/indicadores') }}"><span class="fa fa-table"></span> <span class="xn-text">Agregar indicadores</span></a></li>
                      <li><a href="{{ url('/catalogoindicadores') }}"><span class="fa fa-table"></span> <span class="xn-text">Catalogo de indicadores</span></a></li>
                      </ul>
@@ -53,7 +54,7 @@
                         <ul>
                             <li><a href="charts-morris.html"><span class="xn-text">Ambito</span></a></li>
                             <li><a href="charts-nvd3.html"><span class="xn-text">Alcance</span></a></li>
-                            <li><a href="charts-rickshaw.html"><span class="xn-text">Rickshaw</span></a></li>
+                            <li><a href="{{ url('configurar/reportes') }}"><span class="xn-text">Configuracion de Reportes</span></a></li>
                             <li><a href="charts-other.html"><span class="xn-text">Other</span></a></li>
                         </ul>
                     </li>                                        

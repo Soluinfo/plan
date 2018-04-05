@@ -5,7 +5,7 @@
                 <ul class="breadcrumb">
                     <li><a href="{{ url('/principal')}}">Principal</a></li>                    
                     <li><a href="{{ url('/objetivos')}}">Portafolio de Objetivos</a></li>
-                    <li class="active">Detalle de proyecto</li>
+                    <li class="active">Detalle de Objetivo</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
@@ -122,7 +122,7 @@
                     <div class="modal-content">
                         <div class="modal-header">
                             <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
-                            <h4 class="modal-title" id="defModalHead">Agregar Ambito de Influencia</h4>
+                            <h4 class="modal-title" id="defModalHead">Editar Ambito de Influencia</h4>
                         </div>
                         <div class="modal-body">
                             <div class="row">
@@ -161,6 +161,11 @@
                 
                 
                 @push('PageScript')
+                <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
                     <script>
                         /*function obtenerDetalleObjetivo(IDOBJETIVOESTRATEGICO){
                            _token = $("input[name=_token]").val();
@@ -170,6 +175,7 @@
                             $("#modalDetalleObjetivo").modal('show');
                            
                         }*/
+                      
                         function editarDetalleAmbito(IDAMBITOINFLUENCIA){
                            _token = $("input[name=_token]").val();
                             $.post("{{ url('/ambito/editar') }}",{_token:_token,IDAMBITOINFLUENCIA:IDAMBITOINFLUENCIA},function(data){
@@ -179,8 +185,64 @@
                             //"columnDefs": [{ targets: [3], "orderable": false}],
                                    
                         }
-
-                        
+                        function eliminarAmbito(IDAMBITOINFLUENCIA){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el ambito de influencia del objetivo?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/objetivos/eliminarAmbitoObjetivos') }}",{IDAMBITOINFLUENCIA:IDAMBITOINFLUENCIA,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El ambito de influencia a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableAmbitosObjetivos.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el ambito de influencia intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+                        function eliminarAlcance(IDALCANCE){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el alcance del objetivo?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/objetivos/eliminarAlcanceObjetivos') }}",{IDALCANCE:IDALCANCE,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El alcance a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableAlcanceObjetivos.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el alcance intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
                         
                         $(function(){
                             var $input = $("#progreso");

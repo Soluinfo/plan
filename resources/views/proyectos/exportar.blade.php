@@ -6,7 +6,6 @@
                                                 <th>Id</th>
                                                 <th>Nombre proyecto</th>
                                                 <th>Fecha creacion</th>
-                                               
                                                 <th>Departamento</th>
                                                 
                                                
@@ -18,7 +17,7 @@
                                                 <td>{{ $p->IDPROYECTO }}</td>
                                                 <td>{{ $p->NOMBREPROYECTO }}</td>
                                                 <td>{{ $p->FECHAPROYECTO }}</td>
-                                                
+                                                <td>{{ $p->DESCRIPCION_DEP }}</td>
                                                 <td>{{ $p->DESCRIPCION_DEP }}</td>
                                                 
                                             </tr>

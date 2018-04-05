@@ -10,9 +10,18 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+use App\Mail\emailsupervisor;
+use Illuminate\Support\Facades\Mail;
 
-Route::get('/', 'Auth\LoginController@home');
+
+
+Route::get('/', 'Auth\LoginController@login');
+//Route::get('/login', 'Auth\LoginController@home');
+
+Route::post('/principal', 'Auth\LoginController@principal')->name('principal');
 Route::get('/principal', 'PrincipalController@home');
+Route::get('/inicio', 'PrincipalController@home')->name('inicio');
+
 Route::get('/objetivos', 'objetivos\CatalogoController@home');
 Route::get('/crearobjetivo', 'objetivos\CatalogoController@crear');
 Route::get('/proyectos', 'proyectos\ProyectoController@home');
@@ -55,7 +64,7 @@ Route::post('/objetivos/datatableAlcanceObjetivo','objetivos\ObjetivosController
 
 Route::get('/crearobjetivos/{id?}', 'objetivos\ObjetivosController@crear');
 Route::post('/objetivos/guardar', 'objetivos\ObjetivosController@guardar');
-Route::get('/objetivos/eliminar{id}', 'objetivos\ObjetivosController@destroy');
+
 
 Route::post('/ambito/editar', 'objetivos\DetalleObjetivoController@editarDetalleAmbito');
 
@@ -64,20 +73,22 @@ Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralc
 
 
 // rutas de catalogo
-Route::get('/catalogo', 'objetivos\CatalogoController@home');
-//Route::get('/crearobjetivo/crear/{id?}', 'objetivos\CatalogoController@crear')->where('id', '[0-9]+');
-Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
+//Route::get('/catalogo', 'objetivos\CatalogoController@home');
+Route::get('/catalogoObjetivos/editar/{id?}', 'indicadores\CatalogoIndicadorController@crear')->where('id', '[0-9]+');
+Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoObjetivosController@crear');
 Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
 
-Route::get('/catalogo/detalleCatalogo/{id}','objetivos\DetalleCatalogoController@home');
-Route::post('/catalogo/datatableCataloObjetivos','objetivos\CatalogoController@datatablesCataObjetivos');
+Route::get('/catalogo/detalleCatalogoObjetivos/{id}','objetivos\DetalleCatalogoObjetivosController@home');
+Route::post('/catalogo/datatableCataloObjetivos','objetivos\CatalogoObjetivosController@datatablesCataObjetivos');
 
 //rutas de indicadores
 Route::get('/indicadores', 'indicadores\IndicadorController@home');
 Route::get('/crearindicadores/{id?}', 'indicadores\IndicadorController@crear');
 Route::post('/crearindicadores/guardar', 'indicadores\IndicadorController@guardar');
 Route::get('/indicadores/detalleIndicador/{id}','indicadores\DetalleIndicadorController@home');
+Route::get('/indicadores/detalleCatalogoIndicador/{id}','indicadores\DetalleCatalogoIndicadorController@home');
 Route::post('/indicadores/datatableIndicadorActividad','proyectos\ActividadController@datatablesIndicador');
+Route::post('/catalogo/datatableCatalogoIndicadores','indicadores\DetalleCatalogoIndicadorController@datatablesCatalogoIndicadores');
 
 Route::post('/indicadores/datatableActividadIndicador','indicadores\IndicadorController@datatablesActividades');
 
@@ -99,26 +110,21 @@ Route::get('/proyectos/reportepdf/{id}','proyectos\ProyectoController@Exportarpd
 //Route::post('/actividades/datatableActividad','proyectos\ActividadController@datatableActividad');
 Route::post('/actividades/asignarResponsableActividad','proyectos\ActividadController@asignarResponsable');
 Route::post('/actividades/ObtenerResponsablesDeActividad','proyectos\ActividadController@obtenerResponsablesDeActividad');
-<<<<<<< HEAD
-Route::get('/actividades/detalleActividad/{id}','proyectos\DetalleActividadController@home');
 
 
-=======
-Route::post('/actividades/eliminarResponsableActividad','proyectos\ActividadController@eliminarResponsableActividad');
-Route::post('/actividades/eliminarFechaActividad','proyectos\ActividadController@eliminarfechasActividad');
->>>>>>> origin/test
+
 
 Route::post('/ambito/guardara', 'objetivos\ObjetivosController@guardarambito');
 Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralcance');
 
 
 // rutas de catalogo
-Route::get('/catalogo', 'objetivos\CatalogoController@home');
+Route::get('/catalogoObjetivos', 'objetivos\CatalogoObjetivosController@home');
 //Route::get('/crearobjetivo/crear/{id?}', 'objetivos\CatalogoController@crear')->where('id', '[0-9]+');
-Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
+//Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
 Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
 
-Route::get('/catalogo/detalleCatalogo/{id}','objetivos\DetalleCatalogoController@home');
+Route::get('/catalogo/detalleCatalogoIndicadores/{id}','objetivos\DetalleCatalogoIndicadorController@home');
 
 Route::get('/proyectos/pdf', 'proyectos\ProyectoController@reportepdfcompleto');
 
@@ -139,3 +145,63 @@ Route::post('/ProgresoActividad/obtenerActividadesDeProyecto','proyectos\Activid
 Route::post('/ProgresoActividad/obtenerDetalleActividadesEnModal','proyectos\ActividadController@obtenerDetalleActividadesEnModal');
 Route::post('/ProgresoActividad/obtenerAvanceActividadmodal','proyectos\ActividadController@obtenerAvanceActividadmodal');
 Route::post('/ProgresoActividad/obtenerRecursosActividadesEnModal','proyectos\ActividadController@obtenerRecursosActividadesEnModal');
+
+//rutas para eliminar archivos
+Route::post('/Proyectos/eliminar/{id}','proyectos\ProyectoController@eliminarProyecto');
+Route::post('/objetivos/eliminarAmbitoObjetivos','objetivos\ObjetivosController@eliminarAmbitoObjetivo');
+Route::post('/objetivos/eliminarAlcanceObjetivos','objetivos\ObjetivosController@eliminarAlcanceObjetivo');
+
+Route::post('/actividades/eliminarFechaActividad','proyectos\ActividadController@eliminarfechasActividad');
+Route::post('/proyectos/eliminarProgramacionActividad','proyectos\ProyectoController@eliminarProyectoObjetivo');
+Route::post('/actividades/eliminarResponsableActividad','proyectos\ActividadController@eliminarResponsableActividad');
+
+Route::post('/catalogo/eliminarCatalogoObjetivos','objetivos\CatalogoObjetivosController@eliminarCatalogoObjetivos');
+Route::post('/indicadores/eliminarActividad','indicadores\IndicadorController@eliminarActividadIndicador');
+
+Route::post('/objetivos/eliminarObjetivos/{id}','objetivos\ObjetivosController@eliminarObjetivo');
+
+//rutas para ver detalles
+Route::post('/catalogo/detalles', 'objetivos\DetalleCatalogoObjetivosController@obtenerDetalleObjetivoCatalogo');
+
+Route::get('charts/grafico', 'graficas\TestController@grafica_columnas');
+
+
+Route::get('enviarcorreo/principal', 'enviarcorreo\MailController@send');
+Route::get('grafico', 'graficas\TestController@grafica_columnas');
+Route::get('grafico2', 'graficas\TestController@grafica_pastel');
+
+Route::get('enviarcorreo', 'enviarcorreo\MailController@enviarCorreo');
+
+
+Route::get('enviar', function(){
+    
+    Mail::to('unidadeducativaprivadcristorey@gmail.com','Libreria mailtrap')
+        ->send(new emailsupervisorcorreo());    
+    });
+//funcion para la libreria mailtrap
+    Route::get('enviarm', function(){
+        
+        Mail::send('email.Mail', array('key' => 'value'), function($message) { $message->to('unidadeducativaprivadcristorey@gmail.com', 'Sender Name')->subject('Welcome!'); });
+            return "mensaje enviado";
+        });
+
+        //rutas configurar reportes
+
+        Route::get('configurar/reportes', 'configuracion_reportes\Configurar_ReportesController@home');
+        Route::get('editar/reportes/{id?}', 'configuracion_reportes\Configurar_ReportesController@crear');
+        Route::post('actualizar/reportes', 'configuracion_reportes\Configurar_ReportesController@actualizar');
+        
+
+        
+
+
+       
+    
+  
+
+
+
+
+
+  
+    

@@ -311,8 +311,8 @@ class ActividadController extends Controller
             return Datatables($datosderesponsable)
             ->removeColumn('IDACTIVIDADRESPONSABLE')
             ->addColumn('action', function ($datosderesponsable) {
-                return '<a onclick="obtenerDetalleResponsable('.$datosderesponsable ->IDACTIVIDADRESPONSABLE.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                        <a onclick="eliminarresponsableActidad('.$datosderesponsable ->IDACTIVIDADRESPONSABLE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                return '<a onclick="obtenerDetalleResponsable('.$datosderesponsable ->IDACTIVIDADRESPONSABLE.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalles!"><i class="fa fa-info-circle"></i></a>
+                        <a onclick="eliminarresponsableActidad('.$datosderesponsable ->IDACTIVIDADRESPONSABLE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminarte!"><i class="fa fa-trash-o"></i></a>';
             })
             ->make(true);
         }

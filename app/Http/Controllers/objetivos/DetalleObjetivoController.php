@@ -26,6 +26,7 @@ class DetalleObjetivoController extends Controller
     public function editarDetalleAmbito(Request $r){
         if($r->ajax()){
             $tabla = ObjetivoHelper::editarAmbito($r->IDAMBITOINFLUENCIA);
+            $tabla['NOMBREAMBITO'] = $r->txtDescripcionAmbito;
             echo $tabla;
         }
     }

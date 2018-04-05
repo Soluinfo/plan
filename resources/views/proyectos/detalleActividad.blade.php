@@ -199,6 +199,64 @@
                     <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
 
                     <script>
+                    function eliminarfechaActidad(IDACTIVIDADFECHAFINAL){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar la programacion de la actividad?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/actividades/eliminarFechaActividad') }}",{IDACTIVIDADFECHAFINAL:IDACTIVIDADFECHAFINAL,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El objetivo a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableFechasActividad.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino la programacion de la actividad, intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+                        function eliminarresponsableActidad(IDACTIVIDADRESPONSABLE){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el responsable de la actividad?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/actividades/eliminarResponsableActividad') }}",{IDACTIVIDADRESPONSABLE:IDACTIVIDADRESPONSABLE,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El responsable a sido eliminado de la actividad', layout: 'topRight', type: 'success'});
+                                                    tableResponsableActividad.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el responsable de la actividad, intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
                         $(function(){
                             //tap para agregar fechas a la actividad
                             tableFechasActividad = $("#datatable-reprogramarActividad").DataTable({

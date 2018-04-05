@@ -30,7 +30,8 @@
                                         <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                                         <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
                                     </ul> 
-                                    <div class="btn-group">
+                                    <div class="panel-body col-md-3 col-xs-12">
+                                       <div class="btn-group">
                                         <button type="button" class="btn btn-info">Seleccione Accion</button>
                                         <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
                                             <span class="caret"></span>
@@ -41,6 +42,7 @@
                                             
                                             <li><a target="_blank" href="{{ url('/proyectos/pdf') }}">Exportar a PDF</a></li>
                                         </ul>
+                                    </div> 
                                     </div> 
                                     <!--<a href="{{ url('/proyectos/reporteexcel') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Reporte en Excel <span class="fa fa-plus fa-right"></span></a>
                                     <a href="{{ url('/actividad/pdf') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">PDF<span class="fa fa-plus fa-right"></span></a>-->
@@ -85,7 +87,8 @@
                                                 <td>
                                                     <a href="{{ action('proyectos\DetalleProyectoController@home',$p->IDPROYECTO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
                                                     <a href="{{ action('proyectos\ProyectoController@crear',$p->IDPROYECTO) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
-                                                    <a class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
+                                                    <a href="{{ url('eliminarProyecto',$p->IDPROYECTO) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
+
                                                     <!--<a href="{{ action('proyectos\ProyectoController@ExportarExcelId',$p->IDPROYECTO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Excel!"><span class="fa fa-file-excel-o"></span></a>-->
                                                     <a href="{{ action('proyectos\ProyectoController@Exportarpdf',$p->IDPROYECTO) }}" target="_blank" type="button" class="btn btn-success btn-xs" data-toggle="tooltip" data-placement="top" title="Reporte PDF!"><span class="fa fa-file-pdf-o"></span></a>
 
@@ -104,6 +107,37 @@
                 </div>
                 <!-- END PAGE CONTENT WRAPPER --> 
                 @push('PageScript')
-                    <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script> 
+                    <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script>
+                    <script>
+                    function eliminarProyecto(IDPROYECTO){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el proyecto?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/Proyectos/eliminar') }}",{IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El proyecto ha sido Eliminado', layout: 'topRight', type: 'success'});
+                                                    
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el proyecto intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+                    </script> 
                 @endpush('PageScript')
 @endsection('principal')

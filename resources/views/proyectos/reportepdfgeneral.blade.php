@@ -3,51 +3,41 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <link rel="stylesheet" href="css/estilos.css">
-        <style type="text/css">
-        </style>  
+       
     </head>   
         <body>
        
-            <div class="container">
-                <div class="row">
-                <div align=center> <img src="img/colegio.jpg" width="300" height="70"/>
-                    </div>
-                    <h5 style="text-align:center"><strong><u>MATRIZ DE PLANIFICACIÓN PROYECTO DE MEJORA</u></strong></h5>
+            <div class="container">   
+                
                     <table style="font-size:12px">
-                        
-                      
-                            <tr>
-                                <th style="width: 20%;"><strong>Area de Mejora</strong></th>                            
-                                <th style="width: 30%;"><strong>Proyecto</strong></th>
-                                <th style="width: 20%;"><strong>Fecha</strong></th>
-                                <th style="width: 15%;"><strong>Estado</strong></th>
-                                <th style="width: 15%;"><strong>Departamento</strong></th>
-                            </tr>
-                            <tbody>
-                                @foreach($proyectos as $p)
-                                <tr>
-                                <td>Prueba</td>
-                                <td>{{ $p->NOMBREPROYECTO }}</td>
-                                <td>{{ $p->FECHAPROYECTO }}</td>
-                                @if($p->ESTADOPROYECTO == 1)
-                                    <td><span class="label label-info label-form">ABIERTO</span></td>
-                                    @elseif($p->ESTADOPROYECTO == 2)
-                                    <td><span class="label label-success label-form">EN PROGRESO</span></td>
-                                    @elseif($p->ESTADOPROYECTO == 3)
-                                    <td><span class="label label-danger label-form">EN RETRASO</span></td>
-                                    @else
-                                    <td><span class="label label-success label-form">COMPLETADO</span></td>
-                                @endif      
-                            <td>{{ $p->DESCRIPCION_DEP  }}</td>
-                            </tr>
-                            @endforeach 
-                                </tbody> 
-                                
+                    @foreach($datosfinales as $p)
+                    <tr>
+                        <td><strong>Area de Mejora</strong></td> 
+                        <td>FAMILIA Y COMUNIDAD</td>
+                        <td><strong>Título del Proyecto</strong></td>
+                        <td>{{ $p->NOMBREPROYECTO }}</td>
+                    </tr>
+                   
+                    <tr>
+                        <td><strong>Coordinador e integrantes del equipo de mejora</strong></td>
+                        <td>{{ $p->NOMBRE_EPL }} {{$p->APELLIDO_EPL }} </td>
+                        <td><strong>Objetivo General</strong></td>
+                        <td>{{ $p->DESCRIPCION }}</td>
                             
-                        </table>
-                      
-                        
-                </div>
+                    </tr> 
+                             
+                        <!--<tr>
+                            <td><strong>RESPONSABLE</strong></th>
+                            <td>{{ $p->NOMBRE_EPL }} {{$p->APELLIDO_EPL }} </td>
+
+                            <td><strong>RECURSOS</strong></th>
+                            <td colspan="2">{{ $p->FECHAPROYECTO }} </td>
+
+                            <td><strong>PLAZO</strong></th>
+                            <td colspan="2">{{ $p->FECHAPROYECTO }} </td>
+                        </tr>-->
+                        @endforeach 
+                    </table>   
             </div>
            
         </body>

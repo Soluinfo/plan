@@ -1,5 +1,5 @@
 @extends('master')
-@section('title','Catalogo de Objetivos')
+@section('title','Catalogo de Indicadores')
 @section('principal')
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
@@ -52,8 +52,8 @@
                                                 <td><span class="label label-danger label-form">Estado 2</span></td>
                                                 @endif                                            
                                                 <td>
-                                                    <a href="{{ action('objetivos\DetalleCatalogoController@home',$p->IDCATALOGOOBJETIVO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
-                                                    <a href="{{ action('objetivos\CatalogoController@crear',$p->IDCATALOGOOBJETIVO) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
+                                                    <a href="{{ action('indicadores\DetalleCatalogoIndicadorController@home',$p->IDCATALOGOINDICADORES) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
+                                                    <a href="{{ action('indicadores\CatalogoIndicadorController@crear',$p->IDCATALOGOINDICADORES) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
                                                     <a class="btn btn-danger btn-xs" href="/eliminar/{{ $p->IDCATALOGOOBJETIVO}}" onclick="return confirm('Quiere borrar el registro?')" role="button"><i class="fa fa-trash-o"></i></a> 
                                                                                                     
                                                 </td>

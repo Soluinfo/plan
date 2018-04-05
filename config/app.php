@@ -163,6 +163,9 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Bogardo\Mailgun\MailgunServiceProvider::class,
+       
+        
 
         
 
@@ -173,6 +176,7 @@ return [
         Laraveles\Spanish\SpanishServiceProvider::class,
         Collective\Html\HtmlServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
+        ConsoleTVs\Charts\ChartsServiceProvider::class,
        
         
         /*
@@ -241,7 +245,11 @@ return [
         'Html' => Collective\Html\HtmlFacade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
+        'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
+        'Input' => Illuminate\Support\Facades\Input::class,
         //'PDF' => Elibyy\TCPDF\Facades\TCPDF::class,
+
         
         
     ],

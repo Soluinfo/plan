@@ -97,12 +97,19 @@ public function datatablesActividades(Request $r){
          ->addColumn('action', function ($datosactividad) {
             return '<a onclick="obtenerDetalleActividad('.$datosactividad->IDACTIVIDAD.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
                     <a onclick=class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
-                    <a onclick="agregarObjetivos('.$datosactividad->IDACTIVIDAD.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                    <a onclick="eliminaractividadesindicador('.$datosactividad->IDACTIVIDAD.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminari!"><i class="fa fa-trash-o"></i></a>';
         })
         ->make(true);
     }
 }
 //actividades del indicador
-
+public function eliminarActividadIndicador(Request $r){
+    if($r->ajax()){
+        $eliminar = Actividad::where(['IDACTIVIDAD' => $r->IDACTIVIDAD])
+                                        ->delete();
+        
+        echo 'eliminado';     
+    }
+}
 
 }

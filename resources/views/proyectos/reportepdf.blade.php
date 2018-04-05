@@ -10,35 +10,52 @@
                 <div class="row">
                    <div align=center> <img  src="img/colegio.jpg" width="350" height="50"/>
                     </div>
-                    <h5 style="text-align:center"><strong><u>MATRIZ DE PLANIFICACIÓN PROYECTO DE MEJORA</u></strong></h5>
+                    @foreach($datosf as $r)
+                    <h5 style="text-align:center"><strong><u>{{ $r->encabezado1 }}</u></strong></h5>
+                    @endforeach
                     <table style="font-size:12px">
                     @foreach($datosf as $p)
+                   
                         <tr>
                             <th style="width: 40%;"><strong>Area de Mejora</strong></th> 
                             <td style="width: 60%;" >FAMILIA Y COMUNIDAD</td>
                         </tr> 
                         <tr>                      
-                            <th><strong>Título del Proyecto</strong></th>
+                            <td><strong>Título del Proyecto</strong></td>
                             <td>{{ $p->NOMBREPROYECTO }}</td>
                             </tr>
                             <tr>
-                            <th><strong>Coordinador e integrantes del equipo de mejora</strong></th>
-                            <td>Diego Intriago</td>
+                          
+                            <td><strong>Coordinador e integrantes del equipo de mejora</strong></td>
+                            <td>{{ $p->NOMBRE_EPL }} {{$p->APELLIDO_EPL }} </td>
+                           
                             </tr>
                             <tr>
-                            <th><strong>Objetivo General</strong></th>
+                            <td><strong>Objetivo General</strong></td>
                             <td>{{ $p->DESCRIPCION }}</td>
                             </tr>
                             
                             <tr>
-                            <th><strong>Departamento</strong></th>
+                            <td><strong>Departamento</strong></td>
                             <td>{{ $p->DESCRIPCION_DEP  }}</td>
                         </tr>
+                        @endforeach 
+                        </table> 
+                        <table style="font-size:12px">
+                        <tr>
+                            <th><strong>OBJETIVOS ESPECÍFICOS</strong></th>
+                            <th><strong>INDICADORES DE LOGRO</strong></th>
+                            <th><strong>ACTIVIDADES</strong></th>
+                            <th><strong>RESPONSABLE</strong></th>
+                            <th><strong>RECURSOS</strong></th>
+                            <th><strong>PLAZO</strong></th>
+                        </tr>
                         
-                            @endforeach 
+                            
                         
                          
                     </table> 
+                    
                      
                 </div>
                 

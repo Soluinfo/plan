@@ -12,10 +12,11 @@
         
         <!-- CSS INCLUDE -->        
         <link rel="stylesheet" type="text/css" id="theme" href="{{ url('css/theme-default.css') }}"/>
+        
         <!-- EOF CSS INCLUDE -->
         <script>
             var baseUrl = "{{ url('/') }}";
-            
+           
         </script>                               
     </head>
     <body>

@@ -9,6 +9,7 @@ use App\Actividad;
 use App\Proyectosobjetivos;
 use App\Empleado;
 use App\Proyectosupervisor;
+use App\ReportesGeneral;
  
 class ProyectoHelper {
     /**
@@ -164,7 +165,7 @@ $datosdeproyecto = Proyectosobjetivos::join('objetivosestrategicos', 'proyectoso
                                         }
                                         return $datosdeproyecto;
     }
-    //funcion para generar el pdf de proyectos
+    //funcion para generar el pdf general de proyectos
     public static function obtenerSupervisoresDeProyectos($id = null){
         if($id == null){
             $supervisor = Empleado::join('proyectosupervisor', 'empleado.SERIAL_EPL', '=', 'proyectosupervisor.IDSUPERVISOR')
@@ -177,9 +178,26 @@ $datosdeproyecto = Proyectosobjetivos::join('objetivosestrategicos', 'proyectoso
                             ->select('empleado.*', 'proyectosupervisor.*')
                             ->get();
                             }
+                           
+                           
                             return $supervisor;
+                           
+                           
+                              }
+    public static function obtenerdatosreportegeneral($id = null){
+        if($id == null){
+                                $datosdeproyecto = Proyecto::join('departamento', 'proyectos.IDDEPARTAMENTO', '=', 'departamento.SERIAL_DEP')              
+                                ->select('proyectos.*','departamento.*')
+                                ->get();
+                                    }else{
+                                    $datosdeproyecto = Proyecto::join('departamento', 'proyectos.IDDEPARTAMENTO', '=', 'departamento.SERIAL_DEP')              
+                                                ->where('IDPROYECTO',$id)
+                                                ->select('proyectos.*','departamento.*')
+                                                ->get();
+                                                    }
+                                                return $datosdeproyecto;
+
     }
+ 
 }
 
-    //fin de funcion obtener
-}

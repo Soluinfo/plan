@@ -4,8 +4,8 @@
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="{{ url('/')}}">Principal</a></li>                    
-                    <li><a href="{{ url('/catalogo')}}">Catalogo de objetivos</a></li>
-                    <li class="active">Crear objetivo</li>
+                    <li><a href="{{ url('/catalogoObjetivos')}}">Catalogo de objetivos</a></li>
+                    <li class="active">Crear Catalogo de Objetivos</li>
                 </ul>
              <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
@@ -64,9 +64,10 @@
                                             </div>
                                         </div>
                                         {{ csrf_field() }}
-                                        <input type="text" name="idcatalogoobjetivo" value="{{ $IDCATALOGOOBJETIVO or '0'}}"/>
+                                        <input type="hidden" name="idcatalogoobjetivo" value="{{ $IDCATALOGOOBJETIVO or '0'}}"/>
                                         
                                     </form>
+                                    <a href="{{ url('/crearcatalogo') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Catalogo<span class="fa fa-plus fa-right"></span></a>
                                     <button id="btnGuardarCatalogo" class="btn btn-primary pull-right">Guardar Catalogo<span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 
