@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Indicador;
 use App\Catalogoindicador;
+use App\Proyectoindicador;
  
 class IndicadorHelper {
     /**
@@ -60,4 +61,9 @@ $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'i
         return $actividad;
     }
 //fin de funcion obtener
+
+    public static function numeroIndicadoresProyecto($idproyecto){
+        $numero = Proyectoindicador::where('IDPROYECTO',$idproyecto)->count();
+        return $numero;
+    }
 }

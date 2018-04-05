@@ -12,6 +12,7 @@
 */
 
 Route::get('/', 'Auth\LoginController@home');
+Route::get('/autenticacion/login','Autenticacion\IniciosesionController@iniciarsesion');
 Route::get('/principal', 'PrincipalController@home');
 Route::get('/objetivos', 'objetivos\CatalogoController@home');
 Route::get('/crearobjetivo', 'objetivos\CatalogoController@crear');
@@ -27,12 +28,15 @@ Route::post('/proyectos/asignarSupervisorProyecto','proyectos\ProyectoController
 Route::post('/proyectos/obtenerSupervisorProyecto','proyectos\ProyectoController@obtenerSupervisores');
 Route::post('/proyectos/asignarIndicadorProyectos','proyectos\ProyectoController@asignarIndicadorProyecto');
 Route::post('/proyectos/eliminarIndicadorProyecto','proyectos\ProyectoController@eliminarIndicadorProyecto');
+Route::post('/proyectos/obtenerFechasActivasDeProyecto','proyectos\ProyectoController@obtenerFechasActivasDeProyecto');
+Route::post('/proyectos/guardarFechas','proyectos\ProyectoController@guardarFechas');
 Route::post('/objetivos/detalles', 'proyectos\DetalleProyectoController@obtenerDetalleObjetivo');
 Route::post('/supervisor/detalles','proyectos\DetalleProyectoController@obtenerDetalleSupervisor');
 
 Route::post('/proyectos/asignarObjetivoProyecto','proyectos\ProyectoController@asignarObjetivoProyecto');
 Route::post('/proyectos/eliminarProyectoObjetivos','proyectos\ProyectoController@eliminarProyectoObjetivo');
-
+Route::post('/proyectos/eliminarProyectoSupervisor','proyectos\ProyectoController@eliminarProyectoSupervisor');
+Route::post('/proyectos/obtenerProgresoInformacion','proyectos\ProyectoController@obtenerProgresoInformacion');
 //validaciones
 Route::post('/proyectos/validacion/proyectoExiste','proyectos\ProyectoController@validarExisteProyecto');
 
@@ -42,6 +46,7 @@ Route::post('/proyectos/indicador','proyectos\ProyectoController@datatableIndica
 Route::post('/proyectos/datatableObjetivosProyecto','proyectos\ProyectoController@datatableObjetivosProyecto');
 Route::post('/proyectos/obtenerSupervisoresProyectos','proyectos\ProyectoController@obtenerSupervisoresDeProyecto');
 Route::post('/proyectos/obtenerIndicadorProyectos','proyectos\ProyectoController@datatableIndicadorProyectos');
+Route::post('/proyectos/datatableFechasProyecto','proyectos\ProyectoController@datatableFechasProyecto');
 
 //Diego Intriago
 Route::post('/ambito/detalles', 'objetivos\DetalleObjetivoController@obtenerDetalleAmbito');
@@ -93,7 +98,7 @@ Route::post('/actividades/asignarResponsableActividad','proyectos\ActividadContr
 Route::post('/actividades/ObtenerResponsablesDeActividad','proyectos\ActividadController@obtenerResponsablesDeActividad');
 Route::post('/actividades/eliminarResponsableActividad','proyectos\ActividadController@eliminarResponsableActividad');
 Route::post('/actividades/eliminarFechaActividad','proyectos\ActividadController@eliminarfechasActividad');
-
+Route::post('/actividades/obtenerFechaActividad','proyectos\ActividadController@obtenerFechaActividad');
 Route::post('/ambito/guardara', 'objetivos\ObjetivosController@guardarambito');
 Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralcance');
 
@@ -125,6 +130,7 @@ Route::post('/ProgresoActividad/subirDocumentoRecurso','proyectos\ProgresoActivi
 Route::get('/ProgresoActividad/descargarDocumentoRecurso/{id}','proyectos\ProgresoActividadController@descargarDocumentoRecurso');
 Route::post('/ProgresoActividad/aprobarRecursoActividad','proyectos\ProgresoActividadController@aprobarRecursoActividad');
 Route::post('/ProgresoActividad/desaprobarRecursoActividad','proyectos\ProgresoActividadController@desaprobarRecursoActividad');
+Route::post('/ProgresoActividad/enviarSolicitudReprogramarFecha','proyectos\ProgresoActividadController@enviarSolicitudReprogramarFecha');
 
 Route::get('test', function() {
     Storage::disk('google')->put('test.txt', 'Hello World');
@@ -173,4 +179,7 @@ Route::get('get', function() {
     return response($rawData, 200)
         ->header('ContentType', $file['mimetype'])
         ->header('Content-Disposition', "attachment; filename='$filename'");
+});
+Route::get('test', function() {
+    Storage::disk('google')->put('test.txt', 'Hello World');
 });

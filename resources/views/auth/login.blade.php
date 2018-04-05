@@ -9,10 +9,16 @@
         
         <link rel="icon" href="favicon.ico" type="image/x-icon" />
         <!-- END META SECTION -->
-        
+        <script>
+            var baseUrl = "{{ asset('/') }}";
+            
+        </script> 
         <!-- CSS INCLUDE -->        
         <link rel="stylesheet" type="text/css" id="theme" href="css/theme-default.css"/>
-        <!-- EOF CSS INCLUDE -->                                    
+        <link rel="stylesheet" type="text/css" id="theme" href="{{ asset('css/loader/jquery.loadingModal.min.css') }}"/>
+        <!-- EOF CSS INCLUDE --> 
+        <script type="text/javascript" src="{{ asset('js/plugins/jquery/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/plugins/loader/jquery.loadingModal.min.js') }}"></script>                                   
     </head>
     <body>
         <div class="login-container">
@@ -22,25 +28,26 @@
                 
                 <div class="login-body">
                     <div class="login-title"><strong>Bienvenido</strong>, por favor Inicia sesión</div>
-                    <form  class="form-horizontal" method="post">
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <input type="text" name="txtusuario" class="form-control" placeholder="Nombre de usuario"/>
+                    {!! Form::open(['url' => 'autenticacion/login', "name" => "formLogin", "id" => "formLogin","class" => "form-horizontal", "role" => "form"])!!}
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="text" name="txtusuario" class="form-control" placeholder="Nombre de usuario"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-12">
-                            <input type="password" name="txtpassword" class="form-control" placeholder="Contraseña"/>
+                        <div class="form-group">
+                            <div class="col-md-12">
+                                <input type="password" name="txtpassword" class="form-control" placeholder="Contraseña"/>
+                            </div>
                         </div>
-                    </div>
-                    <div class="form-group">
-                        <div class="col-md-6">
-                            <a href="#" class="btn btn-link btn-block">Olvidaste tu contraseña</a>
+                        <div class="form-group">
+                            <div class="col-md-6">
+                                <a href="#" class="btn btn-link btn-block">Olvidaste tu contraseña</a>
+                            </div>
+                            <div class="col-md-6">
+                                <a id="btnIniciar" type="button" class="btn btn-info btn-block">Iniciar sesión</a>
+                            </div>
                         </div>
-                        <div class="col-md-6">
-                            <a href="{{ url('principal') }}" id="btnIniciar" type="button" class="btn btn-info btn-block">Iniciar sesión</a>
-                        </div>
-                    </div>
+                        {{ csrf_field() }}
                     </form>
                 </div>
                 <div class="login-footer">
@@ -63,7 +70,36 @@
         <script>
         
         $(function(){
-           
+            $("#btnIniciar").on("click",function(){
+                $("#formLogin").submit();
+            })
+            $("#formLogin").on("submit", function(e) {
+                usuario = $("input[name=txtusuario]").val();
+                clave = $("input[name=txtpassword]").val();
+                _token = $("input[name=_token]").val();
+                e.preventDefault();
+                $.ajax({
+                    url: $(this).attr("action"),
+                    type: $(this).attr("method"),
+                    data: { usuario:usuario,clave:clave,_token:_token},
+                    dataType : 'json',
+                    beforeSend : function(){
+                        
+                        //$('body').loadingModal('show');
+                        //$('body').loadingModal('text', 'Reprogramando actividad...');
+                    },
+                    success : function(data){
+                        if(data.respuesta == 'ok'){
+                            $('body').loadingModal('text', 'Bienvenido...');
+                            $(location).attr('href', '{{url("/principal")}}');
+                        }
+                        //$('body').loadingModal('hide');
+                    },
+                    error : function(xhr,estado){
+                        //$('body').loadingModal('hide');
+                    }
+                })
+            })
         });
         </script>   
         <!-- END PLUGINS -->

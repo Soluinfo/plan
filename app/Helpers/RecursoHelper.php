@@ -42,12 +42,12 @@ class RecursoHelper {
     public static function obtenerValorMaxPorcentaje($idactividad){
         $porcentajemax = 100;
         $porcentajevalidado = 0;
-        $contadormax = Recurso::where('IDACTIVIDAD','=', $idactividad)->count();
+        $contadormax = Recurso::where('IDACTIVIDAD','=', $idactividad)->get();
         if($contadormax){
             foreach($contadormax as $c){
                 $porcentajevalidado = $porcentajevalidado + $c->PORCENTAJERECURSO;
             }
         }
-        return $porcentajevalidado;
+        return $porcentajemax - $porcentajevalidado;
     }
 }

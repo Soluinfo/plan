@@ -56,6 +56,24 @@
                             <li><a href="charts-rickshaw.html"><span class="xn-text">Rickshaw</span></a></li>
                             <li><a href="charts-other.html"><span class="xn-text">Other</span></a></li>
                         </ul>
-                    </li>                                        
+                    </li> 
+                    <li class="xn-openable">
+                        <a href="#"><span class="fa fa-bar-chart-o"></span> <span class="xn-text">Reportes</span></a>
+                        <ul>
+                            <li><a href="charts-morris.html"><span class="xn-text">Ambito</span></a></li>
+                            <li><a href="charts-nvd3.html"><span class="xn-text">Alcance</span></a></li>
+                            <li><a href="charts-rickshaw.html"><span class="xn-text">Rickshaw</span></a></li>
+                            <li><a href="charts-other.html"><span class="xn-text">Other</span></a></li>
+                        </ul>
+                    </li>
+                    <li class="xn-openable">
+                        <a href="#"><span class="fa fa-bar-chart-o"></span> <span class="xn-text">Estadistica</span></a>
+                        <ul>
+                            <li><a href="charts-morris.html"><span class="xn-text">Ambito</span></a></li>
+                            <li><a href="charts-nvd3.html"><span class="xn-text">Alcance</span></a></li>
+                            <li><a href="charts-rickshaw.html"><span class="xn-text">Rickshaw</span></a></li>
+                            <li><a href="charts-other.html"><span class="xn-text">Other</span></a></li>
+                        </ul>
+                    </li>                                      
                 </ul>
                 <!-- END X-NAVIGATION -->

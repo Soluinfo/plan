@@ -18,7 +18,11 @@ use App\Proyectosobjetivos;
 use App\Catalogoindicador;
 use App\Indicador;
 use App\Proyectoindicador;
+use App\Fechaproyecto;
 use App\Helpers\ProyectoHelper;
+use App\Helpers\ActividadHelper;
+use App\Helpers\ObjetivoHelper;
+use App\Helpers\IndicadorHelper;
 use App\Providers\GoogleDriveServiceProvider;
 
 
@@ -67,6 +71,8 @@ class ProyectoController extends Controller
                 ];
                 
                 if($idProyecto > 0){
+                    $nombretemp1 = str_ireplace(" ", "_", $datosDeProyecto['NOMBREPROYECTO']);
+                    $nombretemp2 = str_ireplace(" ", "_", $r->txtnombreProyecto);
                     if($r->txtnombreProyecto == $datosDeProyecto['NOMBREPROYECTO']){
                         $rule = [
                             
@@ -83,16 +89,16 @@ class ProyectoController extends Controller
                         $contents = collect(Storage::cloud()->listContents($dir, $recursive));
                         $directory = $contents
                             ->where('type', '=', 'dir')
-                            ->where('filename', '=', $datosDeProyecto['NOMBREPROYECTO'])
+                            ->where('filename', '=', $nombretemp1)
                             ->first(); // there can be duplicate file names!
-                        Storage::cloud()->move($directory['path'], $r->txtnombreProyecto);
+                        Storage::cloud()->move($directory['path'], $nombretemp2);
                     }
                     
                     $proyecto = Proyecto::where('IDPROYECTO', $idProyecto)
                                         ->update([
                                         'NOMBREPROYECTO' => $r->txtnombreProyecto,
-                                        'FECHAPROYECTO' => $r->dpFechaProyecto,
-                                        'FECHAFINAL' => $r->dpFechaFinalProyecto,
+                                        /*'FECHAPROYECTO' => $r->dpFechaProyecto,
+                                        'FECHAFINAL' => $r->dpFechaFinalProyecto,*/
                                         'ESTADOPROYECTO' => $r->slEstado,
                                         'IDDEPARTAMENTO' => $r->slDepartamento
                                         ]);
@@ -100,6 +106,8 @@ class ProyectoController extends Controller
                     $datos['codigo'] = $idProyecto;
                     $datos['transaccion'] = 'actualizar';
                 }else{
+                    //$nombretemp1 = str_ireplace(" ", "_", $datosDeProyecto['NOMBREPROYECTO']);
+                    $nombretemp2 = str_ireplace(" ", "_", $r->txtnombreProyecto);
                     //reglas de validacion
                     $rule = [
                         'txtnombreProyecto' => 'unique:proyectos,NOMBREPROYECTO',
@@ -109,7 +117,7 @@ class ProyectoController extends Controller
 
                     $iddirectorio = '';
                     $nombreProyecto = $r->txtnombreProyecto;
-                    $info = Storage::cloud()->makeDirectory($nombreProyecto);
+                    $info = Storage::cloud()->makeDirectory($nombretemp2);
                     if($info){
                         $dir = '/';
                         $recursive = false; // Get subdirectories also?
@@ -117,7 +125,7 @@ class ProyectoController extends Controller
 
                         $directory = $contents
                         ->where('type', '=', 'dir')
-                        ->where('filename', '=', $nombreProyecto)
+                        ->where('filename', '=', $nombretemp2)
                         ->first();
                         $iddirectorio = $directory['path'];
                         $proyecto = new Proyecto(array(
@@ -127,9 +135,20 @@ class ProyectoController extends Controller
                             'ESTADOPROYECTO' => $r->slEstado,
                             'IDDEPARTAMENTO' => $r->slDepartamento,
                             'IDDIRECTORIO' => $iddirectorio,
+                            'PROGRESODECREACION' => 50
                         ));
                         $proyecto->save();
                         $id = $proyecto->id;
+                        $fechaproyecto = new Fechaproyecto(
+                            array(
+                                'FECHAINICIAL' => $r->dpFechaProyecto,
+                                'FECHAFINAL' => $r->dpFechaFinalProyecto,
+                                'IDPROYECTO' => $id,
+                                'ESTADOFECHAP' => '1',
+                                'OBSEVACIONP' => 'CREACION DE PROYECTO',
+                            )
+                        );
+                        $fechaproyecto->save();
                         $datos['respuesta'] = 'ok';
                         $datos['codigo'] = $id;
                         $datos['path'] = $directory['path'];
@@ -144,6 +163,35 @@ class ProyectoController extends Controller
             }
         }
     //fin de funcion guardar
+
+    public function guardarFechas(Request $r){
+        if($r->ajax()){
+            $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
+            $desactualizarfechas = Fechaproyecto::where('IDPROYECTO',$r->idproyecto)
+            ->update(['ESTADOFECHAP' => '2']);
+            $fechaproyecto = new Fechaproyecto(
+                array(
+                    'FECHAINICIAL' => $r->dpFechaInicial,
+                    'FECHAFINAL' => $r->dpFechaFinal,
+                    'IDPROYECTO' => $r->idproyecto,
+                    'ESTADOFECHAP' => '1',
+                    'OBSEVACIONP' => $r->taobservacion,
+                )
+            );
+            $fechaproyecto->save();
+            Proyecto::where('IDPROYECTO',$r->idproyecto)->update(['FECHAPROYECTO' => $r->dpFechaInicial,'FECHAFINAL' => $r->dpFechaFinal]);
+            $datos['respuesta'] = 'ok';
+            echo json_encode($datos);
+        }
+    }
+
+    public function obtenerFechasActivasDeProyecto(Request $r){
+        if($r->ajax()){
+            $objetoProyectoFechas = ProyectoHelper::obtenerFechasActivasProyecto($r->IDPROYECTO);
+            $arrayProyectoFechas = ProyectoHelper::obtenerArrayFechasActivasProyecto($objetoProyectoFechas);
+            echo json_encode($arrayProyectoFechas);
+        }
+    }
 
     //Inicio de funcion para obtener todos los proyecto con su departamento respectivo
         public function obtener($id = null){
@@ -186,6 +234,15 @@ class ProyectoController extends Controller
                         'FECHAPROYECTOSUPERVISOR' => date('Y-m-d')
                     ]);
                     $asignacion->save();
+                    $Proyecto = ProyectoHelper::obtenerProyectos($r->IDPROYECTO);
+                    $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto($Proyecto);
+                    $suma = $datosDeProyecto['PROGRESODECREACION'] + 20;
+                    $cantidadSupervisor = ProyectoHelper::numeroSupervisoresProyecto($r->IDPROYECTO);
+                    if($cantidadSupervisor > 1){
+
+                    }else{
+                        Proyecto::where('IDPROYECTO',$r->IDPROYECTO)->update(['PROGRESODECREACION' => $suma]);
+                    }
                     $datos['respuesta'] = 'ok';
                     $datos['mensaje'] = 'Supervisor asignado con exito';
                 }
@@ -200,20 +257,26 @@ class ProyectoController extends Controller
             if($r->ajax()){
                 $datosdesupervisor = Empleado::join('proyectosupervisor', 'empleado.SERIAL_EPL', '=', 'proyectosupervisor.IDSUPERVISOR')
                                                     ->where('proyectosupervisor.IDPROYECTO', '=' ,$r->idproyecto)
-                                                    ->select('empleado.SERIAL_EPL','empleado.DOCUMENTOIDENTIDAD_EPL','empleado.NOMBRE_EPL','empleado.APELLIDO_EPL','empleado.EMAIL_EPL','empleado.CELULAR_EPL')
+                                                    ->select('proyectosupervisor.IDPROYECTO','empleado.SERIAL_EPL','empleado.DOCUMENTOIDENTIDAD_EPL','empleado.NOMBRE_EPL','empleado.APELLIDO_EPL','empleado.EMAIL_EPL','empleado.CELULAR_EPL')
                                                     ->get();
                                                 
                 return Datatables($datosdesupervisor)
+                ->removeColumn('IDPROYECTO')
                 ->addColumn('action', function ($datosdesupervisor) {
                     return '<a onclick="obtenerDetalleSupervisor('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                            <a onclick="agregarObjetivos('.$datosdesupervisor->SERIAL_EPL.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                            <a onclick="eliminarSupervisorProyecto('.$datosdesupervisor->SERIAL_EPL.','.$datosdesupervisor->IDPROYECTO.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                 })
                 ->make(true);
             }
         }
     //final de funcion obtenerSupervisoresDeProyecto
 
-    
+    public function eliminarProyectoSupervisor(Request $r){
+        $eliminar = Proyectosupervisor::where(['IDSUPERVISOR' => $r->IDSUPERVISOR, 'IDPROYECTO' => $r->IDPROYECTO])
+        ->delete();
+
+        echo 'eliminado';     
+    }
 
     //inicio de funcion para validar si existe supervisor asignado a proyecto
         public function verificarSupervisorProyectoExiste($idproyecto,$idsupervisor){
@@ -306,6 +369,24 @@ class ProyectoController extends Controller
                     ->make(true);
     }
 
+    public function datatableFechasProyecto(Request $r){
+        $idProyecto = $r->idproyecto;
+        $fechasProyeto = Fechaproyecto::where('IDPROYECTO', $r->idproyecto)
+                                                ->select('proyectofechasfinales.IDPROYECTOFECHAFINAL',
+                                                        'proyectofechasfinales.FECHAINICIAL',
+                                                        'proyectofechasfinales.FECHAFINAL',
+                                                        'proyectofechasfinales.ESTADOFECHAP',
+                                                        'proyectofechasfinales.OBSEVACIONP'
+                                                    );
+            return Datatables($fechasProyeto)
+                    ->addColumn('action', function ($fechasProyeto) {
+                        return '<a onclick="obtenerDetalleIndicador('.$fechasProyeto->IDPROYECTOFECHAFINAL.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                                <a onclick="eliminarIndicadorProyecto('.$fechasProyeto->IDPROYECTOFECHAFINAL.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                    })
+                   
+                    ->make(true);
+    }
+
     public function asignarObjetivoProyecto(Request $r){
         if($r->ajax()){
             $datos = array('respuesta' => 'no','mensaje' => '');
@@ -319,6 +400,17 @@ class ProyectoController extends Controller
                     'IDOBJETIVOESTRATEGICO' => $r->IDOBJETIVOESTRATEGICO,
                 ));
                 $Proyectosobjetivos->save();
+                $Proyecto = ProyectoHelper::obtenerProyectos($r->IDPROYECTO);
+                $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto($Proyecto);
+                $suma = $datosDeProyecto['PROGRESODECREACION'] + 20;
+                
+                $cantidadObjetivos = ObjetivoHelper::numeroObjetivosProyecto($r->IDPROYECTO);
+                if($cantidadObjetivos > 1){
+
+                }else{
+                    Proyecto::where('IDPROYECTO',$r->IDPROYECTO)->update(['PROGRESODECREACION' => $suma]);
+                }
+                
                 $datos['respuesta'] = 'ok';
                 $datos['mensaje'] = 'Objetivo estrategico asignado al proyecto';
             }
@@ -340,6 +432,16 @@ class ProyectoController extends Controller
                     'IDINDICADOR' => $r->IDINDICADOR,
                 ));
                 $Proyectosindicador->save();
+                $Proyecto = ProyectoHelper::obtenerProyectos($r->IDPROYECTO);
+                $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto($Proyecto);
+                $suma = $datosDeProyecto['PROGRESODECREACION'] + 20;
+                
+                $cantidadIndicador = IndicadorHelper::numeroIndicadoresProyecto($r->IDPROYECTO);
+                if($cantidadIndicador > 1){
+
+                }else{
+                    Proyecto::where('IDPROYECTO',$r->IDPROYECTO)->update(['PROGRESODECREACION' => $suma]);
+                }
                 $datos['respuesta'] = 'ok';
                 $datos['mensaje'] = 'Indicador asignado al proyecto';
             }
@@ -392,19 +494,41 @@ class ProyectoController extends Controller
     //funcion para eliminar objetivo de proyecto
     public function eliminarProyectoObjetivo(Request $r){
         if($r->ajax()){
-            $eliminar = Proyectosobjetivos::where(['IDOBJETIVOESTRATEGICO' => $r->IDOBJETIVOESTRATEGICO, 'IDPROYECTO' => $r->IDPROYECTO])
+            $validar = ActividadHelper::validarObjetivoActividad($r->IDOBJETIVOESTRATEGICO,$r->IDPROYECTO);
+            if($validar > 0){
+                echo 'existe';
+            }else{
+                $eliminar = Proyectosobjetivos::where(['IDOBJETIVOESTRATEGICO' => $r->IDOBJETIVOESTRATEGICO, 'IDPROYECTO' => $r->IDPROYECTO])
                                             ->delete();
-            
-            echo 'eliminado';          
+                echo 'eliminado'; 
+            }         
         }
     }
 
     public function eliminarIndicadorProyecto(Request $r){
         if($r->ajax()){
-            $eliminar = Proyectoindicador::where(['IDINDICADOR' => $r->IDINDICADOR, 'IDPROYECTO' => $r->IDPROYECTO])
+            $validar = ActividadHelper::validarIndicadorActividad($r->IDINDICADOR,$r->IDPROYECTO);
+            if($validar > 0){
+                echo 'existe';
+            }else{
+                $eliminar = Proyectoindicador::where(['IDINDICADOR' => $r->IDINDICADOR, 'IDPROYECTO' => $r->IDPROYECTO])
                                             ->delete();
             
-            echo 'eliminado';   
+                echo 'eliminado';  
+            } 
+        }
+    }
+    public function obtenerProgresoInformacion(Request $r){
+        if($r->ajax()){
+            $IDPROYECTO = $r->IDPROYECTO;
+            $verificar = ProyectoHelper::verificarProyectoExiste($IDPROYECTO);
+            if($verificar == 1){
+                $Proyecto = ProyectoHelper::obtenerProyectos($r->IDPROYECTO);
+                $datosDeProyecto = ProyectoHelper::obtenerArrayProyecto($Proyecto);
+                echo $datosDeProyecto['PROGRESODECREACION'];
+            }else{
+                echo 0;
+            }
         }
     }
 }

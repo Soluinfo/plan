@@ -11,8 +11,19 @@
                 <!-- PAGE TITLE -->
                 <div class="page-title">                    
                     <h2><span class="fa fa-arrow-circle-o-left"></span> Crear proyecto</h2>
+                   
                 </div>
-                
+                <div class="page-content-wrap">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <div class="progress">
+                                <div id="progresoinformacion" class="progress-bar progress-bar-striped active"  role="progressbar" aria-valuenow="{{$PROGRESODECREACION or 0}}" aria-valuemin="0" aria-valuemax="100" style="width: {{$PROGRESODECREACION or 0}}%">Informacion de proyecto {{$PROGRESODECREACION or 0}}%</div>
+                            </div>
+                        </div>
+                                                
+                    </div>
+                </div>
+               
                 <!-- END PAGE TITLE --> 
                 <!-- PAGE CONTENT WRAPPER -->
                 <div class="page-content-wrap">
@@ -21,6 +32,7 @@
                             <div class="panel panel-default tabs">                            
                                 <ul class="nav nav-tabs" role="tablist">
                                     <li class="active"><a href="#tab-informacion" role="tab" data-toggle="tab">Información</a></li>
+                                    <li><a href="#tab-fecha" role="tab" data-toggle="tab">Fechas</a></li>
                                     <li><a href="#tab-objetivo" role="tab" data-toggle="tab">Objetivos estrategicos</a></li>
                                     <li><a href="#tab-indicador" role="tab" data-toggle="tab">Indicadores</a></li>
                                     <li><a href="#tab-supervisor" role="tab" data-toggle="tab">Supervisores</a></li>
@@ -28,7 +40,7 @@
                                 <div class="panel-body tab-content">
                                     <div class="tab-pane active" id="tab-informacion">
                                         {!! Form::open(['url' => 'proyectos/guardar', "name" => "formProyecto", "id" => "formProyecto","class" => "form-horizontal", "role" => "form"]) !!}
-                                            
+                                        
                                             <div class="form-group">
                                                 <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Nombre de proyecto :</label>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
@@ -39,13 +51,13 @@
                                             <div class="form-group">                                        
                                                 <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha inicial:</label>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="dpFechaProyecto" id="dpFechaProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>">
+                                                    <input type="text" name="dpFechaProyecto" id="dpFechaProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>" <?php if(isset($IDPROYECTO)){echo 'disabled';} ?>>
                                                 </div>
                                             </div>
                                             <div class="form-group">                                        
                                                 <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha final:</label>
                                                 <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                    <input type="text" name="dpFechaFinalProyecto" id="dpFechaFinalProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAFINAL)){echo $FECHAFINAL;} ?>">
+                                                    <input type="text" name="dpFechaFinalProyecto" id="dpFechaFinalProyecto" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAFINAL)){echo $FECHAFINAL;} ?>" <?php if(isset($IDPROYECTO)){echo 'disabled';} ?>>
                                                 </div>
                                             </div>            
                                             <div class="form-group">
@@ -91,11 +103,35 @@
                                                 </div>
                                             </div>
                                             {{ csrf_field() }}
-                                            <input type="hidden" name="idproyecto" value="{{ $IDPROYECTO or '0'}}">
+                                            <input type="text" name="idproyecto" value="{{ $IDPROYECTO or '0'}}">
+                                            <input type="hidden" name="inputprogresoInformacion" value="{{ $PROGRESODECREACION or '0'}}">
                                             
                                         </form>
                                         <a href="{{ url('/proyectos/crear') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo proyecto <span class="fa fa-plus fa-right"></span></a>
                                         <button id="btnGuardarProyecto" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right"><?php if(isset($IDPROYECTO)){echo 'Actualizar Proyecto';}else{ echo 'Guardar Proyecto';} ?> <span class="fa fa-floppy-o fa-right"></span></button>
+                                    </div>
+                                    <div class="tab-pane" id="tab-fecha">
+                                        <button id="btnAgregarFecha" class="btn btn-block btn-primary col-md-4"><span class="fa fa-plus"></span>Reprogramar</button>
+                                            
+                                            <!-- START RESPONSIVE TABLES -->
+                                            @component('componentes.dataTable')
+                                                @slot('titleComponent')
+                                                Fechas del proyecto
+                                                @endslot
+                                                @slot('idcomponent')
+                                                datatableFechasProyectos
+                                                @endslot
+                                                <tr>
+                                                    <th width="50">id</th>
+                                                    <th>Fecha inicial</th>
+                                                    <th>Fecha final</th>
+                                                    <th>Estado</th>
+                                                    <th>Observacion</th>
+                                                    <th width="100">Accion</th>
+                                                </tr>
+
+                                            @endcomponent
+                                            <!-- END RESPONSIVE TABLES --> 
                                     </div>
                                     <div class="tab-pane" id="tab-objetivo">
 
@@ -121,7 +157,10 @@
                                         
                                     </div>
                                     <div class="tab-pane" id="tab-indicador">
-                                        <button id="btnAgregarIndicador" class="btn btn-block btn-primary"><span class="fa fa-plus"></span>Agregar supervisor</button>
+                                        
+                                        <button id="btnAgregarIndicador" class="btn btn-block btn-primary"><span class="fa fa-plus"></span>Agregar indicador</button>
+                                        
+                                       
                                         <!-- START RESPONSIVE TABLES -->
                                         @component('componentes.dataTable')
                                             @slot('titleComponent')
@@ -178,6 +217,48 @@
 
                 @endcomponent
                 <!-- END PAGE CONTENT WRAPPER -->
+                
+                <!-- MODALS -->   
+                @component('componentes.modal')
+                        @slot('idmodal')
+                            modalprogramarProyecto
+                        @endslot
+                        @slot('tamanomodal')
+                            modal-lg
+                        @endslot
+                        @slot('titulomodal')
+                            Programar Proyecto
+                        @endslot
+                        {!! Form::open(['url' => '/proyectos/guardarFechas', "name" => "formFechas", "id" => "formFechas","class" => "form-horizontal", "role" => "form"])!!}
+                            
+                                        
+                                <div class="form-group">                                        
+                                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha de inicio:</label>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text" name="dpFechaInicial" id="dpFechaInicial" class="form-control datepicker" placeholder="aaaa-mm-dd" value="">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">                                        
+                                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha final:</label>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <input type="text" name="dpFechaFinal" id="dpFechaFinal" class="form-control datepicker" placeholder="aaaa-mm-dd" value="">
+                                    </div>
+
+                                </div>
+                                <div class="form-group">                                        
+                                    <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Observación:</label>
+                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                        <textarea name="taobservacion" id="taobservacion" class="form-control" rows="3"></textarea>
+                                    </div>
+
+                                </div>
+                                <a id="btnGuardarFechas" class="btn btn-primary pull-right">Programar fecha <span class="fa fa-floppy-o fa-right"></span></a>
+
+                          
+                        </form>
+                    @endcomponent
+                <!-- END MODALS -->  
                 <!-- MODALS -->  
                     @component('componentes.modal')
                     @slot('idmodal')
@@ -331,24 +412,51 @@
 
                 @push('PageScript')
         
-                <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-datepicker.js') }}"></script>
-                <script type="text/javascript" src="{{ url('js/plugins/bootstrap/locales/bootstrap-datepicker.es.js') }}"></script>                
+                <script type="text/javascript" src="{{ asset('js/plugins/bootstrap/bootstrap-datepicker.js') }}"></script>
+                <script type="text/javascript" src="{{ asset('js/plugins/bootstrap/locales/bootstrap-datepicker.es.js') }}"></script>                
                
-                <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-select.js') }}"></script>
-                <script type="text/javascript" src="{{ url('js/plugins/tagsinput/jquery.tagsinput.min.js') }}"></script>
+                <script type="text/javascript" src="{{ asset('js/plugins/bootstrap/bootstrap-select.js') }}"></script>
+                <script type="text/javascript" src="{{ asset('js/plugins/tagsinput/jquery.tagsinput.min.js') }}"></script>
                 
-                <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
-                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
-                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
-                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                <script type='text/javascript' src="{{ asset('js/plugins/noty/jquery.noty.js') }}"></script>
+                <script type='text/javascript' src="{{ asset('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                <script type='text/javascript' src="{{ asset('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                <script type='text/javascript' src="{{ asset('js/plugins/noty/layouts/topRight.j') }}s"></script>
 
-                <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
+                <script type='text/javascript' src="{{ asset('js/plugins/noty/themes/default.js') }}"></script>
 
-                <script type="text/javascript" src="{{ url('js/plugins/smartwizard/jquery.smartWizard-2.0.min.js') }}"></script>        
-                <script type="text/javascript" src="{{ url('js/plugins/jquery-validation/jquery.validate.js') }}"></script> 
+                <script type="text/javascript" src="{{ asset('js/plugins/smartwizard/jquery.smartWizard-2.0.min.js') }}"></script>        
+                <script type="text/javascript" src="{{ asset('js/plugins/jquery-validation/jquery.validate.js') }}"></script> 
 
-                <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
+                <script type="text/javascript" src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js') }}"></script>
                 <script>
+
+                    function progresoInformacionProyecto(){
+                        _token = $("input[name=_token]").val();
+                        IDPROYECTO = $("input[name=idproyecto]").val();
+                        PROGRESOINICIAL = $("input[name=inputprogresoInformacion]").val();
+                        $.post("{{ url('/proyectos/obtenerProgresoInformacion') }}",{IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                            $("#progresoinformacion").html("Informacion de proyecto "+data+"%");
+                            progresobar(PROGRESOINICIAL,data);
+                            $("input[name=inputprogresoInformacion]").val(data);
+                        });
+                    }
+
+                    function progresobar(PROGRESOINICIAL,data){
+                        x = PROGRESOINICIAL;
+                            final = data;
+                            var timer;
+                    
+                            if(x<final){
+                                x++;
+                                document.getElementById('progresoinformacion').style.width=x+'%';            
+                                timer=setTimeout('progresobar('+x+','+final+')',50);
+                            }else{
+                                clearTimeout(timer);
+                                
+                            }
+                    }
+
                     function obtenerDetalleObjetivo(IDOBJETIVOESTRATEGICO){
                         _token = $("input[name=_token]").val();
                         $.post("{{ url('/objetivos/detalles') }}",{_token:_token,IDOBJETIVOESTRATEGICO:IDOBJETIVOESTRATEGICO},function(data){
@@ -368,6 +476,7 @@
                                 if(data2.respuesta == 'ok'){
                                     noty({text: data2.mensaje, layout: 'topRight', type: 'success'});
                                     tableSupervisoresProyectos.ajax.reload();
+                                    progresoInformacionProyecto();
                                 }else if(data2.respuesta == 'existe'){
                                     noty({text: data2.mensaje , layout: 'topRight', type: 'warning'});
                                 }else{
@@ -388,6 +497,7 @@
                                 if(data2.respuesta == 'ok'){
                                     noty({text: data2.mensaje, layout: 'topRight', type: 'success'});
                                     tableIndicadorProyectos.ajax.reload();
+                                    progresoInformacionProyecto();
                                 }else if(data2.respuesta == 'existe'){
                                     noty({text: data2.mensaje , layout: 'topRight', type: 'warning'});
                                 }else{
@@ -405,6 +515,7 @@
                             if(data2.respuesta == 'ok'){
                                 noty({text: data2.mensaje, layout: 'topRight', type: 'success'});
                                 tableObjetivosProyectos.ajax.reload();
+                                progresoInformacionProyecto();
                             }else if(data2.respuesta == 'existe'){
                                 noty({text: data2.mensaje, layout: 'topRight', type: 'warning'});
                             }else{
@@ -426,6 +537,8 @@
                                             if(data == 'eliminado'){
                                                 noty({text: 'El objetivo a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
                                                 tableObjetivosProyectos.ajax.reload();
+                                            }else if(data == 'existe'){
+                                                noty({text: 'El objetivo no a sido eliminado del proyecto, esta asignado a una actividad', layout: 'topRight', type: 'warning'});
                                             }else{
                                                 noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
                                             }
@@ -452,7 +565,7 @@
                             buttons: [
                                     {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
                                         $noty.close();
-                                        $.post("{{ url('/proyectos/eliminarSupervisorObjetivos') }}",{IDSUPERVISOR:IDSUPERVISOR,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                        $.post("{{ url('/proyectos/eliminarProyectoSupervisor') }}",{IDSUPERVISOR:IDSUPERVISOR,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
                                             if(data == 'eliminado'){
                                                 noty({text: 'El supervisor a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
                                                 tableSupervisoresProyectos.ajax.reload();
@@ -481,10 +594,12 @@
                             buttons: [
                                     {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
                                         $noty.close();
-                                        $.post("{{ url('/proyectos/eliminarIndicadorProyecto') }}",{IDINDICADOR:IDINDICADOR,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                        $.post("{{ url('/index.php/proyectos/eliminarIndicadorProyecto') }}",{IDINDICADOR:IDINDICADOR,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
                                             if(data == 'eliminado'){
                                                 noty({text: 'El indicador a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
                                                 tableIndicadorProyectos.ajax.reload();
+                                            }else if(data == 'existe'){
+                                                noty({text: 'El Indicador no a sido eliminado del proyecto, tiene una actividad asignada', layout: 'topRight', type: 'warning'});
                                             }else{
                                                 noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
                                             }
@@ -502,12 +617,47 @@
                         })
                         
                     }
+                    function obtenerFechasProyecto(IDPROYECTO){
+                        _token = $("input[name=_token]").val();
+                        $.post("{{ url('/proyectos/obtenerFechasActivasDeProyecto') }}",{IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                            data2 = JSON.parse(data);
+                            $("#dpFechaProyecto").val(data2.FECHAINICIAL);
+                            $("#dpFechaFinalProyecto").val(data2.FECHAFINAL);
+                        })
+                    }
                
                     $(function (){
+                       
+                        $("#btnAgregarFecha").on("click",function(){
+                            IDPROYECTO = $("input[name=idproyecto]").val();
+                            if(IDPROYECTO > 0){
+                                $('#modalprogramarProyecto').modal('show')
+                            }else{
+                              
+                                /* MESSAGE BOX */
+                                var box = $("#message-box-sound-1");
+                                    if(box.length > 0){
+                                        box.toggleClass("open");
+                                        
+                                        var sound = box.data("sound");
+                                        
+                                        if(sound === 'alert')
+                                            playAudio('alert');
+                                        
+                                        if(sound === 'fail')
+                                            playAudio('fail');
+                                        
+                                    }        
+                                   
+                                /* END MESSAGE BOX */
+                                
+                            }
+                            
+                        })           
                         table = $("#datatableObjetivos").DataTable({
                             "lengthMenu": [ 5, 10],
                             "language" : {
-                                "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                "url": '{{ asset("/js/plugins/datatables/spanish.json") }}',
                             },
                             "autoWidth": false,
                             "order": [], //Initial no order
@@ -533,7 +683,7 @@
                         tableindicador = $("#datatableIndicador").DataTable({
                             "lengthMenu": [ 5, 10],
                             "language" : {
-                                "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                "url": '{{ asset("/js/plugins/datatables/spanish.json") }}',
                             },
                             "autoWidth": false,
                             "order": [], //Initial no order
@@ -790,6 +940,8 @@
                                             $("input[name=idproyecto]").val(data.codigo);
                                             if(data.transaccion == 'guardar'){
                                                 $("#btnGuardarProyecto").html('Actualizar proyecto');
+                                                progresoInformacionProyecto();
+                                                tableFechasProyectos.ajax.reload();
                                                 noty({text: 'Proyecto creado con exito', layout: 'topRight', type: 'success'});
                                                 $.mpb('show',{value: [80,100],speed: 80,state: 'success'});
                                                 $.mpb('destroy');
@@ -833,12 +985,144 @@
                                 })
                             })
                         //end tap Guardar informacion proyecto
+                          //ALCANCE 
+                        $("#btnGuardarFechas").on("click",function(){
+                            datos2 = $("#formFechas").validate({
+                                rules: {
+                                    dpFechaInicial: {
+                                        required: true,
+                                    },
+                                    dpFechaFinal: {
+                                        required: true,
+                                    }, 
+                                    taobservacion: {
+                                        required: true,
+                                    }           
+                                },
+                                messages: {
+                                    dpFechaInicial: {
+                                        required: "El campo Fecha inicial es requerido",
+                                    },
+                                    dpFechaFinal: {
+                                        required: "El campo Fecha final es requerido",
+                                    },
+                                    taobservacion: {
+                                        required: "El campo Observacion es requerido",
+                                    }
+                                    
+                                },
+                                success: function ( label, element ) {
+                                    
+                                    var element2 = label.siblings('div'); 
+                                                    
+                                    if(element2.hasClass('btn-group')){
+                                        element2.attr("class","btn-group bootstrap-select form-control select valid");
+                                    }
+                                    
+                                },
+                                errorPlacement: function (error, element) {
+                                    console.log('error');
+                                    var element2 = element.siblings('div'); 
+                                    var element3 = element.siblings('span'); 
+                                    
+                                    if (element2.hasClass('btn-group')) {
+                                        element2.attr("class","btn-group bootstrap-select form-control select error");
+                                        error.insertAfter(element2);
+                                    } else {
+                                        
+                                        element3.hide();
+                                        error.insertAfter(element);
+                                        
+                                    }
+                                
+                                },
+                                
+                                
+                                
+                            })
+                            if(datos2.form() == true){
+                                $("#formFechas").submit();
+                            }
+                            
+                        })
+                        $("#formFechas").on("submit", function(e) {
+                            dpFechaInicial = $("#dpFechaInicial").val();
+                            dpFechaFinal = $("#dpFechaFinal").val();
+                            taobservacion = $("#taobservacion").val();
+                            _token = $("input[name=_token]").val();
+                            idproyecto = $("input[name=idproyecto]").val();
+                            
+                            e.preventDefault();
+                            $.ajax({
+                                url: $(this).attr("action"),
+                                type: $(this).attr("method"),
+                                data: { dpFechaInicial:dpFechaInicial,dpFechaFinal:dpFechaFinal,idproyecto:idproyecto,taobservacion:taobservacion,_token:_token},
+                                dataType : 'json',
+                                beforeSend : function(){
+                                    $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
+                                    
+                                    $('body').loadingModal('show');
+                                    $('body').loadingModal('text', 'Reprogramando fechas...');
+                                },
+                                success : function(data){
+                                    if(data.respuesta == 'ok'){
+                                        tableFechasProyectos.ajax.reload();
+                                    
+                                        if(data.transaccion == 'programar'){
+                                            noty({text: 'Fechas programadas con exito', layout: 'topRight', type: 'success'});
+                                        }else{
+                                            noty({text: 'Fechas reprogramadas con exito', layout: 'topRight', type: 'success'});
+                                        }
+                                        idproyecto = $("input[name=idproyecto]").val();
+                                        obtenerFechasProyecto(idproyecto);
+                                    }
+                                    $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                                    $.mpb('destroy');
+                                    $('body').loadingModal('hide');
+                                },
+                                error : function(xhr,estado){
+                                    $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
+                                    $.mpb('destroy');
+                                    $('body').loadingModal('hide');
+                                    alert("!Error "+xhr.status+", reportelo al centro de computo");
+                                    
+                                }
+                            })
+                        })
+                        tableFechasProyectos = $("#datatableFechasProyectos").DataTable({
+                                "lengthMenu": [ 5, 10],
+                                "language" : {
+                                    "url": '{{ asset("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
+                                "order": [], //Initial no order
+                                "processing" : true,
+                                "serverSide": true,
+                                "ajax": {
+                                    "url": '{{ url("/proyectos/datatableFechasProyecto") }}',
+                                    "type": "post",
+                                    "data": function (d){
+                                        d.idproyecto = $("input[name=idproyecto]").val();
+                                        d._token = $("input[name=_token]").val();
+                                    }
+                                },
+                                "columnDefs": [{ targets: [3], "orderable": false}],
+                                "columns": [
+                                    {width: '8%',data: 'IDPROYECTOFECHAFINAL'},
+                                    {width: '20%',data: 'FECHAINICIAL'},
+                                    {width: '20%',data: 'FECHAFINAL'},
+                                    {width: '10%',data: 'ESTADOFECHAP'},
+                                    {width: '30%',data: 'OBSEVACIONP'},
+                                    {width: '12%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                
+                                ]
+                            });
                         //tap para agregar objetivos estrategicos
                             
                             tableObjetivosProyectos = $("#datatableObjetivosProyectos").DataTable({
                                 "lengthMenu": [ 5, 10],
                                 "language" : {
-                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                    "url": '{{ asset("/js/plugins/datatables/spanish.json") }}',
                                 },
                                 "autoWidth": false,
                                 "order": [], //Initial no order
@@ -872,7 +1156,7 @@
                             tableSupervisoresProyectos = $("#datatable-supervisorProyecto").DataTable({
                                 "lengthMenu": [ 5, 10],
                                 "language" : {
-                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                    "url": '{{ asset("/js/plugins/datatables/spanish.json") }}',
                                 },
                                 "autoWidth": false,
                                 "order": [], //Initial no order
@@ -902,7 +1186,7 @@
                         tableIndicadorProyectos = $("#datatable-indicadorProyecto").DataTable({
                                 "lengthMenu": [ 5, 10],
                                 "language" : {
-                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                    "url": '{{ asset("/js/plugins/datatables/spanish.json") }}',
                                 },
                                 "autoWidth": false,
                                 "order": [], //Initial no order

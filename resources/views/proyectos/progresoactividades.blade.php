@@ -187,10 +187,12 @@
                             @slot('titulomodal')
                                     Panel para programar actividad
                             @endslot
+                                      
                                 <!-- START RESPONSIVE TABLES -->
                                 @component('componentes.dataTable')
                                     @slot('titleComponent')
                                     Programar actividad
+                                    <button onclick="reprogramarfechaactividad()" class="btn btn-primary">Solicitar reprogramación</button>
                                     @endslot
                                     @slot('idcomponent')
                                     datatable-reprogramarActividad
@@ -274,6 +276,7 @@
                             @slot('titulomodal')
                                 Responsable actividad
                             @endslot
+                           
                             <!-- START RESPONSIVE TABLES -->
                             @component('componentes.dataTable')
                                 @slot('titleComponent')
@@ -313,12 +316,52 @@
                             <!-- END ACCORDION -->   
                     @endComponent
                      <!--END MODALS --> 
+                      <!-- MODALS -->  
+                    @component('componentes.modal')
+                            @slot('idmodal')
+                                modalReprogramarFechaActividad
+                            @endslot
+                            @slot('tamanomodal')
+                                modal-md
+                            @endslot
+                            @slot('titulomodal')
+                                Solitar reprogramación de fecha
+                            @endslot
+                             <!-- START ACCORDION --> 
+                             <form class="form-horizontal" id="form_reprogramar" name="form_reprogramar">       
+                                <div class="col-lg-12">
+                                    <div class="form-group">                                        
+                                        <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha inicial:</label>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" name="dpFechaInicio" id="dpFechaInicio" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAPROYECTO)){echo $FECHAPROYECTO;} ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">                                        
+                                        <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha final:</label>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            <input type="text" name="dpFechaFinal" id="dpFechaFinal" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAFINAL)){echo $FECHAFINAL;} ?>">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Observación :</label>
+                                        <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                            
+                                            <textarea type="text" class="form-control" id="txtObsevacionReprogramacion" name="txtObsevacionReprogramacion" placeholder="Ejemplo: Motivo" rows="3"></textarea>
+                                        </div>
+                                    </div>
+                                    <a id="btnReprogramarFecha" class="btn btn-info">Reprogramar fecha</a>
+                                </div>
+                            </form>
+                            <!-- END ACCORDION -->   
+                    @endComponent
+                     <!--END MODALS --> 
                 @push('PageScript')
+                <script type="text/javascript" src="{{ asset('js/plugins/bootstrap/bootstrap-datepicker.js') }}"></script>
                 <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js')}}"></script> 
                 <script type="text/javascript" src="{{ url('js/plugins/moment.min.js')}}"></script>
                 <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap-select.js')}}"></script>
                 <script type="text/javascript" src="{{ url('js/demo_tasks.js')}}"></script> 
-                
+                <script type="text/javascript" src="{{ url('js/plugins/jquery-validation/jquery.validate.js') }}"></script> 
                 <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>
                 <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
                 <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
@@ -336,6 +379,10 @@
                 <script src="{{ url('fileinput/js/locate/es.js')}}"></script>
                 
                 <script>
+                    function reprogramarfechaactividad(){
+                       idactividad = $("input[name=idactividad]").val();
+                       $('#modalReprogramarFechaActividad').modal('show');
+                    }
                     function cargarActividadesDeProyecto(IDPROYECTO){
                         _token = $("input[name=_token]").val();
                         estadoabierto = '1';
@@ -497,6 +544,89 @@
                             
                             ]
                         })
+                        $("#btnReprogramarFecha").on("click",function(){
+                            datos = $("#form_reprogramar").validate({
+                                ignore: ":hidden:not(select)",
+                                
+                                rules: {
+                                    dpFechaInicio: {
+                                        required: true, 
+                                        date:true
+                            
+                                    },
+                                    
+                                    dpFechaFinal: {
+                                            required: true,    
+                                            date: true,
+                                    },
+                                    txtObsevacionReprogramacion : {
+                                        required: true,
+                                        maxlength: 500,
+                                    }
+                                    
+                                },
+                                messages: {
+                                    dpFechaInicio: {
+                                        required: "El campo Fecha inicial es requerido",
+                                        date: "Debe colocar una fecha valida",                                                      
+                                    },
+                                    
+                                    dpFechaFinal: {
+                                            required: "Seleccione un Indicador",
+                                            date: "Debe colocar una fecha valida", 
+                                        },
+                                    txtObsevacionReprogramacion: {
+                                        required: "El campo observacion es requerido",
+                                        maxLength: ""
+                                    },
+                                    
+                                },
+                                success: function ( label, element ) {
+                                    
+                                    var element2 = label.siblings('div'); 
+                                                    
+                                    if(element2.hasClass('btn-group')){
+                                        element2.attr("class","btn-group bootstrap-select form-control select valid");
+                                    }
+                                    
+                                },
+                                errorPlacement: function (error, element) {
+                                    console.log('error');
+                                    var element2 = element.siblings('div'); 
+                                    var element3 = element.siblings('span'); 
+                                    
+                                    if (element2.hasClass('btn-group')) {
+                                        element2.attr("class","btn-group bootstrap-select form-control select error");
+                                        error.insertAfter(element2);
+                                    } else {
+                                        
+                                        element3.hide();
+                                        error.insertAfter(element);
+                                        
+                                    }
+                                    /*Add other (if...else...) conditions depending on your
+                                    * validation styling requirements*/
+                                },
+                                
+                                
+                            });
+                                                
+                        
+                            if(datos.form() == true){
+                                FECHAINICIO = $('#dpFechaInicio').val();
+                                FECHAFINAL = $('#dpFechaFinal').val();
+                                OBSERVACION = $('#txtObsevacionReprogramacion').val();
+                                IDACTIVIDAD = $("input[name=idactividad]").val();
+                                _token = $("input[name=_token]").val();
+                                $.post(" {{url('/ProgresoActividad/enviarSolicitudReprogramarFecha') }}",{FECHAINICIO:FECHAINICIO,FECHAFINAL:FECHAFINAL,OBSERVACION:OBSERVACION,_token:_token,IDACTIVIDAD:IDACTIVIDAD},function(data){
+                                    if(data == "ok"){
+                                        noty({text: 'Solicitud enviada', layout: 'topRight', type: 'success'});
+                                    }else{
+                                        noty({text: 'Ya existe una solicitud pendiente', layout: 'topRight', type: 'error'});
+                                    }
+                                });
+                            }
+                        });
                     })
                 </script>
                 @endpush('PageScript')

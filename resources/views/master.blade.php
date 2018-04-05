@@ -11,16 +11,27 @@
         <!-- END META SECTION -->
         
         <!-- CSS INCLUDE -->        
-        <link rel="stylesheet" type="text/css" id="theme" href="{{ url('css/theme-default.css') }}"/>
+        <link rel="stylesheet" type="text/css" id="theme" href="{{ asset('css/theme-default.css') }}"/>
+        <!-- CSS INCLUDE -->        
+        <link rel="stylesheet" type="text/css" id="theme" href="{{ asset('css/loader/jquery.loadingModal.min.css') }}"/>
+
         <!-- EOF CSS INCLUDE -->
         <script>
-            var baseUrl = "{{ url('/') }}";
+            var baseUrl = "{{ asset('/') }}";
             
         </script> 
-        <script type="text/javascript" src="{{ url('js/plugins/jquery/jquery.min.js') }}"></script>
-                                  
+        <script type="text/javascript" src="{{ asset('js/plugins/jquery/jquery.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/plugins/loader/jquery.loadingModal.min.js') }}"></script>
+        <script>
+            function cargar(texto,time){
+                $('body').loadingModal({text: texto});
+                setTimeout(() => {
+                    $('body').loadingModal('hide');
+                }, time); 
+            }
+        </script>               
     </head>
-    <body>
+    <body onload="cargar('Cargando...',3000)">
         <!-- START PAGE CONTAINER -->
         <div class="page-container">
             <!-- START PAGE SIDEBAR -->
@@ -62,35 +73,35 @@
         <!-- END MESSAGE BOX-->
 
         <!-- START PRELOADS -->
-        <audio id="audio-alert" src="{{ url('audio/alert.mp3') }}" preload="auto"></audio>
-        <audio id="audio-fail" src="{{ url('audio/fail.mp3') }}" preload="auto"></audio>
+        <audio id="audio-alert" src="{{ asset('audio/alert.mp3') }}" preload="auto"></audio>
+        <audio id="audio-fail" src="{{ asset('audio/fail.mp3') }}" preload="auto"></audio>
         <!-- END PRELOADS -->                  
         
     <!-- START SCRIPTS -->
         <!-- START PLUGINS -->
         
-        <script type="text/javascript" src="{{ url('js/plugins/jquery/jquery-ui.min.js') }}"></script>
-        <script type="text/javascript" src="{{ url('js/plugins/bootstrap/bootstrap.min.js') }}"></script>        
+        <script type="text/javascript" src="{{ asset('js/plugins/jquery/jquery-ui.min.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/plugins/bootstrap/bootstrap.min.js') }}"></script>        
         <!-- END PLUGINS -->
 
         <!-- START THIS PAGE PLUGINS-->        
-            <script type='text/javascript' src="{{ url('js/plugins/icheck/icheck.min.js') }}"></script>        
-            <script type="text/javascript" src="{{ url('js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js') }}"></script>
-            <script type="text/javascript" src="{{ url('js/plugins/scrolltotop/scrolltopcontrol.js') }}"></script> 
+            <script type='text/javascript' src="{{ asset('js/plugins/icheck/icheck.min.js') }}"></script>        
+            <script type="text/javascript" src="{{ asset('js/plugins/mcustomscrollbar/jquery.mCustomScrollbar.min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/plugins/scrolltotop/scrolltopcontrol.js') }}"></script> 
             
-            <script type="text/javascript" src="{{ url('js/plugins/morris/raphael-min.js') }}"></script>
-            <script type="text/javascript" src="{{ url('js/plugins/morris/morris.min.js') }}"></script> 
+            <script type="text/javascript" src="{{ asset('js/plugins/morris/raphael-min.js') }}"></script>
+            <script type="text/javascript" src="{{ asset('js/plugins/morris/morris.min.js') }}"></script> 
             @stack('PageScript')
             
         <!-- END THIS PAGE PLUGINS-->        
 
         <!-- START TEMPLATE -->
-        <script type="text/javascript" src="{{ url('js/settings.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/settings.js') }}"></script>
         
-        <script type="text/javascript" src="{{ url('js/plugins.js') }}"></script>        
-        <script type="text/javascript" src="{{ url('js/actions.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/plugins.js') }}"></script>        
+        <script type="text/javascript" src="{{ asset('js/actions.js') }}"></script>
         
-        <script type="text/javascript" src="{{ url('js/demo_dashboard.js') }}"></script>
+        <script type="text/javascript" src="{{ asset('js/demo_dashboard.js') }}"></script>
         <!-- END TEMPLATE -->
     <!-- END SCRIPTS -->         
     </body>

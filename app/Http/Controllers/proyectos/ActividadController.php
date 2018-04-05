@@ -13,6 +13,7 @@ use App\Empleado;
 use App\Helpers\ProyectoHelper;
 use App\Helpers\ObjetivoHelper;
 use App\Helpers\ActividadHelper;
+use App\Helpers\RecursoHelper;
 use App\Catalogoindicador;
 use App\Objetivo;
 use App\Indicador;
@@ -58,6 +59,7 @@ class ActividadController extends Controller
             $datosDeActividad = ActividadHelper::obtenerActividadesProyecto($IDPROYECTO,$ESTADO);
             
             if(isset($datosDeActividad)){
+            //if($datosDeActividad){
                 foreach($datosDeActividad as $da){
                     $actividadimprimir .= '
                         <div class="task-item '.$marcaestado.'">                                    
@@ -73,6 +75,14 @@ class ActividadController extends Controller
             }
             echo $actividadimprimir;
             
+        }
+    }
+    //funcion para obtener las fechas de las actividades
+    public function obtenerFechaActividad(Request $r){
+        if($r->ajax()){
+            $objetoactividad = ActividadHelper::obtenerFechasActividad($r->IDACTIVIDAD);
+            $datosfechas = ActividadHelper::arrayFechasActividad($objetoactividad);
+            echo json_encode($datosfechas);
         }
     }
 
@@ -174,9 +184,8 @@ class ActividadController extends Controller
                                                             'objetivosestrategicos' => $objetivo,
                                                             'proyectos' => $datosDeProyecto])
                                                             ->with($datosDeActividad);
-        
-        
     }
+
     public function guardar(Request $r){
         if($r->ajax()){
             $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
@@ -190,78 +199,101 @@ class ActividadController extends Controller
 
             $messages = [
                 'txtNombre.unique' => 'El nombre de la activadad ya esta en uso',
+                'txtPorcentajeActividad.max' => 'El campo porcentaje no puede exceder de :max %',
             ];
 
             $nombreActividad = $r->txtNombre;
             $nombretemp = str_ireplace(" ", "_", $nombreActividad);
-            if($idActividad > 0){
-                if($r->txtNombre == $datosDeActividad['NOMBREACTIVIDAD']){
-                    $rule = [
+            if($datosDeProyecto['PROGRESODECREACION'] == 100){
+                if($idActividad > 0){
+                    $valorMaxPorcentajeActividad = ActividadHelper::obtenerValorMaxPorcentaje($r->slProyecto,$idActividad);
+                    if($r->txtNombre == $datosDeActividad['NOMBREACTIVIDAD']){
+                        $rule = [
+                            'txtPorcentajeActividad' => 'numeric|max:'.$valorMaxPorcentajeActividad.'',
+    
+                        ];
+                        $validator = Validator::make($r->all(),$rule,$messages)->validate();
+                    }else{
+                        $rule = [
+                            'txtNombre' => 'unique:actividades,NOMBREACTIVIDAD',
+                            'txtPorcentajeActividad' => 'numeric|max:'.$valorMaxPorcentajeActividad.'',
+                        ];
+                        $validator = Validator::make($r->all(),$rule,$messages)->validate();
+                        $nombresinespacion = str_ireplace(" ", "_", $datosDeActividad['NOMBREACTIVIDAD']);
+                        $dir1 = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/';
+                        $dir2 = '/'.$datosDeProyecto['IDDIRECTORIO'].'/'.$nombretemp.'/';
                         
-                    ];
-                    $validator = Validator::make($r->all(),$rule,$messages)->validate();
+                        Storage::cloud()->move($dir1, $dir2);
+                    }
+    
+                    $actividad = Actividad::where('IDACTIVIDAD', $idActividad)
+                                        ->update([
+                                        'NOMBREACTIVIDAD' => $r->txtNombre,
+                                        'IDINDICADORES' => $r->slIndicador,
+                                        'IDOBJETIVOESTRATEGICO' => $r->slObjetivo,
+                                        'IDPROYECTO' => $r->slProyecto,
+                                        'PORCENTAJEACTIVIDAD' => $r->txtPorcentajeActividad,
+                                        ]);
+                    $datos['respuesta'] = 'ok';
+                    $datos['codigo'] = $idActividad;
+                    $datos['transaccion'] = 'actualizar';
+                    $datos['valormaximo'] = $valorMaxPorcentajeActividad;
                 }else{
+                    
+                    $valorMaxPorcentajeActividad = ActividadHelper::obtenerValorMaxPorcentaje($r->slProyecto,null);
+                    //reglas de validacion
                     $rule = [
                         'txtNombre' => 'unique:actividades,NOMBREACTIVIDAD',
+                        'txtPorcentajeActividad' => 'numeric|max:'.$valorMaxPorcentajeActividad.'',
                     ];
+                    //validacion enviara un json con un error 422
                     $validator = Validator::make($r->all(),$rule,$messages)->validate();
-                    $nombresinespacion = str_ireplace(" ", "_", $datosDeActividad['NOMBREACTIVIDAD']);
-                    $dir1 = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/';
-                    $dir2 = '/'.$datosDeProyecto['IDDIRECTORIO'].'/'.$nombretemp.'/';
                     
-                    Storage::cloud()->move($dir1, $dir2);
+                    $iddirectorio2 = '/'.$datosDeProyecto['IDDIRECTORIO'].'/'.$nombretemp.'/';
+                    $info = Storage::cloud()->makeDirectory($iddirectorio2);
+    
+                    if($info){
+                        $dir = '/'.$datosDeProyecto['IDDIRECTORIO'].'/';
+                        $recursive = false; // Get subdirectories also?
+                        $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+    
+                        $directory = $contents
+                        ->where('type', '=', 'dir')
+                        ->where('filename', '=', $nombretemp)
+                        ->first();
+                        $iddirectorioactividad = $directory['path'];
+                        
+                        $actividad = new Actividad(array(
+                            'NOMBREACTIVIDAD' => $r->txtNombre,
+                            'IDINDICADORES' => $r->slIndicador,
+                            'IDOBJETIVOESTRATEGICO' => $r->slObjetivo,
+                            'IDDIRECTORIOACTIVIDAD' => $iddirectorioactividad,
+                            'IDPROYECTO' => $r->slProyecto,
+                            'ESTADO' => '1',
+                            'progreso' => 0,
+                            'PORCENTAJEACTIVIDAD' => $r->txtPorcentajeActividad,
+                            'FECHAINICIALACTIVIDAD' => $r->dpFechaActividadIncial,
+                            'FECHAFINALACTIVIDAD' => $r->dpFechaActividadFinal,
+                        ));
+                        $actividad->save();
+                        $id = $actividad->id;
+                        $actividadFechas = new Actividadfechafinal(array(
+                            'FECHAINICIALACTIVIDAD' => $r->dpFechaActividadIncial,
+                            'FECHAFINALACTIVIDAD' => $r->dpFechaActividadFinal,
+                            'IDACTIVIDAD' => $id,
+                            'ESTADOACTIVIDADFECHA' => '1',
+                            'OBSERVACION' => 'CREACIÓN DE ACTIVIDAD',
+                        ));
+                        $actividadFechas->save();
+                        $datos['respuesta'] = 'ok';
+                        $datos['codigo'] = $id;
+                        $datos['transaccion'] = 'guardar';
+                    }else{
+                        $datos['respuesta'] = 'errorgoogle';
+                    }
                 }
-
-                $actividad = Actividad::where('IDACTIVIDAD', $idActividad)
-                                    ->update([
-                                    'NOMBREACTIVIDAD' => $r->txtNombre,
-                                    'IDINDICADORES' => $r->slIndicador,
-                                    'IDOBJETIVOESTRATEGICO' => $r->slObjetivo,
-                                    'IDPROYECTO' => $r->slProyecto,
-                                    ]);
-                $datos['respuesta'] = 'ok';
-                $datos['codigo'] = $idActividad;
-                $datos['transaccion'] = 'actualizar';
             }else{
-                
-                //reglas de validacion
-                $rule = [
-                    'txtNombre' => 'unique:actividades,NOMBREACTIVIDAD',
-                ];
-                //validacion enviara un json con un error 422
-                $validator = Validator::make($r->all(),$rule,$messages)->validate();
-                
-                $iddirectorio2 = '/'.$datosDeProyecto['IDDIRECTORIO'].'/'.$nombretemp.'/';
-                $info = Storage::cloud()->makeDirectory($iddirectorio2);
-
-                if($info){
-                    $dir = '/'.$datosDeProyecto['IDDIRECTORIO'].'/';
-                    $recursive = false; // Get subdirectories also?
-                    $contents = collect(Storage::cloud()->listContents($dir, $recursive));
-
-                    $directory = $contents
-                    ->where('type', '=', 'dir')
-                    ->where('filename', '=', $nombretemp)
-                    ->first();
-                    $iddirectorioactividad = $directory['path'];
-                    
-                    $actividad = new Actividad(array(
-                        'NOMBREACTIVIDAD' => $r->txtNombre,
-                        'IDINDICADORES' => $r->slIndicador,
-                        'IDOBJETIVOESTRATEGICO' => $r->slObjetivo,
-                        'IDDIRECTORIOACTIVIDAD' => $iddirectorioactividad,
-                        'IDPROYECTO' => $r->slProyecto,
-                        'ESTADO' => '1',
-                        'progreso' => 0,
-                    ));
-                    $actividad->save();
-                    $id = $actividad->id;
-                    $datos['respuesta'] = 'ok';
-                    $datos['codigo'] = $id;
-                    $datos['transaccion'] = 'guardar';
-                }else{
-                    $datos['respuesta'] = 'no';
-                }
+                $datos['respuesta'] = 'proyectonocumple';
             }
             
             echo json_encode($datos);
@@ -512,43 +544,60 @@ class ActividadController extends Controller
             $nombreRecurso = $r->txtnombrerecurso;
             $nombretemp = str_ireplace(" ", "_", $nombreRecurso);
 
-            if($idActividad > 0){
-
-                $iddirectorio2 = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/'.$nombretemp.'/';
-                $info = Storage::cloud()->makeDirectory($iddirectorio2);
-
-                if($info){
-                    $dir = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/';
-                    $recursive = false; // Get subdirectories also?
-                    $contents = collect(Storage::cloud()->listContents($dir, $recursive));
-
-                    $directory = $contents
-                    ->where('type', '=', 'dir')
-                    ->where('filename', '=', $nombretemp)
-                    ->first();
-                    $iddirectoriorecurso = $directory['path'];
-                    $agregarrecurso = new Recurso(array(
-                        'NOMBRERECURSO' => $r->txtnombrerecurso,
-                        'ESTADO' => '1',
-                        'IDACTIVIDAD' => $idActividad,
-                        'IDDIRECTORIORECURSO' => $iddirectoriorecurso,
-                        'PORCENTAJERECURSO' => $r->txtporcentaje,
-                    ));
-                    $agregarrecurso->save();
-                    $agregarrecursofechafinal = new Recursofechafinal(array(
-                        'FECHAINICIALRECURSO' => $r->dpFechaInicialRecurso,
-                        'FECHAFINALRECURSO' => $r->dpFechaFinalRecurso,
-                        'ESTADOFECHASFINALES' => '1',
-                        'IDRECURSO' => $agregarrecurso->id,
-                    ));
-                    $agregarrecursofechafinal->save();
-                    $datos['respuesta'] = 'ok';
-                
-                    $datos['transaccion'] = 'guardar';
-                }else{
-                    $datos['respuesta'] = 'no';
+            $messages = [
+                'txtporcentaje.max' => 'El campo porcentaje no puede exceder del :max %',
+            ];
+            $numeroResponsables  = ActividadHelper::numeroResponsableActividad($idActividad);
+            if($numeroResponsables > 0){
+                if($idActividad > 0){
+                    //verificar si existe carpeta
+                    $valorMaxPorcentajeRecurso = RecursoHelper::obtenerValorMaxPorcentaje($idActividad);
+                    //reglas de validacion
+                    $rule = [
+                        'txtporcentaje' => 'numeric|max:'.$valorMaxPorcentajeRecurso.'',
+                    ];
+                    //validacion enviara un json con un error 422
+                    $validator = Validator::make($r->all(),$rule,$messages)->validate();
+    
+                    $iddirectorio2 = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/'.$nombretemp.'/';
+                    $info = Storage::cloud()->makeDirectory($iddirectorio2);
+                    $datos['recurso'] = $valorMaxPorcentajeRecurso;
+                    
+                    if($info){
+                        $dir = '/'.$datosDeActividad['IDDIRECTORIOACTIVIDAD'].'/';
+                        $recursive = false; // Get subdirectories also?
+                        $contents = collect(Storage::cloud()->listContents($dir, $recursive));
+    
+                        $directory = $contents
+                        ->where('type', '=', 'dir')
+                        ->where('filename', '=', $nombretemp)
+                        ->first();
+                        $iddirectoriorecurso = $directory['path'];
+                        $agregarrecurso = new Recurso(array(
+                            'NOMBRERECURSO' => $r->txtnombrerecurso,
+                            'ESTADO' => '1',
+                            'IDACTIVIDAD' => $idActividad,
+                            'IDDIRECTORIORECURSO' => $iddirectoriorecurso,
+                            'PORCENTAJERECURSO' => $r->txtporcentaje,
+                        ));
+                        $agregarrecurso->save();
+                        $agregarrecursofechafinal = new Recursofechafinal(array(
+                            'FECHAINICIALRECURSO' => $r->dpFechaInicialRecurso,
+                            'FECHAFINALRECURSO' => $r->dpFechaFinalRecurso,
+                            'ESTADOFECHASFINALES' => '1',
+                            'IDRECURSO' => $agregarrecurso->id,
+                        ));
+                        $agregarrecursofechafinal->save();
+                        $datos['respuesta'] = 'ok';
+                    
+                        $datos['transaccion'] = 'guardar';
+                    }else{
+                        $datos['respuesta'] = 'no';
+                    }
+                    
                 }
-                
+            }else{
+                $datos['respuesta'] = 'actividadincompleta';
             }
             
             echo json_encode($datos);
@@ -562,7 +611,8 @@ class ActividadController extends Controller
                                                     ->select('recursos.IDRECURSO',
                                                             'recursos.NOMBRERECURSO',
                                                             'recursos.IDDIRECTORIORECURSO',
-                                                            'recursos.ESTADO'
+                                                            'recursos.ESTADO',
+                                                            'recursos.PORCENTAJERECURSO'
                                                         )
                                                         ->get();
             
@@ -600,29 +650,39 @@ class ActividadController extends Controller
                                                 <h4 class="panel-title">
                                                     <a href="#acordion'.$dr->IDRECURSO.'">';
                     $datoshtmlrecursos .= $dr->NOMBRERECURSO;
-                    $datoshtmlrecursos .= '         </a> 
+                    $datoshtmlrecursos .= '         </a> | Estado:
                                                     <span id="span'.$dr->IDRECURSO.'" class="label label-';
                     if($dr->ESTADO == '1'){
                         $datoshtmlrecursos .= 'primary">ABIERTO</span>';
                     }else if($dr->ESTADO == '2'){
-                        $datoshtmlrecursos .= 'warning">CARGADO</span>';
-                        $datoshtmlrecursos .= ' Accion : <div class="btn-group btn-group-md">
-                            <button onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i>Aprobar</butto>
-                            <button onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i>Desaprobar</button>                                                                                                                                                                          
-                        </div>';
+                        $datoshtmlrecursos .= 'warning">EN PROGRESO</span>';
+                        $datoshtmlrecursos .= '| ACCION: <div class="btn-group btn-group-md">
+                                            <button title="APROBAR" onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i></butto>
+                                            <button title="REPROBAR" onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i></button>                                                                                     
+                                        </div>';
                     }else if($dr->ESTADO == '3'){
-                        $datoshtmlrecursos .= 'success">APROBADO</span>';
-                        $datoshtmlrecursos .= ' Accion : <div class="btn-group btn-group-md">
-                            <button onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i>Aprobar</butto>
-                            <button onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i>Desaprobar</button>                                                                                     
-                        </div>';
+                        $datoshtmlrecursos .= 'success">COMPLETADO</span>';
+                        $datoshtmlrecursos .= '| ACCION: <div class="btn-group btn-group-md">
+                        <button title="APROBAR" onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i></butto>
+                        <button title="REPROBAR" onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i></button>                                                                                     
+                    </div>';
                     }else{
-                        $datoshtmlrecursos .= 'danger">DESAPROBADO</span>';
-                        $datoshtmlrecursos .= ' Accion : <div class="btn-group btn-group-md">
-                            <button onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i>Aprobar</butto>
-                            <button onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i>Desaprobar</button>                                                                                     
-                        </div>';
+                        $datoshtmlrecursos .= 'danger">ATRASADO</span>';
+                        $datoshtmlrecursos .= '| ACCION: <div class="btn-group btn-group-md">
+                                            <button title="APROBAR" onclick="aprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-success"><i class="fa fa-check"></i></butto>
+                                            <button title="REPROBAR" onclick="desaprobarDocumentoRecurso('.$dr->IDRECURSO.')" class="btn btn-danger"><i class="fa fa-times"></i></button>                                                                                     
+                                        </div>';
                     }
+
+                    if($dr->EVALUACION == '1'){
+                        $datoshtmlrecursos .= '  | Evaluacion <span id="span2'.$dr->IDRECURSO.'" class="label label-primary">SIN ACCION</span>';
+                    }else if($dr->EVALUACION == '2'){
+                        $datoshtmlrecursos .= '  | Evaluacion <span id="span2'.$dr->IDRECURSO.'" class="label label-success">APROBADO</span>';
+                    }else{
+                        $datoshtmlrecursos .= '  | Evaluacion <span id="span2'.$dr->IDRECURSO.'" class="label label-danger">REPROBADO</span>';
+                    }
+
+                    
                     
                    
                                             
@@ -643,8 +703,10 @@ class ActividadController extends Controller
                                                         if(data = "aprobado"){
                                                             var element = $("#span" + IDRECURSO);
                                                             var element2 = $("#panel" + IDRECURSO);
-                                                            element.attr("class","label label-success").html("APROBADO");
+                                                            var element3 = $("#span2" + IDRECURSO);
+                                                            element.attr("class","label label-success").html("COMPLETADO");
                                                             element2.attr("class","panel panel-success");
+                                                            element3.attr("class","label label-success").html("APROBADO");
                                                             noty({text: "El recurso fue aprobado", layout: "topRight", type: "success"});
                                                         }
                                                     });
@@ -655,9 +717,11 @@ class ActividadController extends Controller
                                                         if(data = "desaprobado"){
                                                             var element = $("#span" + IDRECURSO);
                                                             var element2 = $("#panel" + IDRECURSO);
-                                                            element.attr("class","label label-danger").html("DESAPROBADO");
-                                                            element2.attr("class","panel panel-danger");
-                                                            noty({text: "El recurso fue aprobado", layout: "topRight", type: "error"});
+                                                            var element3 = $("#span2" + IDRECURSO);
+                                                            element.attr("class","label label-info").html("EN PROGRESO");
+                                                            element2.attr("class","panel panel-info");
+                                                            element3.attr("class","label label-danger").html("REPROBADO");
+                                                            noty({text: "El recurso fue reprobado", layout: "topRight", type: "error"});
                                                         }
                                                     });
                                                     

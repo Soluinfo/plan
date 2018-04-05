@@ -198,11 +198,11 @@
                 </div>
                 <!-- END MODALS -->
                 @push('PageScript')
-                    <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
-                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
-                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
-                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
-                    <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
+                    <script type='text/javascript' src="{{ asset('js/plugins/noty/jquery.noty.js') }}"></script>
+                    <script type='text/javascript' src="{{ asset('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                    <script type='text/javascript' src="{{ asset('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                    <script type='text/javascript' src="{{ asset('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                    <script type='text/javascript' src="{{ asset('js/plugins/noty/themes/default.js') }}"></script>
 
                     <script>
                         
@@ -222,6 +222,35 @@
                             })*/
                             $("#modalDetalleSupervisor").modal('show');
                         }
+                        function eliminarSupervisorProyecto(IDSUPERVISOR,IDPROYECTO){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el supervisor del proyecto?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/proyectos/eliminarProyectoSupervisor') }}",{IDSUPERVISOR:IDSUPERVISOR,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El supervisor a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableSupervisoresProyectos.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
 
                         function eliminarObjetivoProyecto(IDOBJETIVOESTRATEGICO,IDPROYECTO){
                             _token = $("input[name=_token]").val();
@@ -235,6 +264,40 @@
                                                 if(data == 'eliminado'){
                                                     noty({text: 'El objetivo a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
                                                     tableObjetivosProyectos.ajax.reload();
+                                                }else if(data == 'existe'){
+                                                    noty({text: 'El objetivo no a sido eliminado del proyecto, esta asignado a una actividad', layout: 'topRight', type: 'warning'});
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+
+                        function eliminarIndicadorProyecto(IDINDICADOR,IDPROYECTO){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el indicador del proyecto?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/index.php/proyectos/eliminarIndicadorProyecto') }}",{IDINDICADOR:IDINDICADOR,IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El indicador a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableIndicadorProyectos.ajax.reload();
+                                                }else if(data == 'existe'){
+                                                    noty({text: 'El Indicador no a sido eliminado del proyecto, tiene una actividad asignada', layout: 'topRight', type: 'warning'});
                                                 }else{
                                                     noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
                                                 }
@@ -279,7 +342,7 @@
                                 tableObjetivosProyectos = $("#datatableObjetivosProyectos").DataTable({
                                     "lengthMenu": [ 5, 10],
                                     "language" : {
-                                        "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                        "url": '{{ asset("/js/plugins/datatables/spanish.json") }}',
                                     },
                                     "autoWidth": false,
                                     "order": [], //Initial no order
@@ -307,7 +370,7 @@
                                 tableSupervisoresProyectos = $("#datatable-supervisorProyecto").DataTable({
                                     "lengthMenu": [ 5, 10],
                                     "language" : {
-                                        "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                        "url": '{{ asset("/js/plugins/datatables/spanish.json") }}',
                                     },
                                     "autoWidth": false,
                                     "order": [], //Initial no order
@@ -336,8 +399,8 @@
                         })
                     </script>
                     
-                    <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>
-                    <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js')}}"></script> 
+                    <script type="text/javascript" src="{{ asset('js/plugins/knob/jquery.knob.min.js')}}"></script>
+                    <script type="text/javascript" src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js')}}"></script> 
                     
                 @endpush('PageScript')
 @endsection('principal')

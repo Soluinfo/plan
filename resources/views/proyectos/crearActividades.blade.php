@@ -11,6 +11,7 @@
                 <!-- PAGE TITLE -->
                 <div class="page-title">                    
                 <h2><span class="fa fa-arrow-circle-o-left"></span> Crear Actividades</h2>
+                
             </div>
             <!-- END PAGE TITLE --> 
             <!-- PAGE CONTENT WRAPPER -->
@@ -24,7 +25,7 @@
                                 <li class="active"><a href="#tab-actividad" role="tab" data-toggle="tab">Crear Actividades</a></li>
                                 <li><a href="#tab-reprogramar-actividad" role="tab" data-toggle="tab">Programar Actividad</a></li>
                                 <li><a href="#tab-responsable" role="tab" data-toggle="tab">Responsable</a></li>
-                                <li><a href="#tab-recursos" role="tab" data-toggle="tab">Recursos</a></li>
+                                <li><a href="#tab-recursos" role="tab" data-toggle="tab">Entregable</a></li>
                                 
                             </ul>
                             <div class="panel-body tab-content">
@@ -58,7 +59,7 @@
                                                 </select>
                                             </div>
                                         </div>
-
+                                        
                                         <div class="form-group">
                                             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Objetivo</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                
@@ -77,13 +78,30 @@
                                                 </select>
                                             </div>
                                         </div>
-
+                                        <div class="form-group">                                        
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha inicial:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" name="dpFechaActividadIncial" id="dpFechaActividadIncial" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAINICIALACTIVIDAD)){echo $FECHAINICIALACTIVIDAD;} ?>" <?php if(isset($IDACTIVIDAD)){echo 'disabled';} ?>>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">                                        
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha final:</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                                                <input type="text" name="dpFechaActividadFinal" id="dpFechaActividadFinal" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHAFINALACTIVIDAD)){echo $FECHAFINALACTIVIDAD;} ?>" <?php if(isset($IDACTIVIDAD)){echo 'disabled';} ?>>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Porcentaje</label>
+                                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                                                                                        
+                                                <input type="text" class="form-control" name="txtPorcentajeActividad" id="txtPorcentajeActividad" placeholder="Ejemplo 20" value="<?php if(isset($PORCENTAJEACTIVIDAD)){echo $PORCENTAJEACTIVIDAD;} ?>"/>                                                    
+                                            </div>
+                                        </div>
                                        
                                            
 
                                        
                                         {{ csrf_field() }}
-                                        <input type="text" name="idactividad" value="{{ $IDACTIVIDAD or '0'}}"/>
+                                        <input type="hidden" name="idactividad" value="{{ $IDACTIVIDAD or '0'}}"/>
                                         
                                     </form>
                                     <a href="{{ url('/actividades/crear/') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Actividad <span class="fa fa-plus fa-right"></span></a>
@@ -139,7 +157,7 @@
                                        
                                 </div>
                                 <div class="tab-pane" id="tab-recursos">
-                                    <button id="btnAgregarRecursos" class="btn btn-block btn-primary"><span class="fa fa-plus"></span>Agregar Recurso</button>
+                                    <button id="btnAgregarRecursos" class="btn btn-block btn-primary"><span class="fa fa-plus"></span>Crear Entregable</button>
                                         <!-- START RESPONSIVE TABLES -->
                                         @component('componentes.dataTable')
                                             @slot('titleComponent')
@@ -153,7 +171,7 @@
                                                 <th width="100" >Nombre</th>
 
                                                 <th width="100">Estado</th>
-                                            
+                                                <th width="100">% de recurso</th>
                                                 <th width="100">actions</th>
                                             </tr>
 
@@ -270,12 +288,12 @@
                             modal-lg
                         @endslot
                         @slot('titulomodal')
-                            Panel de recursos de Actividad
+                            Formulario para crear entregables
                         @endslot
                         {!! Form::open(['url' => '/actividades/guardarRecursos', "name" => "formRecursosActividad", "id" => "formRecursosActividad","class" => "form-horizontal", "role" => "form"])!!}
                                  
                             <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">Nombre de recurso</label>
+                                <label class="col-md-3 col-xs-12 control-label">Nombre de entregable</label>
                                 <div class="col-md-6 col-xs-12">                                            
                                      
                                     <input type="text" name="txtnombrerecurso" id="txtnombrerecurso" class="form-control"/>
@@ -283,7 +301,7 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label class="col-md-3 col-xs-12 control-label">Valor del recurso %</label>
+                                <label class="col-md-3 col-xs-12 control-label">Valor del entregable %</label>
                                 <div class="col-md-6 col-xs-12">                                            
                                     
                                     <input type="number" id="txtporcentaje" name="txtporcentaje" class="form-control"/>
@@ -428,6 +446,15 @@
                     ]
             })
             
+        }
+
+        function obtenerFechaActividad(IDACTIVIDAD){
+            _token = $("input[name=_token]").val();
+            $.post("{{ url('/actividades/obtenerFechaActividad') }}",{IDACTIVIDAD:IDACTIVIDAD,_token:_token},function(data){
+                data2 = JSON.parse(data);
+                $("#dpFechaActividadIncial").val(data2.FECHAINICIALACTIVIDAD);
+                $("#dpFechaActividadFinal").val(data2.FECHAFINALACTIVIDAD);
+            })
         }
         
 $(document).ready(function(){
@@ -601,15 +628,19 @@ $(document).ready(function(){
                 }
             },
             "columns": [
-                {width: '20%',data: 'IDRECURSO'},
-                {width: '30%',data: 'NOMBRERECURSO'},
-                {width: '30%',data: 'ESTADO'},
-               
-                {width: '20%',data: 'action', name: 'action', orderable: false, searchable: false},
+                {width: '10%',data: 'IDRECURSO'},
+                {width: '35%',data: 'NOMBRERECURSO'},
+                {width: '25%',data: 'ESTADO'},
+                {width: '15%',data: 'PORCENTAJERECURSO'},
+                {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
             
             ]
         })          
-        
+        $.validator.addMethod("validarFechaFinal", function(value, element, param) {
+            
+            return this.optional(element) || value > $(param).val();
+            
+        }, "El campo [Fecha final] no puede ser menor al campo [Fecha inicial]");
    //variables para el wizard
    $("#btnGuardarActividad").on("click",function(){
         datos = $("#formActividad").validate({
@@ -622,7 +653,13 @@ $(document).ready(function(){
                     maxlength:50
         
                 },
-                
+                dpFechaActividadIncial: {
+                    required: true,
+                },
+                dpFechaActividadFinal: {
+                    required: true,
+                    validarFechaFinal: '#dpFechaActividadIncial',
+                },
                 slIndicador: {
                         required: true,    
                         
@@ -633,6 +670,10 @@ $(document).ready(function(){
                 },
                 slProyecto: {
                     required: true,
+                },
+                txtPorcentajeActividad : {
+                    required: true,
+                    range: [0, 100]
                 }
                 
             },
@@ -642,7 +683,12 @@ $(document).ready(function(){
                     maxlength: "El campo Nombre no puede contener mas de 50 caracteres"
                 
                 },
-                
+                dpFechaActividadIncial: {
+                    required: "La fecha inicial es requerida",  
+                },
+                dpFechaActividadFinal: {
+                    required: "La fecha final es requerida", 
+                },
                 slIndicador: {
                         required: "Seleccione un Indicador",
                     },
@@ -651,6 +697,10 @@ $(document).ready(function(){
                 },
                 slProyecto: {
                     required: "Seleccione un Objetivo",
+                },
+                txtPorcentajeActividad : {
+                    required: "El campo porcentaje es requerido",
+                    range: "El campo porcentaje acepta valores de 0 a 100",
                 }
                 
             },
@@ -712,6 +762,8 @@ $(document).ready(function(){
             dataType : 'json',
             beforeSend : function(){
                 $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
+                $('body').loadingModal('show');
+                $('body').loadingModal('text', 'Guardando actividad...');
             },
             success : function(data){
                 if(data.respuesta == 'ok'){
@@ -721,21 +773,35 @@ $(document).ready(function(){
                     }else{
                         noty({text: 'Actividad actualizada con exito', layout: 'topRight', type: 'success'});
                     }
-                    
+                    tableFechasActividad.ajax.reload();
+                }else if(data.respuesta == 'proyectonocumple'){
+                    noty({text: '!Advertencia : La actividad no se ha registrado, informacion del proyecto es incompleta', layout: 'topRight', type: 'error'});
+                }else if(data.respuesta == 'errorgoogle'){
+                    noty({text: '!Advertencia : el sistema no se pudo conectar con google drive, intente de nuevo', layout: 'topRight', type: 'error'});
+                }else{
+                    noty({text: 'Error', layout: 'topRight', type: 'error'});
                 }
+                $('body').loadingModal('hide');
                 $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                 $.mpb('destroy');
             },
             error : function(xhr,estado){
                 $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                 $.mpb('destroy');
+                $('body').loadingModal('hide');
                 //alert("!Error "+xhr.status+", reportelo al centro de computo");
                 if(xhr.status == 422){
                                             
                     if(xhr.responseJSON.txtNombre){
                         noty({text: xhr.responseJSON.txtNombre[0], layout: 'topRight', type: 'warning'});
                     }
+
+                    if(xhr.responseJSON.txtPorcentajeActividad){
+                        noty({text: xhr.responseJSON.txtPorcentajeActividad[0], layout: 'topRight', type: 'warning'});
+                    }
                     
+                }else if(xhr.status == 500){
+                    noty({text: 'Error: falló conexión, intente de nuevo', layout: 'topRight', type: 'error'});
                 }
                 console.log("!Error "+xhr.status+", reportelo al centro de computo");
                 
@@ -810,26 +876,33 @@ $(document).ready(function(){
             dataType : 'json',
             beforeSend : function(){
                 $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
+                $('body').loadingModal('show');
+                $('body').loadingModal('text', 'Reprogramando actividad...');
             },
             success : function(data){
                 if(data.respuesta == 'ok'){
                     tableFechasActividad.ajax.reload();
-                   
                     if(data.transaccion == 'programar'){
                         noty({text: 'Fechas programadas con exito', layout: 'topRight', type: 'success'});
                     }else{
                         noty({text: 'Fechas reprogramadas con exito', layout: 'topRight', type: 'success'});
                     }
+                    idactividad = $("input[name=idactividad]").val();
+                    obtenerFechaActividad(idactividad);
                     
                 }
                 $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                 $.mpb('destroy');
+                $('body').loadingModal('hide');
             },
             error : function(xhr,estado){
+                if(xhr.status == 500){
+                    noty({text: 'Error: falló conexión, intente de nuevo', layout: 'topRight', type: 'error'});
+                }
+                console.log("!Error "+xhr.status+", reportelo al centro de computo");
                 $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                 $.mpb('destroy');
-                alert("!Error "+xhr.status+", reportelo al centro de computo");
-                
+                $('body').loadingModal('hide');
             }
         })
     })
@@ -843,7 +916,7 @@ $(document).ready(function(){
                 },
                 txtporcentaje: {
                     required: true,
-                    max: 100,
+                    range: [0, 100],
                     number: true,
                 },
                 dpFechaInicialRecurso: {
@@ -863,7 +936,7 @@ $(document).ready(function(){
                 txtporcentaje: {
                     required: "El campo porcentaje es requerido",
                     number: "El campo porcentaje debe ser un número",
-                    max: "El campo porcetaje no puede exceder de 100",
+                    range: "El campo porcetaje no puede exceder de 100 ni ser menor a 0",
                 },
                 dpFechaInicialRecurso: {
                     required: "El campo fecha inicial es requerido",
@@ -935,6 +1008,8 @@ $(document).ready(function(){
                         noty({text: 'Recurso actualizado con exito', layout: 'topRight', type: 'success'});
                     }
                     
+                }else if(data.respuesta == 'actividadincompleta'){
+                    noty({text: '!Advertencia: La actividad esta incompleta, agregue responsable', layout: 'topRight', type: 'Error'});
                 }
                 $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                 $.mpb('destroy');
@@ -942,7 +1017,16 @@ $(document).ready(function(){
             error : function(xhr,estado){
                 $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                 $.mpb('destroy');
-                alert("!Error "+xhr.status+", reportelo al centro de computo");
+                if(xhr.status == 422){
+                                            
+                    if(xhr.responseJSON.txtporcentaje){
+                        noty({text: xhr.responseJSON.txtporcentaje[0], layout: 'topRight', type: 'warning'});
+                    }
+                    
+                }else if(xhr.status == 500){
+                    noty({text: 'Error: hay problema con la conexion, intente de nuevo', layout: 'topRight', type: 'Error'});
+                }
+                console.log("!Error "+xhr.status+", reportelo al centro de computo");
                 
             }
         })

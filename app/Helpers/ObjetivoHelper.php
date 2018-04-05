@@ -9,6 +9,7 @@ use App\Ambitoinfluencia;
 use App\Alcance;
 use App\Empleado;
 use App\Catalogoobjetivo;
+use App\Proyectosobjetivos;
  
 class ObjetivoHelper {
     /**
@@ -203,4 +204,8 @@ class ObjetivoHelper {
         
     }
 
+    public static function numeroObjetivosProyecto($idproyecto){
+        $numero = Proyectosobjetivos::where('IDPROYECTO',$idproyecto)->count();
+        return $numero;
+    }
 }

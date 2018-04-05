@@ -14,7 +14,7 @@ use App\Actividadresponsable;
 use App\Empleado;
 //use App\Helpers\ProyectoHelper;
 //use App\Helpers\ObjetivoHelper;
-//use App\Helpers\ActividadHelper;
+use App\Helpers\ActividadHelper;
 use App\Helpers\RecursoHelper;
 use App\Catalogoindicador;
 use App\Objetivo;
@@ -48,6 +48,7 @@ class ProgresoActividadController extends Controller
                 
                 Recurso::where('IDRECURSO','=',$idrecurso)
                         ->update(['ESTADO' => '2','NOMBREARCHIVO' => $fileName,'PESODEARCHIVO' => $fileSize]);
+                
             }else{
                 $data['error'] = 'Error: al subir el documento, por favor intente de nuevo';
             }
@@ -80,7 +81,17 @@ class ProgresoActividadController extends Controller
     public function aprobarRecursoActividad(Request $r){
         if($r->ajax()){
             $idrecurso = $r->IDRECURSO;
-            $datos = Recurso::where('IDRECURSO','=',$idrecurso)->update(['ESTADO' => '3']);
+            $porcentajetotal = 0;
+            //se obtienen datos de recursos
+            $objetorecurso = RecursoHelper::obtener($idrecurso);
+            $arrayRecurso = RecursoHelper::obtenerarrayRecurso($objetorecurso);
+            //se obtienen datos de actividad
+            $objetoActividad = ActividadHelper::obtener($arrayRecurso['IDACTIVIDAD']);
+            $arrayActividad = ActividadHelper::obtenerArrayActividad($objetoActividad);
+            $porcentajetotal = intval($arrayActividad['progreso']) + intval($arrayRecurso['PORCENTAJERECURSO']);
+            Recurso::where('IDRECURSO','=',$idrecurso)->update(['ESTADO' => '4','EVALUACION' => '2']);
+            Actividad::Where('IDACTIVIDAD','=',$arrayRecurso['IDACTIVIDAD'])->update(['progreso' => $porcentajetotal]);
+            var_dump($arrayRecurso['PORCENTAJERECURSO']);
             echo "aprobado";
         }
     }
@@ -88,8 +99,37 @@ class ProgresoActividadController extends Controller
     public function desaprobarRecursoActividad(Request $r){
         if($r->ajax()){
             $idrecurso = $r->IDRECURSO;
-            $datos = Recurso::where('IDRECURSO','=',$idrecurso)->update(['ESTADO' => '4']);
+            $porcentajetotal = 0;
+            //se obtienen datos de recursos
+            $objetorecurso = RecursoHelper::obtener($idrecurso);
+            $arrayRecurso = RecursoHelper::obtenerarrayRecurso($objetorecurso);
+            //se obtienen datos de actividad
+            $objetoActividad = ActividadHelper::obtener($arrayRecurso['IDACTIVIDAD']);
+            $arrayActividad = ActividadHelper::obtenerArrayActividad($objetoActividad);
+            $porcentajetotal = intval($arrayActividad['progreso']) - intval($arrayRecurso['PORCENTAJERECURSO']);
+            Recurso::where('IDRECURSO','=',$idrecurso)->update(['ESTADO' => '2','EVALUACION' => '3']);
+            Actividad::Where('IDACTIVIDAD','=',$arrayRecurso['IDACTIVIDAD'])->update(['progreso' => $porcentajetotal]);
             echo "desaprobado";
+        }
+    }
+
+    public function enviarSolicitudReprogramarFecha(Request $r){
+        if($r->ajax()){
+            $respuesta = 'NO';
+            $cantidad = ActividadHelper::verificarSolicitudesReprogramacion($r->IDACTIVIDAD);
+            if($cantidad == 0){
+                $datosactividad = new Actividadfechafinal(array(
+                    'IDACTIVIDAD' => $r->IDACTIVIDAD,
+                    'FECHAINICIALACTIVIDAD' => $r->FECHAINICIO,
+                    'FECHAFINALACTIVIDAD' => $r->FECHAFINAL,
+                    'ESTADOACTIVIDADFECHA' => '3',
+                    'OBSERVACION' => $r->OBSERVACION,
+                ));
+                $datosactividad->save();
+                echo "ok";
+            }else{
+                echo "no";
+            }
         }
     }
 }

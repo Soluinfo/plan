@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Proyecto;
 use App\Actividad;
+use App\Proyectosupervisor;
+use App\Fechaproyecto;
  
 class ProyectoHelper {
     /**
@@ -48,6 +50,7 @@ class ProyectoHelper {
                 $datosDeProyecto['updated_at'] = $p->updated_at;
                 $datosDeProyecto['idusuario'] = $p->idusuario;
                 $datosDeProyecto['SERIAL_DEP'] = $p->SERIAL_DEP;
+                $datosDeProyecto['PROGRESODECREACION'] = $p->PROGRESODECREACION;
             }
         }
         return $datosDeProyecto;
@@ -90,4 +93,31 @@ class ProyectoHelper {
         return $actividad;
     }
     //fin de funcion obtener
+
+    public static function verificarProyectoExiste($id){
+        $verificador = Proyecto::where('IDPROYECTO',$id)->count();
+        return $verificador;
+    }
+    public static function numeroSupervisoresProyecto($idproyecto){
+        $numero = Proyectosupervisor::where('IDPROYECTO',$idproyecto)->count();
+        return $numero;
+    }
+
+    public static function obtenerFechasActivasProyecto($idproyecto){
+        $fechas = Fechaproyecto::where(['IDPROYECTO' => $idproyecto,'ESTADOFECHAP' => '1'])->get();
+        return $fechas;
+    }
+
+    public static function obtenerArrayFechasActivasProyecto($objetoFechasProyecto){
+        $datosDeProyectoFecha = array();
+        if(isset($objetoFechasProyecto)){
+            foreach($objetoFechasProyecto as $ofp){
+                $datosDeProyectoFecha['FECHAINICIAL'] = $ofp->FECHAINICIAL;
+                $datosDeProyectoFecha['FECHAFINAL'] = $ofp->FECHAFINAL;
+                $datosDeProyectoFecha['ESTADOFECHAP'] = $ofp->ESTADOFECHAP;
+                $datosDeProyectoFecha['OBSEVACIONP'] = $ofp->OBSEVACIONP;
+            }
+        }
+        return $datosDeProyectoFecha;
+    }
 }

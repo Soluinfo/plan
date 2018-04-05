@@ -12,10 +12,15 @@ class Actividad extends Model
                             'IDINDICADORES',
                             'IDPROYECTO',
                             'NOMBREACTIVIDAD',
-                            'FECHACREACIONACTIVIDAD',
+                            'FECHAINICIALACTIVIDAD',
                             'IDDIRECTORIOACTIVIDAD',
+                            'PORCENTAJEACTIVIDAD',
+                            'ESTADO',
+                            'progreso',
                             'created_at',
                             'updated_at',
-                            'idusuario'
+                            'idusuario',
+                            'FECHAINICIALACTIVIDAD',
+                            'FECHAFINALACTIVIDAD',
                         ];
 }
