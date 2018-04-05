@@ -5,7 +5,7 @@
                 <ul class="breadcrumb">
                     <li><a href="{{ url('/principal')}}">Principal</a></li>                    
                     <li><a href="{{ url('/objetivos')}}">Portafolio de Objetivos</a></li>
-                    <li class="active">Detalle de proyecto</li>
+                    <li class="active">Detalle de Objetivo</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
@@ -84,11 +84,11 @@
                                             <tr>
                                             <th width="50">id</th>
                                             <th>Nombre</th>
+                                            
                                             <th width="100">Accion</th>
                                             </tr>
 
-                                        @endcomponent
-                                        
+                                        @endcomponent  
                                     </div>
 
                                     <div class="tab-pane" id="tab-alcance">
@@ -115,9 +115,57 @@
                     </div>                    
                 </div>
                 <!-- END PAGE CONTENT WRAPPER --> 
+                <!-- MODALS --> 
+                  
+                <div class="modal" id="modalDetalleAmbito" tabindex="-1" role="dialog" aria-labelledby="defModalHead" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                            <h4 class="modal-title" id="defModalHead">Editar Ambito de Influencia</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="block">
+                                    <div class="panel panel-default">
+                                        <div class="panel-body">
+
+                                         <div id="tablaDetalleAmbito" type="text" class="panel-body panel-body-table">
+
+                                        </div>
+                                            
+                                            <div class="form-group">
+                                                <label class="col-md-3 col-xs-12 control-label">Descripcion</label>
+                                                <div class="col-md-6 col-xs-12">                                            
+                                                    <input type="text" class="form-control" name="txtDescripcionAmbito" value="<?php if(isset($NOMBREAMBITO)){echo $NOMBREAMBITO;} ?>">
+                                                </div>
+                                            </div>                                           
+                                        </div>
+                                    </div>
+                                </div> 
+                            </div>
+                        </div>
+                    
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                            <a id="btnGuardarAmbito" class="btn btn-primary pull-right">Guardar Ambito <span class="fa fa-floppy-o fa-right"></span></a>
+                        </div>
+                    </div>
+                </div>
+                    
+            </div>
+
+
+                <!-- END MODALS -->
+                <!-- MODALS -->        
                 
                 
                 @push('PageScript')
+                <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
                     <script>
                         /*function obtenerDetalleObjetivo(IDOBJETIVOESTRATEGICO){
                            _token = $("input[name=_token]").val();
@@ -127,13 +175,73 @@
                             $("#modalDetalleObjetivo").modal('show');
                            
                         }*/
-                        function obtenerDetalleAmbito(IDOBJETIVOESTRATEGICO){
+                      
+                        function editarDetalleAmbito(IDAMBITOINFLUENCIA){
                            _token = $("input[name=_token]").val();
-                            $.post("{{ url('/ambito/detalles') }}",{_token:_token,IDOBJETIVOESTRATEGICO:IDOBJETIVOESTRATEGICO},function(data){
-                                $("#tablaDetalleObjetivo").html(data);
+                            $.post("{{ url('/ambito/editar') }}",{_token:_token,IDAMBITOINFLUENCIA:IDAMBITOINFLUENCIA},function(data){
+                                $("#tablaDetalleAmbito").html(data);
                             })
-                            $("#modalDetalleObjetivo").modal('show');
-                           
+                            $("#modalDetalleAmbito").modal('show');
+                            //"columnDefs": [{ targets: [3], "orderable": false}],
+                                   
+                        }
+                        function eliminarAmbito(IDAMBITOINFLUENCIA){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el ambito de influencia del objetivo?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/objetivos/eliminarAmbitoObjetivos') }}",{IDAMBITOINFLUENCIA:IDAMBITOINFLUENCIA,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El ambito de influencia a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableAmbitosObjetivos.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el ambito de influencia intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+                        function eliminarAlcance(IDALCANCE){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el alcance del objetivo?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/objetivos/eliminarAlcanceObjetivos') }}",{IDALCANCE:IDALCANCE,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El alcance a sido eliminado del proyecto', layout: 'topRight', type: 'success'});
+                                                    tableAlcanceObjetivos.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el alcance intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
                         }
                         
                         $(function(){
@@ -180,8 +288,7 @@
                                     //"columnDefs": [{ targets: [3], "orderable": false}],
                                     "columns": [
                                         {width: '15%',data: 'IDAMBITOINFLUENCIA'},
-                                        {width: '70%',data: 'NOMBREAMBITO'},
-                                        
+                                        {width: '70%',data: 'NOMBREAMBITO'}, 
                                         {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
                                     
                                     ]

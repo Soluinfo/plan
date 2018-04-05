@@ -23,11 +23,31 @@
                             <div class="panel panel-default">
                                 <div class="panel-heading">                                
                                     <h3 class="panel-title">Listas de proyectos</h3>
+
                                     <ul class="panel-controls">
                                         <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
                                         <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
                                         <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
-                                    </ul>                                
+                                    </ul> 
+                                    <div class="panel-body col-md-3 col-xs-12">
+                                       <div class="btn-group">
+                                        <button type="button" class="btn btn-info">Seleccione Accion</button>
+                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            
+                                        </button>
+                                        <ul class="dropdown-menu" role="menu" id="export-menu">
+                                            <li id="export-to-excel"><a href="{{ url('/proyectos/reporteexcel') }}">Exportar a Excel</a></li>
+                                            
+                                            <li><a target="_blank" href="{{ url('/proyectos/pdf') }}">Exportar a PDF</a></li>
+                                        </ul>
+                                    </div> 
+                                    </div> 
+                                    <!--<a href="{{ url('/proyectos/reporteexcel') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Reporte en Excel <span class="fa fa-plus fa-right"></span></a>
+                                    <a href="{{ url('/actividad/pdf') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">PDF<span class="fa fa-plus fa-right"></span></a>-->
+
+                                    
+
                                 </div>
                                 <div class="panel-body">
                                     <div class="table-responsive">
@@ -120,5 +140,36 @@
                         })
                     </script>
                     <script type="text/javascript" src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+                    <script>
+                    function eliminarProyecto(IDPROYECTO){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el proyecto?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/Proyectos/eliminar') }}",{IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El proyecto ha sido Eliminado', layout: 'topRight', type: 'success'});
+                                                    
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el proyecto intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+                    </script> 
                 @endpush('PageScript')
 @endsection('principal')

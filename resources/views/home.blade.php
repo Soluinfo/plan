@@ -5,6 +5,7 @@
                 <ul class="breadcrumb">
                     <li><a href="#">Home</a></li>                    
                     <li class="active">Dashboard</li>
+                    
                 </ul>
                 <!-- END BREADCRUMB -->                       
                 
@@ -14,24 +15,18 @@
                     <!-- START WIDGETS -->                    
                     <div class="row">
                         <div class="col-md-3">
-                            
+
                             <!-- START WIDGET SLIDER -->
                             <div class="widget widget-default widget-carousel">
                                 <div class="owl-carousel" id="owl-example">
                                     <div>                                    
-                                        <div class="widget-title">Total Visitors</div>                                                                        
-                                        <div class="widget-subtitle">27/08/2014 15:23</div>
-                                        <div class="widget-int">3,548</div>
+                                        <div class="widget-title">Total Proyectos</div>                                                                        
+                                        <div class="widget-int"><h3><?php if(isset($total)){echo $total;} ?></h3></div>
+                                        
                                     </div>
                                     <div>                                    
-                                        <div class="widget-title">Returned</div>
-                                        <div class="widget-subtitle">Visitors</div>
-                                        <div class="widget-int">1,695</div>
-                                    </div>
-                                    <div>                                    
-                                        <div class="widget-title">New</div>
-                                        <div class="widget-subtitle">Visitors</div>
-                                        <div class="widget-int">1,977</div>
+                                    <div class="widget-title">Total Proyectos</div>                                                                       
+                                    <div class="widget-int"><h3><?php if(isset($total)){echo $total;} ?></h3></div>
                                     </div>
                                 </div>                            
                                 <div class="widget-controls">                                
@@ -49,7 +44,7 @@
                                     <span class="fa fa-envelope"></span>
                                 </div>                             
                                 <div class="widget-data">
-                                    <div class="widget-int num-count">48</div>
+                                <div class="widget-int"><h3><?php if(isset($num)){echo $num;} ?></h3></div>
                                     <div class="widget-title">New messages</div>
                                     <div class="widget-subtitle">In your mailbox</div>
                                 </div>      
@@ -60,6 +55,7 @@
                             <!-- END WIDGET MESSAGES -->
                             
                         </div>
+                        
                         <div class="col-md-3">
                             
                             <!-- START WIDGET REGISTRED -->
@@ -106,263 +102,159 @@
                     </div>
                     <!-- END WIDGETS -->                    
                     
+                    <!-- <div class="page-content-wrap">
                     <div class="row">
-                        <div class="col-md-4">
-                            
-                            <!-- START USERS ACTIVITY BLOCK -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="panel-title-box">
-                                        <h3>Users Activity</h3>
-                                        <span>Users vs returning</span>
-                                    </div>                                    
-                                    <ul class="panel-controls" style="margin-top: 2px;">
-                                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
-                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
-                                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
-                                            </ul>                                        
-                                        </li>                                        
-                                    </ul>                                    
-                                </div>                                
-                                <div class="panel-body padding-0">
-                                    <div class="chart-holder" id="dashboard-bar-1" style="height: 200px;"></div>
-                                </div>                                    
-                            </div>
-                            <!-- END USERS ACTIVITY BLOCK -->
-                            
-                        </div>
-                        <div class="col-md-4">
-                            
-                            <!-- START VISITORS BLOCK -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="panel-title-box">
-                                        <h3>Visitors</h3>
-                                        <span>Visitors (last month)</span>
-                                    </div>
-                                    <ul class="panel-controls" style="margin-top: 2px;">
-                                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
-                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
-                                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
-                                            </ul>                                        
-                                        </li>                                        
-                                    </ul>
-                                </div>
-                                <div class="panel-body padding-0">
-                                    <div class="chart-holder" id="dashboard-donut-1" style="height: 200px;"></div>
-                                </div>
-                            </div>
-                            <!-- END VISITORS BLOCK -->
-                            
-                        </div>
-
-						<div class="col-md-4">
-                            
-                            <!-- START PROJECTS BLOCK -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="panel-title-box">
-                                        <h3>Projects</h3>
-                                        <span>Projects activity</span>
-                                    </div>                                    
-                                    <ul class="panel-controls" style="margin-top: 2px;">
-                                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
-                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
-                                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
-                                            </ul>                                        
-                                        </li>                                        
-                                    </ul>
-                                </div>
-                                <div class="panel-body panel-body-table">
-                                    
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th width="50%">Project</th>
-                                                    <th width="20%">Status</th>
-                                                    <th width="30%">Activity</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td><strong>Joli Admin</strong></td>
-                                                    <td><span class="label label-danger">Developing</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 85%;">85%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Gemini</strong></td>
-                                                    <td><span class="label label-warning">Updating</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 40%;">40%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>                                                
-                                                <tr>
-                                                    <td><strong>Taurus</strong></td>
-                                                    <td><span class="label label-warning">Updating</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 72%;">72%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Leo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <td><strong>Virgo</strong></td>
-                                                    <td><span class="label label-success">Support</span></td>
-                                                    <td>
-                                                        <div class="progress progress-small progress-striped active">
-                                                            <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 100%;">100%</div>
-                                                        </div>
-                                                    </td>
-                                                </tr>                                                
-                                                
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    
-                                </div>
-                            </div>
-                            <!-- END PROJECTS BLOCK -->
-                            
-                        </div>
-                    </div>
-                    
-                    <div class="row">
-						<div class="col-md-8">
-                            
-                            <!-- START SALES BLOCK -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="panel-title-box">
-                                        <h3>Sales</h3>
-                                        <span>Sales activity by period you selected</span>
-                                    </div>                                     
-                                    <ul class="panel-controls panel-controls-title">                                        
-                                        <li>
-                                            <div id="reportrange" class="dtrange">                                            
-                                                <span></span><b class="caret"></b>
-                                            </div>                                     
-                                        </li>                                
-                                        <li><a href="#" class="panel-fullscreen rounded"><span class="fa fa-expand"></span></a></li>
-                                    </ul>                                    
-                                    
-                                </div>
-                                <div class="panel-body">                                    
-                                    <div class="row stacked">
-                                        <div class="col-md-4">                                            
-                                            <div class="progress-list">                                               
-                                                <div class="pull-left"><strong>In Queue</strong></div>
-                                                <div class="pull-right">75%</div>                                                
-                                                <div class="progress progress-small progress-striped active">
-                                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 75%;">75%</div>
-                                                </div>
-                                            </div>
-                                            <div class="progress-list">                                               
-                                                <div class="pull-left"><strong>Shipped Products</strong></div>
-                                                <div class="pull-right">450/500</div>                                                
-                                                <div class="progress progress-small progress-striped active">
-                                                    <div class="progress-bar progress-bar-primary" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 90%;">90%</div>
-                                                </div>
-                                            </div>
-                                            <div class="progress-list">                                               
-                                                <div class="pull-left"><strong class="text-danger">Returned Products</strong></div>
-                                                <div class="pull-right">25/500</div>                                                
-                                                <div class="progress progress-small progress-striped active">
-                                                    <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 5%;">5%</div>
-                                                </div>
-                                            </div>
-                                            <div class="progress-list">                                               
-                                                <div class="pull-left"><strong class="text-warning">Progress Today</strong></div>
-                                                <div class="pull-right">75/150</div>                                                
-                                                <div class="progress progress-small progress-striped active">
-                                                    <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">50%</div>
-                                                </div>
-                                            </div>
-                                            <p><span class="fa fa-warning"></span> Data update in end of each hour. You can update it manual by pressign update button</p>
-                                        </div>
-                                        <div class="col-md-8">
-                                            <div id="dashboard-map-seles" style="width: 100%; height: 200px"></div>
-                                        </div>
-                                    </div>                                    
-                                </div>
-                            </div>
-                            <!-- END SALES BLOCK -->
-                            
-                        </div>
-						<div class="common-modal modal fade" id="common-Modal1" tabindex="-1" role="dialog" aria-hidden="true">
-							<div class="modal-content">
-								<ul class="list-inline item-details">
-									<li><a href="http://themifycloud.com/downloads/janux-premium-responsive-bootstrap-admin-dashboard-template/">Admin templates</a></li>
-									<li><a href="http://themescloud.org">Bootstrap themes</a></li>
-								</ul>
-							</div>
-						</div>
                         
-                        <div class="col-md-4">
-                            
-                            <!-- START SALES & EVENTS BLOCK -->
+                        <div class="col-md-12">
+                            <!-- START DEFAULT DATATABLE 
                             <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <div class="panel-title-box">
-                                        <h3>Sales & Event</h3>
-                                        <span>Event "Purchase Button"</span>
-                                    </div>
-                                    <ul class="panel-controls" style="margin-top: 2px;">
-                                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
-                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
-                                        <li class="dropdown">
-                                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
-                                            <ul class="dropdown-menu">
-                                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
-                                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
-                                            </ul>                                        
-                                        </li>                                        
-                                    </ul>
+                                <div class="panel-heading">                                
+                                   
+                                  
                                 </div>
-                                <div class="panel-body padding-0">
-                                    <div class="chart-holder" id="dashboard-line-1" style="height: 200px;"></div>
+                                <div class="panel-body">
+                                <center><h3 class="panel-title">Listas de proyectos</h3></center>
+                                    <table class="table datatable">
+                                        <thead>
+                                            <tr>
+                                                <th>Id</th>
+                                                <th>Nombre proyecto</th>
+                                                <th>Fecha creacion</th>
+                                                <th>estado</th>
+                                                <th>Departamento</th>
+                                                <th>Actividad</th>
+                                               
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach($proyectos as $p)
+                                            <tr>
+                                           
+                                                <td>{{ $p->IDPROYECTO }}</td>
+                                                <td>{{ $p->NOMBREPROYECTO }}</td>
+                                                <td>{{ $p->FECHAPROYECTO }}</td>
+                                                @if($p->ESTADOPROYECTO == 1)
+                                                <td><span class="label label-info label-form">ABIERTO</span></td>
+                                                @elseif($p->ESTADOPROYECTO == 2)
+                                                <td><span class="label label-success label-form">EN PROGRESO</span></td>
+                                                @elseif($p->ESTADOPROYECTO == 3)
+                                                <td><span class="label label-danger label-form">EN RETRASO</span></td>
+                                                @else
+                                                <td><span class="label label-success label-form">COMPLETADO</span></td>
+                                                @endif
+                                                <td>{{ $p->DESCRIPCION_DEP }}</td>
+                                                <td>
+                                                    <div class="progress progress-small progress-striped active">
+                                                        <div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: {{$p->progreso}}%;">{{$p->progreso}}%</div>
+                                                    </div>
+                                                </td>
+                                               
+                                            </tr>
+                                            @endforeach
+                                            
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-                            <!-- END SALES & EVENTS BLOCK -->
-                            
+                            <!-- END DEFAULT DATATABLE 
+
                         </div>
+                    </div>                   
+                </div> -->
+    <div class "row">
+           <div class="col-lg-7">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                        <i class="fa fa-bar-chart-o fa-fw"></i> Gráfico de Cantidad de Proyectos por Usuario
+                    
+                    <ul class="panel-controls" style="margin-top: 2px;">
+                        <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                            <ul class="dropdown-menu">
+                                <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                            </ul>                                        
+                        </li>                                        
+                    </ul>
+                    </div>  
+                    <h3><center>Numero de Proyectos por Usuario</center></h3>
+                        <span><center>Colegio Nacional Cristo Rey</center></span>
+                    <div class="app">
+                        <center>
+                        {!! $usuarios->html() !!}
+                        </center>
                     </div>
-                    
-                    <!-- START DASHBOARD CHART -->
-					<div class="chart-holder" id="dashboard-area-1" style="height: 200px;"></div>
-					<div class="block-full-width">
-                                                                       
-                    </div>                    
-                    <!-- END DASHBOARD CHART -->
-                    
+                    <!-- End Of Main Application -->
+                    {!! Charts::scripts() !!}
+                    {!! $usuarios->script() !!}
                 </div>
+            </div>
+        </div>
+                <!-- END PAGE CONTENT WRAPPER -->
+        <div class="col-lg-5">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Gráfico Estados de Proyectos    
+                        
+                        <ul class="panel-controls" style="margin-top: 2px;">
+                            <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                            <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                            <li class="dropdown">
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                                    <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                                </ul>                                        
+                            </li>                                        
+                        </ul> 
+                </div>
+                        <h3><center>Proyectos por Departamento</center></h3>
+                            <span><center>Colegio Nacional Cristo Rey</center></span>
+                    <div class="app">
+                        <center>
+                        {!! $pastel->html() !!}
+                        </center>
+                    </div>
+                    <!-- End Of Main Application -->
+                    {!! Charts::scripts() !!}
+                    {!! $pastel->script() !!}
+                </div>   
+            </div>
+        </div> 
+        <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                    <i class="fa fa-bar-chart-o fa-fw"></i> Gráfico de Proyectos por Departamento 
+                
+                <ul class="panel-controls" style="margin-top: 2px;">
+                    <li><a href="#" class="panel-fullscreen"><span class="fa fa-expand"></span></a></li>
+                    <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="fa fa-cog"></span></a>                                        
+                        <ul class="dropdown-menu">
+                            <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span> Collapse</a></li>
+                            <li><a href="#" class="panel-remove"><span class="fa fa-times"></span> Remove</a></li>
+                        </ul>                                        
+                    </li>                                        
+                </ul>
+                </div>  
+                <h3><center>Estado Actual de Proyectos</center></h3>
+                    <span><center>Colegio Nacional Cristo Rey</center></span>
+                <div class="app">
+                    <center>
+                    {!! $columnas->html() !!}
+                    </center>
+                </div>
+                <!-- End Of Main Application -->
+                {!! Charts::scripts() !!}
+                {!! $columnas->script() !!}
+            </div>
+        </div>
+    </div>
+    </div> 
+        
                 <!-- END PAGE CONTENT WRAPPER --> 
     @push('PageScript')
                  
@@ -375,5 +267,15 @@
             <script type='text/javascript' src="{{ asset('js/plugins/bootstrap/bootstrap-datepicker.js')}}"></script>                
             <script type="text/javascript" src="{{ asset('js/plugins/moment.min.js')}}"></script>
             <script type="text/javascript" src="{{ asset('js/plugins/daterangepicker/daterangepicker.js')}}"></script>
+   
+            <script type="text/javascript" src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+            
+
+            <script type="text/javascript" src="{{ asset('js/graficas.js')}}"></script>
+            <script type="text/javascript" src="{{ asset('js/highcharts.js')}}"></script>
+
+            <script>
+            </script>
     @endPush('PageScript')
+    
 @endsection('principal')

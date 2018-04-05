@@ -36,14 +36,15 @@
                                                     <ul class="list-group border-bottom">
                                                         <li class="list-group-item"><strong>codigo : </strong> {{$IDINDICADORES}}</li>
                                                         <li class="list-group-item"><strong>Literal : </strong> {{$LITERAL}}</li>
-                                                        <li class="list-group-item"><strong>Indicador : </strong> {{$DESCRIPCION}}</li>
+                                                        
                                                         <li class="list-group-item"><strong>Catalogo : </strong> {{$NOMBRE}}</li>
 
                                                     </ul>                                
                                                 </div>
                                             </div>
                                             <!-- END DEFAULT LIST GROUP -->
-                                          
+                                            {{ csrf_field() }}
+                                        <input type="hidden" name="idindicador" value="{{ $IDINDICADORES or '0'}}"> 
                                         </div>
 
                                         <div class="col-lg-4">
@@ -76,6 +77,7 @@
                                             @endslot
                                             <tr>
                                                 <th width="50">id</th>
+                                                
                                                 <th>Nombre Actividad</th>
                                                 <th width="100">Accion</th>
                                             </tr>
@@ -91,13 +93,46 @@
                   
                
                 @push('PageScript')
+                <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
                     <script>
-                      
+                      function eliminaractividadesindicador(IDACTIVIDAD){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea la actividad del indicador?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/indicadores/eliminarActividad') }}",{IDACTIVIDAD:IDACTIVIDAD,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'La actividad no se a podido eliminar del indicador', layout: 'topRight', type: 'success'});
+                                                    tableActividadesIndicador.ajax.reload();
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino la actividad del indicador, intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
                         $(function(){
                            
 
                             //tap para agregar objetivos estrategicos
-                                tableActividadesIndicadores = $("#datatableActividadesIndicadores").DataTable({
+                                tableActividadesIndicador = $("#datatableActividadesIndicadores").DataTable({
                                     "lengthMenu": [ 5, 10],
                                     "language" : {
                                         "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
@@ -107,18 +142,19 @@
                                     "processing" : true,
                                     "serverSide": true,
                                     "ajax": {
-                                        "url": '{{ url("/indicadores/datatableActividadesIndicadores") }}',
+                                        "url": '{{ url("/indicadores/datatableActividadIndicador") }}',
                                         "type": "post",
                                         "data": function (d){
-                                            d.idindicador= $("input[name=idindicador]").val();
+                                            d.idindicador = $("input[name=idindicador]").val();
                                             d._token = $("input[name=_token]").val();
                                         }
                                     },
-                                    //"columnDefs": [{ targets: [3], "orderable": false}],
+                                   // "columnDefs": [{ targets: [3], "orderable": false}],
                                     "columns": [
-                                        {width: '8%',data: 'IDACTIVIDAD'},                                      
-                                        {width: '78%',data: 'NOMBREACTIVIDAD'}, 
-                                        {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                        {width: '10%',data: 'IDACTIVIDAD'}, 
+                                                                           
+                                        {width: '75%',data: 'NOMBREACTIVIDAD'}, 
+                                        {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
                                     
                                     ]
                                 });

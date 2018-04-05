@@ -39,7 +39,7 @@
                                         <div class="form-group">
                                             <label class="col-md-3 col-xs-12 control-label">Descripcion</label>
                                             <div class="col-md-6 col-xs-12">                                            
-                                                <input type="text" class="form-control" name="txtDescripcion" value="<?php if(isset($DESCRIPCION)){echo $DESCRIPCION;} ?>"/>
+                                                <input type="text" class="form-control" name="txtDescripcion" value="<?php if(isset($DESCRIPCIONINDICADOR)){echo $DESCRIPCIONINDICADOR;} ?>"/>
                                             </div>
                                         </div> 
 
@@ -64,9 +64,10 @@
                                             </div>
                                         </div>
                                         {{ csrf_field() }}
-                                        <input type="text" name="idindicador" value="{{ $IDINDICADORES or '0'}}"/>
+                                        <input type="hidden" name="idindicador" value="{{ $IDINDICADORES or '0'}}"/>
                                         
                                     </form>
+                                    <a href="{{ url('/crearindicadores') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Indicador<span class="fa fa-plus fa-right"></span></a>
                                     <button id="btnGuardarCatalogo" class="btn btn-primary pull-right">Guardar Indicador<span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 

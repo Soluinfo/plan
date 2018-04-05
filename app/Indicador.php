@@ -9,7 +9,7 @@ class Indicador extends Model
     protected $table = 'indicadores';
     protected $fillable = ['IDINDICADORES',
                             'LITERAL', 
-                            'DESCRIPCION', 
+                            'DESCRIPCIONINDICADOR', 
                             'IDCATALOGOINDICADORES',
                             'created_at',
                             'updated_at',

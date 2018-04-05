@@ -4,8 +4,8 @@
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="{{ url('/')}}">Principal</a></li>                    
-                    <li><a href="{{ url('/catalogo')}}">Catalogo de objetivos</a></li>
-                    <li class="active">Crear objetivo</li>
+                    <li><a href="{{ url('/catalogoObjetivos')}}">Catalogo de objetivos</a></li>
+                    <li class="active">Crear Catalogo de Objetivos</li>
                 </ul>
              <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
@@ -32,31 +32,42 @@
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Nombre de catálogo</label>
                                             <div class="col-md-6">
-                                                <input type="text" class="form-control" name="txtnombre" placeholder="Catalogo de Objetivos"/>
+                                                <input type="text" class="form-control" name="txtnombre" placeholder="Catalogo de Objetivos" value="<?php if(isset($NOMBRE)){echo $NOMBRE;} ?>"/>
                                             </div>
                                         </div>
 
                                         <div class="form-group">
                                             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Fecha creacion</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <input type="text" name="dpFecha" class="form-control datepicker" placeholder="aaaa-mm-dd">
+                                                <input type="text" name="dpFecha" class="form-control datepicker" placeholder="aaaa-mm-dd" value="<?php if(isset($FECHA)){echo $FECHA;} ?>"/>
                                             </div>
                                         </div>  
 
                                         <div class="form-group">
                                             <label class="col-md-3 control-label">Estado</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
-                                                <select class="form-control select" name="slEstado">
-                                                    <option value="">Seleccione un estado</option>
-                                                    <option value="1">PENDIENTE</option>
-                                                    <option value="2">APROBADO</option> 
+                                                <select class="form-control select" name="slEstado"/>
+                                                <option value="">Seleccione estado</option>
+                                                        @if( isset($ESTADO))
+                                                            @if($ESTADO == 1)
+                                                            <option selected="selected" value="1">PENDIENTE</option>
+                                                            <option value="2">APROBADO</option>
+                                                            @else
+                                                            <option value="1">PENDIENTE</option>
+                                                            <option selected="selected" value="2">APROBADO</option>
+                                                            @endif
+                                                            @else
+                                                            <option value="1">PENDIENTE</option>
+                                                            <option value="2">APROBADO</option>
+                                                            @endif
                                                 </select>
                                             </div>
                                         </div>
                                         {{ csrf_field() }}
-                                        <input type="text" name="idcatalogoobjetivo" value="{{ $IDCATALOGOOBJETIVO or '0'}}"/>
+                                        <input type="hidden" name="idcatalogoobjetivo" value="{{ $IDCATALOGOOBJETIVO or '0'}}"/>
                                         
                                     </form>
+                                    <a href="{{ url('/crearcatalogo') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Catalogo<span class="fa fa-plus fa-right"></span></a>
                                     <button id="btnGuardarCatalogo" class="btn btn-primary pull-right">Guardar Catalogo<span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 

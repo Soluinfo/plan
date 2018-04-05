@@ -502,6 +502,35 @@ $(document).ready(function(){
         }
         
     })
+//tap para reprogramar actividades
+tableResprogramarActividades = $("#datatable-reprogramarActividad").DataTable({
+        "lengthMenu": [ 5, 10],
+        "language" : {
+            "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+        },
+        "autoWidth": false,
+        "order": [], //Initial no order
+        "processing" : true,
+        "serverSide": true,
+        "ajax": {
+            "url": '{{ url("/actividad/reprogramar") }}',
+            "type": "post",
+            "data": function (d){
+                d.idactividad = $("input[name=idactividad]").val();
+                d._token = $("input[name=_token]").val();
+            }
+        },
+        //"columnDefs": [{ targets: [5], "orderable": false}],
+        "columns": [
+            {width: '10%',data: 'IDACTIVIDADFECHAFINAL'},
+            {width: '25%',data: 'FECHAINICIALACTIVIDAD'},
+            {width: '25%',data: 'FECHAFINALACTIVIDAD'},
+            {width: '25%',data: 'ESTADOACTIVIDADFECHA'},
+            {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+        
+        ]
+    });
+//end tap para agregar objetivos estrategicos
 
     $("#btnAgregarRecursos").on("click",function(){
         IDACTIVIDAD = $("input[name=idactividad]").val();
@@ -1033,7 +1062,7 @@ $(document).ready(function(){
     })
 
 
-});
+
 </script>   
 
 

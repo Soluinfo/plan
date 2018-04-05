@@ -1,0 +1,28 @@
+table{
+    color: #333;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size:10;
+    width: 90%;
+    margin:0 auto;
+    border-collapse:
+    collapse; border-spacing: 0;
+    
+}
+    td{ 
+    border: 1px solid #dddddd; height: 10px;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size:11;
+    } /* Make cells a bit taller */
+
+    th {
+    border: 1px solid #dddddd;
+    font-family: Helvetica, Arial, sans-serif;
+    font-size:11;
+    /*background-color:#ddd;
+    /*background: #F3F3F3;*/
+    font-weight: bold;
+    height: 12px;
+}
+
+
+

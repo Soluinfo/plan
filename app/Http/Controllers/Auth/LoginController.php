@@ -4,6 +4,17 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\Proyecto;
+use App\Http\Requests\LoginRequest;
+use App\Http\Controllers\PrincipalController;
+use Illuminate\Support\Facades\Input;
+use Session;
+use Redirect;
+use Auth;
+//use Illuminate\Support\Facades\Request;
+use Illuminate\Http\Request;
+use Charts;
+use App\User;
 
 class LoginController extends Controller
 {
@@ -32,12 +43,49 @@ class LoginController extends Controller
      *
      * @return void
      */
-    public function __construct()
-    {
-        //$this->middleware('guest')->except('logout');
-    }
+    
+    public function principal(LoginRequest $request){
+        $this->validate(request(), [
+            
+                    'email' => 'email|required|string',
+                    'password' => 'required|string'
+                    ]);
+                    
+                      
+                    /*if(Auth::attempt(['email' => $request['email'], 'password' => $request['password']]))
+                    {
+                        return Redirect()->route('inicio');
+                    }else{
+                        Session::flash('message-error', 'Datos incorrectos');
+                        return Redirect::to('inicio');
+                    }*/
+                    $userdata = array(
+                        'email' =>$request->get('email'),
+                        'password'=>$request->get('password')
+                        //'email' => $request->email, 
+                        //'password' => $request->password,
+                    );
+                    if(Auth::attempt($userdata))
+                    {
+                        return Redirect()->route('inicio');
+                    }else{
+                       
+                        return Redirect::to('inicio');
+                    }
+                }
+                    
+                    
+                 
+                  //Session::flash('message-error', 'Datos incorrectos');
+                  //return Redirect::to('/');              
+    
+    
+    
+    //public function inicio(){
+      //  return view ('welcome');
+    //}
 
-    public function home(){
+    public function login(){
         return view('auth.login');
     }
 }

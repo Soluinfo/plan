@@ -4,6 +4,7 @@ namespace App\Http\Controllers\proyectos;
 use Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Mpdf\Mpdf;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Validation\Rule;
@@ -16,8 +17,10 @@ use App\Helpers\ActividadHelper;
 use App\Helpers\RecursoHelper;
 use App\Catalogoindicador;
 use App\Objetivo;
+use App\Proyecto;
 use App\Indicador;
-use App\Actividadfechafinal;
+use App\Ambitoinfluencia;
+use App\ActividadFechaFinal;
 use App\Recurso;
 use App\Providers\GoogleDriveServiceProvider;
 use App\Recursofechafinal;
@@ -175,11 +178,11 @@ class ActividadController extends Controller
                 $datosDeActividad = ActividadHelper::obtenerArrayActividad($Actividad);
             }
             
-            $indicador = DB::table('indicadores')->get();
+            $indicador = DB::table('catalogoindicadores')->get();
             $supervisores = $this->obtenerSupervisores(null);
             //$catalogo = $this->obtenerCatalogoIndicador(null);
             $objetivo = $this->obtenerObjetivo(null);
-            return view('proyectos.crearActividades')->with(['indicadores' => $indicador,
+            return view('proyectos.crearActividades')->with(['catalogoindicadores' => $indicador,
                                                             'supervisores' => $supervisores,
                                                             'objetivosestrategicos' => $objetivo,
                                                             'proyectos' => $datosDeProyecto])
@@ -299,6 +302,42 @@ class ActividadController extends Controller
             echo json_encode($datos);
         }
     }
+    
+    public function guardaractividadFechas(Request $r){
+        if($r->ajax()){
+            $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
+            $idActividadFechaFinal = $r->idactividadfechafinal;
+    
+            if($idActividadFechaFinal > 0){
+                $actividadfechafinal = ActividadFechaFinal::where('IDACTIVIDADFECHAFINAL', $idActividadFechaFinal)
+                                    ->update([
+                                    'IDACTIVIDAD' => $r->idactividad,   
+                                    'FECHAINICIALACTIVIDAD' => $r->dpFechaInicialActividad,
+                                    'FECHAFINALACTIVIDAD'=> $r->dpFechaFinalActividad,
+                                    'ESTADOACTIVIDADFECHA'=> $r->slEstado
+                                    
+                                    
+                                    ]);
+                $datos['respuesta'] = 'ok';
+                $datos['codigo'] = $idActividadFechaFinal;
+                $datos['transaccion'] = 'actualizar';
+                }else{
+                    $actividadfechafinal = new ActividadFechaFinal(array(
+                        'IDACTIVIDAD' => $r->idactividad,   
+                        'FECHAINICIALACTIVIDAD' => $r->dpFechaInicialActividad,
+                        'FECHAFINALACTIVIDAD'=> $r->dpFechaFinalActividad,
+                        'ESTADOACTIVIDADFECHA'=> $r->slEstado
+                        
+                    ));
+                    $actividadfechafinal->save();
+                    $id = $actividadfechafinal->id;
+                    $datos['respuesta'] = 'ok';
+                    $datos['codigo'] = $id;
+                    $datos['transaccion'] = 'guardar';
+                }
+                echo json_encode($datos);
+            }
+        }
     //incion funcion para asignar un supervisor a un proyecto
     public function asignarResponsable(Request $r){
         if($r->ajax()){
@@ -366,8 +405,8 @@ class ActividadController extends Controller
             return Datatables($datosderesponsable)
             ->removeColumn('IDACTIVIDADRESPONSABLE')
             ->addColumn('action', function ($datosderesponsable) {
-                return '<a onclick="obtenerDetalleResponsable('.$datosderesponsable ->IDACTIVIDADRESPONSABLE.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                        <a onclick="eliminarresponsableActidad('.$datosderesponsable ->IDACTIVIDADRESPONSABLE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                return '<a onclick="obtenerDetalleResponsable('.$datosderesponsable ->IDACTIVIDADRESPONSABLE.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalles!"><i class="fa fa-info-circle"></i></a>
+                        <a onclick="eliminarresponsableActidad('.$datosderesponsable ->IDACTIVIDADRESPONSABLE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminarte!"><i class="fa fa-trash-o"></i></a>';
             })
             ->make(true);
         }
@@ -513,6 +552,26 @@ class ActividadController extends Controller
                                 <a onclick="eliminarfechaActidad('.$fechasactividad->IDACTIVIDADFECHAFINAL.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
                     })
                     ->make(true);
+    }
+    //final de funcion verificarSupervisorProyectoExiste
+    public function datatablesReproActividad(Request $r){
+        if($r->ajax()){
+            $datosreproactividad = ActividadFechaFinal::join('actividades', 'actividades.IDACTIVIDAD', '=', 'actividadesfechasfinales.IDACTIVIDAD')
+                                                ->where('actividadesfechasfinales.IDACTIVIDAD', '=' ,$r->idactividad)
+                                                ->select('actividadesfechasfinales.IDACTIVIDADFECHAFINAL',
+                                                'actividadesfechasfinales.FECHAINICIALACTIVIDAD',
+                                                'actividadesfechasfinales.FECHAFINALACTIVIDAD',
+                                                'actividadesfechasfinales.ESTADOACTIVIDADFECHA')
+                                                ->get();
+                                            
+            return Datatables($datosreproactividad)
+            ->addColumn('action', function ($datosreproactividad) {
+                return '<a onclick="obtenerDetalleActividad('.$datosreproactividad->IDACTIVIDAD.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                        <a onclick=class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
+                        <a onclick="agregarObjetivos('.$datosreproactividad->IDACTIVIDAD.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+            })
+            ->make(true);
+        }
     }
 
     public function eliminarResponsableActividad(Request $r){
@@ -768,4 +827,18 @@ class ActividadController extends Controller
         }
     }
 
+public function datatablesIndicador(Request $r){
+    $indicadoractividad = Indicador::join('actividades','actividades.IDINDICADORES','=','indicadores.IDINDICADORES')
+                                            ->where('indicadores.IDINDICADORES', $r->idactividad)
+                                            ->select('indicadores.IDINDICADORES',
+                                                    'indicadores.LITERAL',
+                                                    'indicadores.DESCRIPCION')
+                                                    ->get();
+        return Datatables($indicadoractividad)
+                ->addColumn('action', function ($indicadoractividad) {
+                    return '<a onclick="obtenerDetalleObjetivo('.$indicadoractividad->IDINDICADORES.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                            <a onclick="eliminarObjetivoProyecto('.$indicadoractividad->IDINDICADORES.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                })
+                ->make(true);
+}
 }

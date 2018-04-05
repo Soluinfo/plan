@@ -71,14 +71,14 @@ class CatalogoIndicadorController extends Controller
 public function obtener($id = null){
     if($id == null){
         $catalogoindicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
-                        ->where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
+                        
                         ->select('catalogoindicadores.*','indicadores.*')
                         ->get();
     }else{
         $catalogoindicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
-        ->where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
-        ->select('catalogoindicadores.*','indicadores.*')
-        ->get();
+                            ->where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
+                            ->select('catalogoindicadores.*','indicadores.*')
+                            ->get();
     }
     return $catalogoindicadores;
 }

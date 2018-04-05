@@ -123,7 +123,8 @@ return [
     'log' => env('APP_LOG', 'single'),
 
     'log_level' => env('APP_LOG_LEVEL', 'debug'),
-
+    
+    
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers
@@ -162,6 +163,11 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
+        Bogardo\Mailgun\MailgunServiceProvider::class,
+       
+        
+
+        
 
         /*
          * Package Service Providers...
@@ -171,6 +177,9 @@ return [
         Collective\Html\HtmlServiceProvider::class,
         Yajra\DataTables\DataTablesServiceProvider::class,
         App\Providers\GoogleDriveServiceProvider::class,
+        ConsoleTVs\Charts\ChartsServiceProvider::class,
+       
+        
         /*
          * Application Service Providers...
          */
@@ -179,6 +188,10 @@ return [
         // App\Providers\BroadcastServiceProvider::class,
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
+
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        //Elibyy\TCPDF\ServiceProvider::class,
+       
 
     ],
 
@@ -194,6 +207,7 @@ return [
     */
 
     'aliases' => [
+        
 
         'App' => Illuminate\Support\Facades\App::class,
         'Artisan' => Illuminate\Support\Facades\Artisan::class,
@@ -231,7 +245,14 @@ return [
         'Form' => Collective\Html\FormFacade::class,
         'Html' => Collective\Html\HtmlFacade::class,
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
-       
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+        'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
+        'Mailgun' => Bogardo\Mailgun\Facades\Mailgun::class,
+        'Input' => Illuminate\Support\Facades\Input::class,
+        //'PDF' => Elibyy\TCPDF\Facades\TCPDF::class,
+
+        
+        
     ],
 
 ];

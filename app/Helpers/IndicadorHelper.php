@@ -66,4 +66,47 @@ $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'i
         $numero = Proyectoindicador::where('IDPROYECTO',$idproyecto)->count();
         return $numero;
     }
+        public static function obtenerCatalogoIndicadores($id = null){
+        if($id == null){
+            $catalogoIndicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
+            
+                                ->select('catalogoindicadores.*','indicadores.*')
+                                ->get();
+        }else{
+            $catalogoIndicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
+            ->where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
+            ->select('catalogoindicadores.*','indicadores.*')
+            ->get();
+        }
+        return $catalogoIndicadores;
+        }
+
+        public static function obtenerArrayCatalogoIndicadores($objetoCatalogoIndicador){
+        $datosDeCatalogoIndicador = array();
+        if(isset($objetoCatalogoIndicador)){
+            foreach($objetoCatalogoIndicador as $p){
+                $datosDeCatalogoIndicador['IDCATALOGOINDICADORES'] = $p->IDCATALOGOINDICADORES;
+                $datosDeCatalogoIndicador['NOMBRE'] = $p->NOMBRE;
+                $datosDeCatalogoIndicador['DESCRIPCION'] = $p->DESCRIPCION;
+                $datosDeCatalogoIndicador['FECHA'] = $p->FECHA;
+                $datosDeCatalogoIndicador['ESTADO'] = $p->ESTADO;
+                $datosDeCatalogoIndicador['created_at'] = $p->created_at;
+                $datosDeCatalogoIndicador['updated_at'] = $p->updated_at;
+                $datosDeCatalogoIndicador['idusuario'] = $p->idusuario;
+                $datosDeObjetivoIndicador['IDINDICADORES'] = $p->IDINDICADORES;
+                
+            }
+        }
+        return $datosDeCatalogoIndicador;
+        }
+
+        public static function obtenerObjetivosDeProyecto($idproyecto){
+        $objetivosProyecto = Objetivo::join('proyectosobjetivos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','proyectosobjetivos.IDOBJETIVOESTRATEGICO')
+                                    ->where('proyectosobjetivos.IDPROYECTO', $idproyecto)
+                                    ->select('objetivosestrategicos.*','proyectosobjetivos.*')
+                                    ->get();
+        return $objetivosProyecto;
+
+        }
+
 }

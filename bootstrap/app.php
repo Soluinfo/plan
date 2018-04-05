@@ -13,6 +13,7 @@
 
 $app = new Illuminate\Foundation\Application(
     realpath(__DIR__.'/../')
+    
 );
 
 /*
@@ -29,6 +30,7 @@ $app = new Illuminate\Foundation\Application(
 $app->singleton(
     Illuminate\Contracts\Http\Kernel::class,
     App\Http\Kernel::class
+    
 );
 
 $app->singleton(
@@ -40,8 +42,12 @@ $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
 );
-
 /*
+$app->register(
+    Barryvdh\DomPDF\ServiceProvider::class
+); 
+
+
 |--------------------------------------------------------------------------
 | Return The Application
 |--------------------------------------------------------------------------
@@ -51,5 +57,7 @@ $app->singleton(
 | from the actual running of the application and sending responses.
 |
 */
-
+//$app->register(\Barryvdh\DomPDF\ServiceProvider::class); 
+//PDF::loadHTML($html)->setPaper('a4', 'landscape')->setWarnings(false)->save('myfile.pdf');
 return $app;
+
