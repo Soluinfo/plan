@@ -35,7 +35,7 @@
                                                    
                             <li><a href="{{ url('/actividadesprogreso') }}"><span class="fa fa-ticket"></span>Progreso Actividades </a></li>
                             <li><a href="{{ url('/actividades') }}"><span class="fa fa-ticket"></span>Panel Actividades</a></li>
-                            <li><a href="ui-buttons.html"><span class="fa fa-square-o"></span>Panel Recursos</a></li>                            
+                            <li><a href="{{ url('/actividades/entregable') }}"><span class="fa fa-square-o"></span>Panel Entregables</a></li>                            
                             
                         </ul>
                     </li>                    

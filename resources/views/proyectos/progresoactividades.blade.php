@@ -30,47 +30,9 @@
                         <div class="content-frame-left">
                             {{ csrf_field() }}
                             <input type="hidden" name="idactividad">
-                            <div class="form-group">
-                                <h4>Agregar nueva Actividad:</h4>
-                                <textarea class="form-control push-down-10" id="new_task" rows="4" placeholder="Your task text here..."></textarea>                            
-                                <button class="btn btn-primary" id="add_new_task"><span class="fa fa-edit"></span> Add</button>
-                            </div>                        
-                            <div class="form-group push-up-10">
-                                <h4>Buscar Actividad:</h4>
-                                <div class="input-group">
-                                    <div class="input-group-addon"><span class="fa fa-search"></span></div>
-                                    <input type="text" class="form-control" placeholder="keyword..."/>
-                                </div>
-                                
-                            </div>
-                            <div class="form-group">
-                                <div class="col-md-12">
-                                    <label>Default</label>
-                                    <input id="fileprueba" name="fileprueba" type="file" class="file-loading">
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <h4>Grupos de Actividades:</h4>
-                                <div class="list-group border-bottom">
-                                    <a href="#" class="list-group-item"><span class="fa fa-circle text-primary"></span> Project #1</a>
-                                    <a href="#" class="list-group-item"><span class="fa fa-circle text-success"></span> Personal</a>
-                                    <a href="#" class="list-group-item"><span class="fa fa-circle text-warning"></span> Project #2</a>
-                                    <a href="#" class="list-group-item"><span class="fa fa-circle text-danger"></span> Meetings</a>
-                                    <a href="#" class="list-group-item"><span class="fa fa-circle text-info"></span> Work</a>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <h4>Tags:</h4>
-                                <ul class="list-tags">
-                                    <li><a href="#"><span class="fa fa-tag"></span> amet</a></li>
-                                    <li><a href="#"><span class="fa fa-tag"></span> rutrum</a></li>
-                                    <li><a href="#"><span class="fa fa-tag"></span> nunc</a></li>
-                                    <li><a href="#"><span class="fa fa-tag"></span> tempor</a></li>
-                                    <li><a href="#"><span class="fa fa-tag"></span> eros</a></li>
-                                    <li><a href="#"><span class="fa fa-tag"></span> suspendisse</a></li>
-                                    <li><a href="#"><span class="fa fa-tag"></span> dolor</a></li>
-                                </ul>                            
-                            </div>
+                                                    
+                            
+                            
                             
                         </div>       
                         <!-- END CONTENT FRAME TOP -->

@@ -44,48 +44,37 @@ class LoginController extends Controller
      * @return void
      */
     
-    public function principal(LoginRequest $request){
+    public function login(Request $request){
         $this->validate(request(), [
             
-                    'email' => 'email|required|string',
-                    'password' => 'required|string'
-                    ]);
-                    
-                      
-                    /*if(Auth::attempt(['email' => $request['email'], 'password' => $request['password']]))
-                    {
-                        return Redirect()->route('inicio');
-                    }else{
-                        Session::flash('message-error', 'Datos incorrectos');
-                        return Redirect::to('inicio');
-                    }*/
-                    $userdata = array(
-                        'email' =>$request->get('email'),
-                        'password'=>$request->get('password')
-                        //'email' => $request->email, 
-                        //'password' => $request->password,
-                    );
-                    if(Auth::attempt($userdata))
-                    {
-                        return Redirect()->route('inicio');
-                    }else{
-                       
-                        return Redirect::to('inicio');
-                    }
-                }
-                    
-                    
-                 
-                  //Session::flash('message-error', 'Datos incorrectos');
-                  //return Redirect::to('/');              
-    
-    
-    
-    //public function inicio(){
-      //  return view ('welcome');
-    //}
+            'txtusuario' => 'required|string',
+            
+            ]);
+        
+            $credenciales = array(
+                $this->username() => $request->txtusuario,
+                'password' => md5($request->txtpassword),
+                'ESTADO_USR' => 'ACTIVO'
+            );
 
-    public function login(){
-        return view('auth.login');
-    }
+            
+            
+            if(Auth::attempt($credenciales))
+            {
+                return 'logueado';
+                //return 'Redirect()->route('inicio');'
+            }else{
+                //Session::flash('message-error', 'Datos incorrectos');
+                //return Redirect::to('/');
+                return 'no autenticado';
+            }
+                        
+            
+        }
+        public function username()
+        {
+            return 'CODIGO_USR';
+        }
+               
+                    
 }

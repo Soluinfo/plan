@@ -68,7 +68,7 @@
                                         
                                     </form>
                                     <a href="{{ url('/crearcatalogo') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Catalogo<span class="fa fa-plus fa-right"></span></a>
-                                    <button id="btnGuardarCatalogo" class="btn btn-primary pull-right">Guardar Catalogo<span class="fa fa-floppy-o fa-right"></span></button>
+                                    <button id="btnGuardarCatalogo" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Guardar Catalogo<span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 
                             </div>
