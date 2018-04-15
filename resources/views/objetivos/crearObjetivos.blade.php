@@ -4,7 +4,7 @@
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
                     <li><a href="{{ url('/')}}">Principal</a></li>                    
-                    <li><a href="{{ url('/objetivos')}}">Crear objetivos</a></li>
+                    <li><a href="{{ url('/objetivos')}}">Panel de objetivos</a></li>
                     <li class="active">Crear objetivo</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       
@@ -32,8 +32,8 @@
                                         <p aling="justify">En esta interfaz se podrá ingresar objetivos, alcance que tendrá el mismo y el ámbito al cual van a pertenecer. </p>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-xs-12 control-label">Literal</label>
-                                            <div class="col-md-6 col-xs-12">                                                                                                                                                        
+                                            <label class="col-md-3 col-sm-3 col-xs-12 control-label">Literal</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">                                                                                                                                                        
                                                 <input type="text" class="form-control" name="txtLiteral" placeholder="Ejemplo A" value="<?php if(isset($LITERAL)){echo $LITERAL;} ?>"/>                                                    
                                             </div>
                                         </div>
@@ -41,8 +41,8 @@
                                        
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-xs-12 control-label">Descripcion</label>
-                                            <div class="col-md-6 col-xs-12">                                            
+                                            <label class="col-md-3 col-sm-3 col-xs-12 control-label">Descripcion</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">                                            
                                                 <input type="text" class="form-control" name="txtDescripcion" value="<?php if(isset($DESCRIPCION)){echo $DESCRIPCION;} ?>"/>
                                             </div>
                                         </div>
@@ -51,7 +51,7 @@
                                             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Seleccione el Catalogo</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                
                                                 <select class="form-control select" name="slidcatalogo" data-live-search="true">
-                                                    <option value="">seleccion proyecto</option>
+                                                    <option value="">seleccion catalogo</option>
                                                     @foreach($catalogoobjetivos as $d)
                                                         @if(isset($IDCATALOGOOBJETIVO))
                                                             @if($IDCATALOGOOBJETIVO == $d->IDCATALOGOOBJETIVO)
@@ -72,7 +72,7 @@
                                     </form>
                                     <a href="{{ url('/crearobjetivos') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Objetivo<span class="fa fa-plus fa-right"></span></a>
 
-                                    <button id="btnGuardarObjetivo" class="btn btn-primary pull-right">Guardar Objetivo <span class="fa fa-floppy-o fa-right"></span></button>
+                                    <button id="btnGuardarObjetivo" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right"><?php if(isset($IDOBJETIVOESTRATEGICO)){ echo "Actualizar Objetivo";}else{ echo "Guardar Objetivo";} ?><span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 
 
@@ -99,7 +99,7 @@
 
                                 <div class="tab-pane" id="tab-alcance">
                                         
-                                    <button id="btnAgregarAlcance" class="btn btn-block btn-primary col-md-4"><span class="fa fa-plus"></span>Agregar Ambito de Influencia</button>
+                                    <button id="btnAgregarAlcance" class="btn btn-block btn-primary col-md-4"><span class="fa fa-plus"></span>Agregar Alcance</button>
                                     @component('componentes.dataTable')
                                         @slot('titleComponent')
                                         Alcance del objetivo estrategicos
@@ -204,7 +204,7 @@
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                                <a id="btnGuardarAlcance" class="btn btn-primary pull-right">Guardar Ambito <span class="fa fa-floppy-o fa-right"></span></a>
+                                <a id="btnGuardarAlcance" class="btn btn-primary pull-right">Guardar Alcance <span class="fa fa-floppy-o fa-right"></span></a>
 
                             </div>
                         </div>
@@ -503,7 +503,7 @@ $(document).ready(function(){
     });
     
    
-    //ajax guardar informacion proyecto
+    //ajax guardar informacion objetivo
         $("#formObjetivos").on("submit", function(e) {     
             e.preventDefault();
             $.ajax({
@@ -513,24 +513,34 @@ $(document).ready(function(){
                 dataType : 'json',
                 beforeSend : function(){
                     $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
+                    $('body').loadingModal('show');
+                    $('body').loadingModal('text', 'Guardando Objetivo...');
                 },
                 success : function(data){
                     if(data.respuesta == 'ok'){
                         $("input[name=idobjetivo]").val(data.codigo);
                         if(data.transaccion == 'guardar'){
+                            $("#btnGuardarObjetivo").html('Actualizar Objetivo');
                             noty({text: 'Objetivo creado con exito', layout: 'topRight', type: 'success'});
                         }else{
                             noty({text: 'Objetivo actualizado con exito', layout: 'topRight', type: 'success'});
                         }
+                       
                         
                     }
+                    $('body').loadingModal('hide');
                     $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                     $.mpb('destroy');
                 },
                 error : function(xhr,estado){
+                    $('body').loadingModal('hide');
+                    if(xhr.status == 500){
+                        noty({text: 'Error: falló conexión, intente de nuevo', layout: 'topRight', type: 'error'});
+                    }
+                    console.log("!Error "+xhr.status+", reportelo al centro de computo");
                     $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                     $.mpb('destroy');
-                    alert("!Error "+xhr.status+", reportelo al centro de computo");
+                    
                     
                 }
             })

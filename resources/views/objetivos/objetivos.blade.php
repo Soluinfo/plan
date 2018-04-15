@@ -3,77 +3,118 @@
 @section('principal')
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
-                <li><a href="{{ url('/')}}">Principal</a></li>                    
-                <li class="active">Ingresar objetivos</li>
-            </ul>
+                    <li><a href="{{ url('/principal')}}">Principal</a></li>                    
+                    <li class="active">Panel de objetivos</li>
+                </ul>
             <!-- END BREADCRUMB -->                      
                  <!-- PAGE TITLE -->
                  <div class="page-title">                    
-                 <h2><span class="fa fa-arrow-circle-o-left"></span> Crear Objetivos</h2>
-             </div>
+                    <h2><span class="fa fa-arrow-circle-o-left"></span> Panel de objetivos</h2>
+                </div>
              <!-- END PAGE TITLE --> 
              <!-- PAGE CONTENT WRAPPER -->
-             <div class="page-content-wrap">
-                 <div class="row">
+            <div class="page-content-wrap">
+                <div class="row">
                      <div class="col-lg-4">
-                         <a class="btn btn-block btn-primary" href="{{ url('/crearobjetivos') }}"><span class="fa fa-plus"></span> Nuevo Objetivo</a>
+                         <a class="btn btn-block btn-primary" href="{{ url('/crearobjetivos') }}"><span class="fa fa-plus"></span> Nuevo Objetivo</a><br>
                      </div>
-                     <div class="col-md-12">
-                            <!-- START DEFAULT DATATABLE -->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">                                
-                                    <h3 class="panel-title">Lista de Proyectos</h3>
-                                    <ul class="panel-controls">
-                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
-                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
-                                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
-                                    </ul>                                
-                                </div>
-                                
-                                    <table class="table datatable">
-                                        <thead>
-                                            <tr>
-                                                <th>Id</th>
-                                                <th>Literal</th>
-                                                <th>Descripcion</th>
-                                                <th>Catalogo</th>
-                                                <th>Accion</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            @foreach($objetivosestrategicos as $p)
-                                            <tr>      
-                                                <td width="8%">{{ $p->IDOBJETIVOESTRATEGICO }}</td>
-                                                <td width="8%">{{ $p->LITERAL }}</td>
-                                                <td width="35%">{{ $p->DESCRIPCION }}</td>
-                                                <td width="35%">{{ $p->NOMBRE }}</td>
-                                                
-                                                   
-                                                </td>
-                                                <td width="14%">
-                                                    <a href="{{ action('objetivos\DetalleObjetivoController@home',$p->IDOBJETIVOESTRATEGICO) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
-                                                    <a href="{{ action('objetivos\ObjetivosController@crear',$p->IDOBJETIVOESTRATEGICO) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
-                                                    <a href="{{ action('objetivos\ObjetivosController@eliminarObjetivo',$p->IDOBJETIVOESTRATEGICO) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
-                                                    <!--<button id="eliminarObjetivo"  class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></button>-->
+                    <div class="col-md-12">
+                        @component('componentes.dataTable')
+                            @slot('titleComponent')
+                            Objetivos estrategicos
+                            @endslot
+                            @slot('idcomponent')
+                            datatableObjetivosCatalogo
+                            @endslot
+                            <tr>
+                            <th width="50">id</th>
+                            <th>Objetivo</th>
+                            <th>Literal</th>
+                            <th>Catalogo</th>
+                            <th width="100">Accion</th>
+                            </tr>
 
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                            
-                                        </tbody>
-                                        
-                                    </table>
-                                </div>
-                            </div>
-                            <!-- END DEFAULT DATATABLE -->
-
-                        </div>
+                        @endcomponent
+                        {{ csrf_field() }}
                     </div>                    
                 </div>
+            </div>
                 <!-- END PAGE CONTENT WRAPPER --> 
                 @push('PageScript')
                     <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script>
-                   
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
+                    <script>
+                        function eliminarObjetivo(IDOBJETIVO){
+                            
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: '¿Esta seguro que desea eliminar el objetivo?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/objetivos/eliminarObjetivos') }}",{IDOBJETIVO:IDOBJETIVO,_token:_token},function(data){
+                                                $('body').loadingModal('show');
+                                                $('body').loadingModal('text', 'Eliminado Objetivo...');
+                                                if(data == 'eliminado'){
+                                                    tableCatalogoObjetivos.ajax.reload();
+                                                    noty({text: 'El Objetivo ha sido Eliminado', layout: 'topRight', type: 'success'});
+                                                    
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el objetivo intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                                $('body').loadingModal('hide');
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                        
+                        
+                        }
+                        $(function(){
+                            //tabla para mostrar objetivos estrategicos
+                            tableCatalogoObjetivos = $("#datatableObjetivosCatalogo").DataTable({
+                                "lengthMenu": [ 5, 10],
+                                "language" : {
+                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
+                                "order": [], //Initial no order
+                                "processing" : true,
+                                "serverSide": true,
+                                "ajax": {
+                                    "url": '{{ url("/objetivos/datatableObjetivosDeCatalogos") }}',
+                                    "type": "post",
+                                    "data": function (d){
+                                        d.idcatalogoobjetivo = $("input[name=idcatalogoobjetivo]").val();
+                                        d._token = $("input[name=_token]").val();
+                                    }
+                                },
+                                //"columnDefs": [{ targets: [3], "orderable": false}],
+                                "columns": [
+                                    {width: '8%',data: 'IDOBJETIVOESTRATEGICO'},
+                                    {width: '40%',data: 'descripcionobjetivo'},
+                                    {width: '12%',data: 'LITERAL'}, 
+                                    {width: '25%',data: 'descripcioncatalogoobjetivo'},
+                                    {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                
+                                ]
+                            });
+                            //end tap para agregar ambitos de objetivos estrategicos
+                        })
+                    </script>
                        
                 @endpush('PageScript')
 @endsection('principal')

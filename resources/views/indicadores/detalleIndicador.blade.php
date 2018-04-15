@@ -99,69 +99,7 @@
                     <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
                     <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
                     <script>
-                      function eliminaractividadesindicador(IDACTIVIDAD){
-                            _token = $("input[name=_token]").val();
-                            noty({
-                                text: 'Esta seguro que desea la actividad del indicador?',
-                                layout: 'topRight',
-                                buttons: [
-                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
-                                            $noty.close();
-                                            $.post("{{ url('/indicadores/eliminarActividad') }}",{IDACTIVIDAD:IDACTIVIDAD,_token:_token},function(data){
-                                                if(data == 'eliminado'){
-                                                    noty({text: 'La actividad no se a podido eliminar del indicador', layout: 'topRight', type: 'success'});
-                                                    tableActividadesIndicador.ajax.reload();
-                                                }else{
-                                                    noty({text: 'Lo sentimos, no se elimino la actividad del indicador, intenta nuevamente', layout: 'topRight', type: 'error'});
-                                                }
-                                            })
-                                            
-                                            
-                                        }
-                                        },
-                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
-                                            $noty.close();
-                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
-                                            }
-                                        }
-                                    ]
-                            })
-                            
-                        }
-                        $(function(){
-                           
-
-                            //tap para agregar objetivos estrategicos
-                                tableActividadesIndicador = $("#datatableActividadesIndicadores").DataTable({
-                                    "lengthMenu": [ 5, 10],
-                                    "language" : {
-                                        "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
-                                    },
-                                    "autoWidth": false,
-                                    "order": [], //Initial no order
-                                    "processing" : true,
-                                    "serverSide": true,
-                                    "ajax": {
-                                        "url": '{{ url("/indicadores/datatableActividadIndicador") }}',
-                                        "type": "post",
-                                        "data": function (d){
-                                            d.idindicador = $("input[name=idindicador]").val();
-                                            d._token = $("input[name=_token]").val();
-                                        }
-                                    },
-                                   // "columnDefs": [{ targets: [3], "orderable": false}],
-                                    "columns": [
-                                        {width: '10%',data: 'IDACTIVIDAD'}, 
-                                                                           
-                                        {width: '75%',data: 'NOMBREACTIVIDAD'}, 
-                                        {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
-                                    
-                                    ]
-                                });
-                            //end tap para agregar objetivos estrategicos
-                            
-                        })
-                        
+                                              
                     </script>
                     
                     <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>

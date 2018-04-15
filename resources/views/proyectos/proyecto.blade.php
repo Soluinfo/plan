@@ -31,17 +31,17 @@
                                     </ul> 
                                     <div class="panel-body col-md-3 col-xs-12">
                                        <div class="btn-group">
-                                        <button type="button" class="btn btn-info">Seleccione Accion</button>
-                                        <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
-                                            <span class="caret"></span>
-                                            
-                                        </button>
-                                        <ul class="dropdown-menu" role="menu" id="export-menu">
-                                            <li id="export-to-excel"><a href="{{ url('/proyectos/reporteexcel') }}">Exportar a Excel</a></li>
-                                            
-                                            <li><a target="_blank" href="{{ url('/proyectos/pdf') }}">Exportar a PDF</a></li>
-                                        </ul>
-                                    </div> 
+                                            <button type="button" class="btn btn-info">Seleccione Accion</button>
+                                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                                
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu" id="export-menu">
+                                                <li id="export-to-excel"><a href="{{ url('/proyectos/reporteexcel') }}">Exportar a Excel</a></li>
+                                                
+                                                <li><a target="_blank" href="{{ url('/proyectos/pdf') }}">Exportar a PDF</a></li>
+                                            </ul>
+                                        </div> 
                                     </div> 
                                     <!--<a href="{{ url('/proyectos/reporteexcel') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Reporte en Excel <span class="fa fa-plus fa-right"></span></a>
                                     <a href="{{ url('/actividad/pdf') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">PDF<span class="fa fa-plus fa-right"></span></a>-->

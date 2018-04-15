@@ -5,12 +5,12 @@
                 <ul class="breadcrumb">
                     <li><a href="{{ url('/')}}">Principal</a></li>                    
                     <li><a href="{{ url('/indicadores')}}">Indicadores</a></li>
-                    <li class="active">Crear Indicadores</li>
+                    <li class="active"> Crear Indicadores</li>
                 </ul>
              <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
                 <div class="page-title">                    
-                <h2><span class="fa fa-arrow-circle-o-left"></span> Crear Indicadores</h2>
+                <h2><span class="fa fa-arrow-circle-o-left"></span>Formulario de indicadores</h2>
             </div>
             <!-- END PAGE TITLE --> 
             <!-- PAGE CONTENT WRAPPER -->
@@ -27,18 +27,18 @@
                             <div class="panel-body tab-content">
                                 <div class="tab-pane active" id="tab-indicador">
                                 {!! Form::open(['url' => 'crearindicadores/guardar', "name" => "formIndicador", "id" => "formIndicador","class" => "form-horizontal", "role" => "form"])!!}
-                                <p aling="justify">En esta interfaz se podrá crear Catalogos para los objetivos.</p>
+                                <p aling="justify">En esta interfaz se podrá crear indicadores.</p>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-xs-12 control-label">Literal</label>
-                                            <div class="col-md-6 col-xs-12">                                                                                                                                                        
+                                            <label class="col-md-3 col-sm-3 col-xs-12 control-label">Literal</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">                                                                                                                                                        
                                                 <input type="text" class="form-control" name="txtLiteral" placeholder="Ejemplo A" value="<?php if(isset($LITERAL)){echo $LITERAL;} ?>"/>                                                    
                                             </div>
                                         </div>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 col-xs-12 control-label">Descripcion</label>
-                                            <div class="col-md-6 col-xs-12">                                            
+                                            <label class="col-md-3 col-sm-3 col-xs-12 control-label">Descripcion</label>
+                                            <div class="col-md-6 col-sm-6 col-xs-12">                                            
                                                 <input type="text" class="form-control" name="txtDescripcion" value="<?php if(isset($DESCRIPCIONINDICADOR)){echo $DESCRIPCIONINDICADOR;} ?>"/>
                                             </div>
                                         </div> 
@@ -47,7 +47,7 @@
                                             <label class="col-lg-3 col-md-3 col-sm-3 col-xs-12 control-label">Seleccione el Catalogo de Indicador</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">                                                                                
                                                 <select class="form-control select" name="slidcatalogo" data-live-search="true">
-                                                    <option value="">seleccion proyecto</option>
+                                                    <option value="">seleccione Catalogo</option>
                                                     @foreach($catalogoindicadores as $d)
                                                         @if(isset($IDCATALOGOINDICADORES))
                                                             @if($IDCATALOGOINDICADORES == $d->IDCATALOGOINDICADORES)
@@ -68,7 +68,7 @@
                                         
                                     </form>
                                     <a href="{{ url('/crearindicadores') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Indicador<span class="fa fa-plus fa-right"></span></a>
-                                    <button id="btnGuardarCatalogo" class="btn btn-primary pull-right">Guardar Indicador<span class="fa fa-floppy-o fa-right"></span></button>
+                                    <button id="btnGuardarCatalogo" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right"><?php if(isset($IDINDICADORES)){echo"Actualizar Indicador";}else{echo "Guardar Indicador";} ?><span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 
                             </div>
@@ -212,6 +212,7 @@ $("#btnGuardarCatalogo").on("click",function(){
                     if(data.respuesta == 'ok'){
                         $("input[name=idindicador]").val(data.codigo);
                         if(data.transaccion == 'guardar'){
+                            $("#btnGuardarCatalogo").html("Actualizar Catalogo");
                             noty({text: 'Indicador creado con exito', layout: 'topRight', type: 'success'});
                         }else{
                             noty({text: 'Indicador actualizado con exito', layout: 'topRight', type: 'success'});
