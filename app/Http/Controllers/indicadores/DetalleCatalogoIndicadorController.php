@@ -37,7 +37,7 @@ class DetalleCatalogoIndicadorController extends Controller
         $obtenerIndicadores = Indicador::where('IDCATALOGOINDICADORES',$r->idcatalogoindicador)
                                                         ->select('IDINDICADORES',
                                                             'LITERAL',
-                                                            'DESCRIPCION'
+                                                            'DESCRIPCIONINDICADOR'
                                                         );
                                                     
         return Datatables($obtenerIndicadores)

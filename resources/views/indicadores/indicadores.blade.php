@@ -45,14 +45,13 @@
                                         <tr>      
                                             <td width="8%">{{ $p->IDINDICADORES }}</td>
                                             <td width="8%">{{ $p->LITERAL }}</td>
-                                            <td width="40%">{{ $p->DESCRIPCION }}</td>
+                                            <td width="40%">{{ $p->DESCRIPCIONINDICADOR }}</td>
                                             <td width="30%">{{ $p->NOMBRE }}</td>
                                             
                                             <td width="14%">
                                                 <a href="{{ action('indicadores\DetalleIndicadorController@home',$p->IDINDICADORES) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
 
                                                 <a href="{{ action('indicadores\IndicadorController@crear',$p->IDINDICADORES) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
-                                                <a href="{{ action('objetivos\ObjetivosController@destroy',$p->IDOBJETIVOESTRATEGICO) }}" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>
 
                                             </td>
                                         </tr>

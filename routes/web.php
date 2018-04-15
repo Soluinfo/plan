@@ -13,13 +13,14 @@
 use App\Mail\emailsupervisor;
 use Illuminate\Support\Facades\Mail;
 
-Route::get('/', 'Auth\LoginController@home');
+//Route::get('/', 'Auth\LoginController@home');
+Route::get('/', 'PrincipalController@home');
 Route::get('/autenticacion/login','Autenticacion\IniciosesionController@iniciarsesion');
 Route::get('/principal', 'PrincipalController@home');
 Route::get('/inicio', 'PrincipalController@home')->name('inicio');
 
-Route::get('/objetivos', 'objetivos\CatalogoController@home');
-Route::get('/crearobjetivo', 'objetivos\CatalogoController@crear');
+Route::get('/objetivos', 'objetivos\CatalogoObjetivosController@home');
+Route::get('/crearobjetivo', 'objetivos\CatalogoObjetivosController@crear');
 Route::get('/proyectos', 'proyectos\ProyectoController@home');
 //ruta para detalle de proyecto
 Route::get('/proyectos/detalleProyecto/{id}','proyectos\DetalleProyectoController@home');
@@ -74,10 +75,10 @@ Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralc
 
 
 // rutas de catalogo
-//Route::get('/catalogo', 'objetivos\CatalogoController@home');
+//Route::get('/catalogo', 'objetivos\CatalogoObjetivosController@home');
 Route::get('/catalogoObjetivos/editar/{id?}', 'indicadores\CatalogoIndicadorController@crear')->where('id', '[0-9]+');
 Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoObjetivosController@crear');
-Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
+Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoObjetivosController@guardar');
 
 Route::get('/catalogo/detalleCatalogoObjetivos/{id}','objetivos\DetalleCatalogoObjetivosController@home');
 Route::post('/catalogo/datatableCataloObjetivos','objetivos\CatalogoObjetivosController@datatablesCataObjetivos');
@@ -120,9 +121,9 @@ Route::post('/alcance/guardaralcance', 'objetivos\ObjetivosController@guardaralc
 
 // rutas de catalogo
 Route::get('/catalogoObjetivos', 'objetivos\CatalogoObjetivosController@home');
-//Route::get('/crearobjetivo/crear/{id?}', 'objetivos\CatalogoController@crear')->where('id', '[0-9]+');
-//Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoController@crear');
-Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoController@guardar');
+//Route::get('/crearobjetivo/crear/{id?}', 'objetivos\CatalogoObjetivosController@crear')->where('id', '[0-9]+');
+//Route::get('/crearcatalogo/{id?}', 'objetivos\CatalogoObjetivosController@crear');
+Route::post('/crearcatalogo/guardar', 'objetivos\CatalogoObjetivosController@guardar');
 
 Route::get('/catalogo/detalleCatalogoIndicadores/{id}','objetivos\DetalleCatalogoIndicadorController@home');
 

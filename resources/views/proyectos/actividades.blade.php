@@ -36,7 +36,7 @@
                                     </div> 
                                     @endif 
                                     <div class="table-responsive">
-                                        <table class="table datatable">
+                                    <table class="table table-striped table-bordered" id="tablaactividades" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <th>Id</th>
@@ -87,7 +87,58 @@
                 </div>
                 <!-- END PAGE CONTENT WRAPPER --> 
                 @push('PageScript')
-                    <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script>
+                <script>
+                        $(document).ready(function(){
+                            tableActividades = $("#tablaactividades").DataTable({
+                                "language" : {
+                                    "url": baseUrl+"/js/plugins/datatables/spanish.json"
+                                },
+                                "lengthMenu": [ 8, 10],
+                                "columns": [
+                                    {width: '10%'},
+                                    {width: '40%'},
+                                    {width: '20%'},
+                                    {width: '15%'},
+                                    {width: '15%',name: 'action', orderable: false, searchable: false},
+                                
+                                ],
+                            });
+                            
+                           
+                        })
+                    </script>
+                    <script type="text/javascript" src="{{ asset('js/plugins/datatables/jquery.dataTables.min.js')}}"></script>
+                    <script>
+                    function eliminarProyecto(IDPROYECTO){
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el proyecto?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/Proyectos/eliminar') }}",{IDPROYECTO:IDPROYECTO,_token:_token},function(data){
+                                                if(data == 'eliminado'){
+                                                    noty({text: 'El proyecto ha sido Eliminado', layout: 'topRight', type: 'success'});
+                                                    
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el proyecto intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                            
+                        }
+                    </script> 
                    
                        
                 @endpush('PageScript')

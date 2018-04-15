@@ -329,7 +329,7 @@ class ProyectoController extends Controller
     public function datatableIndicador(Request $r){
         $obtenerIndicador = Indicador::where('IDCATALOGOINDICADORES',$r->idcatalogo)
                                                         ->select('IDINDICADORES',
-                                                            'DESCRIPCION'
+                                                            'DESCRIPCIONINDICADOR'
                                                         );
                                                     
         return Datatables($obtenerIndicador)
@@ -362,7 +362,7 @@ class ProyectoController extends Controller
         $indicadorProyeto = Indicador::join('proyectosindicadores','indicadores.IDINDICADORES','=','proyectosindicadores.IDINDICADOR')
                                                 ->where('proyectosindicadores.IDPROYECTO', $r->idproyecto)
                                                 ->select('indicadores.IDINDICADORES',
-                                                        'indicadores.DESCRIPCION',
+                                                        'indicadores.DESCRIPCIONINDICADOR',
                                                         'proyectosindicadores.IDPROYECTO'
                                                     );
             return Datatables($indicadorProyeto)
@@ -585,7 +585,7 @@ class ProyectoController extends Controller
                                ); 
                             //$sheet->mergeCells('A1:E1');
                             //$sheet->row(1, ['ejemplo']);
-                            $sheet->row(1, ['Proyecto', 'Departamento', 'Fecha', 'Estado', 'Supervisor', 'Objetivo']);
+                            $sheet->row(1, ['Proyecto', 'Departamento', 'Fecha', 'Estado']);
                                //$datos = Proyectosupervisor::all();
                                //$arrayProyecto = array();
                                //$proyectos = ProyectoHelper::obtenerProyectos(null);
@@ -604,8 +604,8 @@ class ProyectoController extends Controller
                                    $row[1] = $p->DESCRIPCION_DEP;
                                    $row[2] = $p->FECHAPROYECTO;
                                    $row[3] = $p->ESTADOPROYECTO;
-                                   $row[4] = $p->NOMBRE_EPL;
-                                   $row[5] = $p->IDOBJETIVOESTRATEGICO;
+                                   //$row[4] = $p->NOMBRE_EPL;
+                                   //$row[5] = $p->IDOBJETIVOESTRATEGICO;
                                    //$row[6] = $p->DESCRIPCION;
                                    
                                 $sheet->appendRow($row);

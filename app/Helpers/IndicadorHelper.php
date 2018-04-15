@@ -68,14 +68,12 @@ $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'i
     }
         public static function obtenerCatalogoIndicadores($id = null){
         if($id == null){
-            $catalogoIndicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
-            
-                                ->select('catalogoindicadores.*','indicadores.*')
+            $catalogoIndicadores = Catalogoindicador::
+                                select('catalogoindicadores.*')
                                 ->get();
         }else{
-            $catalogoIndicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
-            ->where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
-            ->select('catalogoindicadores.*','indicadores.*')
+            $catalogoIndicadores = Catalogoindicador::where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
+            ->select('catalogoindicadores.*')
             ->get();
         }
         return $catalogoIndicadores;
@@ -87,7 +85,7 @@ $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'i
             foreach($objetoCatalogoIndicador as $p){
                 $datosDeCatalogoIndicador['IDCATALOGOINDICADORES'] = $p->IDCATALOGOINDICADORES;
                 $datosDeCatalogoIndicador['NOMBRE'] = $p->NOMBRE;
-                $datosDeCatalogoIndicador['DESCRIPCION'] = $p->DESCRIPCION;
+                $datosDeCatalogoIndicador['DESCRIPCIONINDICADOR'] = $p->DESCRIPCIONINDICADOR;
                 $datosDeCatalogoIndicador['FECHA'] = $p->FECHA;
                 $datosDeCatalogoIndicador['ESTADO'] = $p->ESTADO;
                 $datosDeCatalogoIndicador['created_at'] = $p->created_at;

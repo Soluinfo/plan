@@ -41,14 +41,14 @@ class ActividadHelper {
             $actividad = Actividad::join('objetivosestrategicos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','actividades.IDOBJETIVOESTRATEGICO')
                                     ->join('indicadores','actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
                                     ->join('proyectos','proyectos.IDPROYECTO','=','actividades.IDPROYECTO')
-                                    ->select('actividades.*','objetivosestrategicos.DESCRIPCION as nombreobjetivo','indicadores.DESCRIPCION as nombreindicador','proyectos.NOMBREPROYECTO','proyectos.IDDIRECTORIO')
+                                    ->select('actividades.*','objetivosestrategicos.DESCRIPCION as nombreobjetivo','indicadores.DESCRIPCIONINDICADOR as nombreindicador','proyectos.NOMBREPROYECTO','proyectos.IDDIRECTORIO')
                                     ->get();
         }else{
             $actividad = Actividad::join('objetivosestrategicos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','actividades.IDOBJETIVOESTRATEGICO')
                                 ->join('indicadores','actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
                                 ->join('proyectos','proyectos.IDPROYECTO','=','actividades.IDPROYECTO')                 
                                 ->where('IDACTIVIDAD',$id)
-                                ->select('actividades.*','objetivosestrategicos.DESCRIPCION as nombreobjetivo','indicadores.DESCRIPCION as nombreindicador','proyectos.NOMBREPROYECTO','proyectos.IDDIRECTORIO')
+                                ->select('actividades.*','objetivosestrategicos.DESCRIPCION as nombreobjetivo','indicadores.DESCRIPCIONINDICADOR as nombreindicador','proyectos.NOMBREPROYECTO','proyectos.IDDIRECTORIO')
                                 ->get();
         }
         return $actividad;

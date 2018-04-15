@@ -11,8 +11,9 @@ use App\Helpers\IndicadorHelper;
 class CatalogoIndicadorController extends Controller
 {
     public function home(){
-        $catalogoindicadores = IndicadorHelper::obtenerIndicadores(null);
-        return view('indicadores.catalogoindicadores',['catalogoindicadores' => $catalogoindicadores]); 
+        $objetoindicadores = IndicadorHelper::obtenerCatalogoIndicadores(null);
+        //$catalogoindicadores = IndicadorHelper::obtenerArrayCatalogoIndicadores($objetoindicadores);
+        return view('indicadores.catalogoindicadores',['catalogoindicadores' => $objetoindicadores]); 
     }
     public function  crear($id = null){
         $datosDeCatalogoIndicador = array();

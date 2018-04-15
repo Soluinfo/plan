@@ -701,7 +701,7 @@
                             "columns": [
                                 {width: '10%',data: 'IDINDICADORES'},
                                
-                                {width: '70%',data: 'DESCRIPCION'},
+                                {width: '70%',data: 'DESCRIPCIONINDICADOR'},
                                 {width: '20%',data: 'action', name: 'action', orderable: false, searchable: false},
                             
                             ]
@@ -1202,7 +1202,7 @@
                                 },
                                 "columns": [
                                     {width: '10%',data: 'IDINDICADORES'},
-                                    {width: '70%',data: 'DESCRIPCION'},
+                                    {width: '70%',data: 'DESCRIPCIONINDICADOR'},
                                     {width: '20%',data: 'action', name: 'action', orderable: false, searchable: false},
                                 
                                 ]

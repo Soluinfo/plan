@@ -120,7 +120,7 @@ $("#btnGuardarCatalogo").on("click",function(){
                 txtnombre: {
                     required: true,
                     
-                    maxlength: 25
+                    maxlength: 250
                 },
                 dpFecha: {
                     required: true,
@@ -133,7 +133,7 @@ $("#btnGuardarCatalogo").on("click",function(){
                 txtnombre: {
                     required: "El campo nombre de Catalogo es requerido",
                    
-                    maxlength: "El campo nombre de Catalogo no puede contener mas de 25 caracteres"
+                    maxlength: "El campo nombre de Catalogo no puede contener mas de 250 caracteres"
                 },
                 dpFecha : {
                     required: "El campo fecha es requerido"

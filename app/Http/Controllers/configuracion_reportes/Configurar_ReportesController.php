@@ -43,11 +43,15 @@ class Configurar_ReportesController extends Controller
         }
         
         $configuracion_repor = DB::table('configuracion_reportes')->get();
-      
+        $supervisores = $this->obtenerSupervisores(null);
         return view('configuracion_reportes.editar_reportes')->with(['configuracion_reportes' => $configuracion_repor,
-                                                        
+                                                            'supervisores' => $supervisores,
                                                         ])
                                                         ->with($datosDeReporte);
+    }
+    public function obtenerSupervisores($id = null){
+        $supervisores = Empleado::all();
+        return $supervisores;
     }
 
     public function actualizar(Request $r){
