@@ -44,24 +44,25 @@ class IndicadorHelper {
         }
         return $datosDeIndicador;
     }
-    //Inicio de funcion para obtener todos los proyecto con su departamento respectivo
-    public static function obtenerActividades($id = null){
-        if($id == null){
+            //Inicio de funcion para obtener todos los proyecto con su departamento respectivo
+            public static function obtenerActividades($id = null){
+                if($id == null){
+                    $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
+                    
+                    ->select('indicadores.*','actividades.*')
+                    ->get();
+            }else{
             $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
-            
-            ->select('indicadores.*','actividades.*')
-            ->get();
-}else{
-$actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'indicadores.IDINDICADORES')
-            ->where('IDACTIVIDAD',$id)
-            ->select('indicadores.*','actividades.*')
-            ->get();
-        }
-    
-        return $actividad;
-    }
-//fin de funcion obtener
+                        ->where('IDACTIVIDAD',$id)
+                        ->select('indicadores.*','actividades.*')
+                        ->get();
+                    }
+                
+                    return $actividad;
+                }
+            //fin de funcion obtener
 
+<<<<<<< HEAD
     public static function numeroIndicadoresProyecto($idproyecto){
         $numero = Proyectoindicador::where('IDPROYECTO',$idproyecto)->count();
         return $numero;
@@ -75,11 +76,25 @@ $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'i
             $catalogoIndicadores = Catalogoindicador::where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
             ->select('catalogoindicadores.*')
             ->get();
+=======
+        public static function numeroIndicadoresProyecto($idproyecto){
+            $numero = Proyectoindicador::where('IDPROYECTO',$idproyecto)->count();
+            return $numero;
+>>>>>>> origin/test
         }
-        return $catalogoIndicadores;
+        public static function obtenerCatalogoIndicadores($id = null){
+            if($id == null){
+                $catalogoIndicadores = Catalogoindicador::all();
+            }else{
+                $catalogoIndicadores = Catalogoindicador::where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
+                                                        ->select('catalogoindicadores.*')
+                                                        ->get();
+            }
+            return $catalogoIndicadores;
         }
 
         public static function obtenerArrayCatalogoIndicadores($objetoCatalogoIndicador){
+<<<<<<< HEAD
         $datosDeCatalogoIndicador = array();
         if(isset($objetoCatalogoIndicador)){
             foreach($objetoCatalogoIndicador as $p){
@@ -93,18 +108,43 @@ $actividad = Actividad::join('indicadores', 'actividades.IDINDICADORES', '=', 'i
                 $datosDeCatalogoIndicador['idusuario'] = $p->idusuario;
                 $datosDeObjetivoIndicador['IDINDICADORES'] = $p->IDINDICADORES;
                 
+=======
+            $datosDeCatalogoIndicador = array();
+            if(isset($objetoCatalogoIndicador)){
+                foreach($objetoCatalogoIndicador as $p){
+                    $datosDeCatalogoIndicador['IDCATALOGOINDICADORES'] = $p->IDCATALOGOINDICADORES;
+                    $datosDeCatalogoIndicador['NOMBRE'] = $p->NOMBRE;
+                    $datosDeCatalogoIndicador['DESCRIPCION'] = $p->DESCRIPCION;
+                    $datosDeCatalogoIndicador['FECHA'] = $p->FECHA;
+                    $datosDeCatalogoIndicador['ESTADO'] = $p->ESTADO;
+                    $datosDeCatalogoIndicador['created_at'] = $p->created_at;
+                    $datosDeCatalogoIndicador['updated_at'] = $p->updated_at;
+                    $datosDeCatalogoIndicador['idusuario'] = $p->idusuario;
+                    $datosDeObjetivoIndicador['IDINDICADORES'] = $p->IDINDICADORES;
+                    
+                }
+>>>>>>> origin/test
             }
-        }
-        return $datosDeCatalogoIndicador;
+            return $datosDeCatalogoIndicador;
+            }
+
+            public static function obtenerObjetivosDeProyecto($idproyecto){
+            $objetivosProyecto = Objetivo::join('proyectosobjetivos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','proyectosobjetivos.IDOBJETIVOESTRATEGICO')
+                                        ->where('proyectosobjetivos.IDPROYECTO', $idproyecto)
+                                        ->select('objetivosestrategicos.*','proyectosobjetivos.*')
+                                        ->get();
+            return $objetivosProyecto;
+
         }
 
-        public static function obtenerObjetivosDeProyecto($idproyecto){
-        $objetivosProyecto = Objetivo::join('proyectosobjetivos','objetivosestrategicos.IDOBJETIVOESTRATEGICO','=','proyectosobjetivos.IDOBJETIVOESTRATEGICO')
-                                    ->where('proyectosobjetivos.IDPROYECTO', $idproyecto)
-                                    ->select('objetivosestrategicos.*','proyectosobjetivos.*')
-                                    ->get();
-        return $objetivosProyecto;
+        public static function numeroIndicadoresCatalogo($idcatalogo){
+            $numero = Indicador::where('IDCATALOGOINDICADORES',$idcatalogo)->count();
+            return $numero;
+        }
 
+        public static function numeroIndicadoresEnProyecto($idindicador){
+            $numero = Proyectoindicador::where('IDINDICADOR',$idindicador)->count();
+            return $numero;
         }
 
 }

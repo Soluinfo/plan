@@ -1,6 +1,7 @@
 @extends('master')
 @section('title','Proyectos')
 @section('principal')
+<<<<<<< HEAD
     <!-- START BREADCRUMB -->
     <ul class="breadcrumb">
         <li><a href="{{ url('/principal')}}">Principal</a></li>                    
@@ -46,6 +47,54 @@
                         <a href="{{ url('/actividad/pdf') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">PDF<span class="fa fa-plus fa-right"></span></a>-->                                   
                     </div>
                     <div class="panel-body">
+=======
+                <!-- START BREADCRUMB -->
+                <ul class="breadcrumb">
+                    <li><a href="{{ url('/principal')}}">Principal</a></li>                    
+                    <li class="active">Portafolio de proyectos</li>
+                </ul>
+                <!-- END BREADCRUMB -->                       
+                <!-- PAGE TITLE -->
+                <div class="page-title">                    
+                    <h2><span class="fa fa-arrow-circle-o-left"></span> Portafolio de proyectos</h2>
+                </div>
+                <!-- END PAGE TITLE --> 
+                <!-- PAGE CONTENT WRAPPER -->
+                <div class="page-content-wrap">
+                    <div class="row">
+                        <div class="col-lg-4">
+                            <a class="btn btn-block btn-primary" href="{{ url('/proyectos/crear') }}"><span class="fa fa-plus"></span> Nuevo proyecto</a></br>
+                        </div>
+                        <div class="col-md-12">
+                            <!-- START DEFAULT DATATABLE -->
+                            <div class="panel panel-default">
+                                <div class="panel-heading">                                
+                                    <h3 class="panel-title">Listas de proyectos</h3>
+
+                                    <ul class="panel-controls">
+                                        <li><a href="#" class="panel-collapse"><span class="fa fa-angle-down"></span></a></li>
+                                        <li><a href="#" class="panel-refresh"><span class="fa fa-refresh"></span></a></li>
+                                        <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
+                                    </ul> 
+                                    <div class="panel-body col-md-3 col-xs-12">
+                                       <div class="btn-group">
+                                            <button type="button" class="btn btn-info">Seleccione Accion</button>
+                                            <button type="button" class="btn btn-info dropdown-toggle" data-toggle="dropdown">
+                                                <span class="caret"></span>
+                                                
+                                            </button>
+                                            <ul class="dropdown-menu" role="menu" id="export-menu">
+                                                <li id="export-to-excel"><a href="{{ url('/proyectos/reporteexcel') }}">Exportar a Excel</a></li>
+                                                
+                                                <li><a target="_blank" href="{{ url('/proyectos/pdf') }}">Exportar a PDF</a></li>
+                                            </ul>
+                                        </div> 
+                                    </div> 
+                                    <!--<a href="{{ url('/proyectos/reporteexcel') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Reporte en Excel <span class="fa fa-plus fa-right"></span></a>
+                                    <a href="{{ url('/actividad/pdf') }}"  class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">PDF<span class="fa fa-plus fa-right"></span></a>-->
+
+                                    
+>>>>>>> origin/test
 
                         <div class="table-responsive">
                             <div class="panel-body">

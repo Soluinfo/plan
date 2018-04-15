@@ -170,15 +170,10 @@ class ObjetivoHelper {
 
     public static function obtenerCatalogo($id = null){
         if($id == null){
-            $catalogo = Catalogoobjetivo::join('objetivosestrategicos', 'catalogoobjetivos.IDCATALOGOOBJETIVO', '=', 'objetivosestrategicos.IDCATALOGOOBJETIVO')
-            
-                                ->select('catalogoobjetivos.*','objetivosestrategicos.*')
-                                ->get();
+            $catalogo = Catalogoobjetivo::all();
         }else{
-            $catalogo = Catalogoobjetivo::join('objetivosestrategicos', 'catalogoobjetivos.IDCATALOGOOBJETIVO', '=', 'objetivosestrategicos.IDCATALOGOOBJETIVO')
-            ->where('catalogoobjetivos.IDCATALOGOOBJETIVO',$id)
-            ->select('catalogoobjetivos.*','objetivosestrategicos.*')
-            ->get();
+            $catalogo = Catalogoobjetivo::where('catalogoobjetivos.IDCATALOGOOBJETIVO',$id)
+                                            ->get();
         }
         return $catalogo;
     }
@@ -215,4 +210,9 @@ class ObjetivoHelper {
         $numero = Proyectosobjetivos::where('IDPROYECTO',$idproyecto)->count();
         return $numero;
     }
+    public static function numeroObjetivoCatalogo($idcatalogoObjetivo){
+        $numero = Objetivo::where('IDCATALOGOOBJETIVO',$idcatalogoObjetivo)->count();
+        return $numero;
+    }
+    
 }

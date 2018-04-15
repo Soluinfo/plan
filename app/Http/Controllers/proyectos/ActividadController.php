@@ -827,18 +827,18 @@ class ActividadController extends Controller
         }
     }
 
-public function datatablesIndicador(Request $r){
-    $indicadoractividad = Indicador::join('actividades','actividades.IDINDICADORES','=','indicadores.IDINDICADORES')
-                                            ->where('indicadores.IDINDICADORES', $r->idactividad)
-                                            ->select('indicadores.IDINDICADORES',
-                                                    'indicadores.LITERAL',
-                                                    'indicadores.DESCRIPCION')
-                                                    ->get();
-        return Datatables($indicadoractividad)
-                ->addColumn('action', function ($indicadoractividad) {
-                    return '<a onclick="obtenerDetalleObjetivo('.$indicadoractividad->IDINDICADORES.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
-                            <a onclick="eliminarObjetivoProyecto('.$indicadoractividad->IDINDICADORES.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
-                })
-                ->make(true);
-}
+    public function datatablesIndicador(Request $r){
+        $indicadoractividad = Indicador::join('actividades','actividades.IDINDICADORES','=','indicadores.IDINDICADORES')
+                                                ->where('indicadores.IDINDICADORES', $r->idactividad)
+                                                ->select('indicadores.IDINDICADORES',
+                                                        'indicadores.LITERAL',
+                                                        'indicadores.DESCRIPCION')
+                                                        ->get();
+            return Datatables($indicadoractividad)
+                    ->addColumn('action', function ($indicadoractividad) {
+                        return '<a onclick="obtenerDetalleObjetivo('.$indicadoractividad->IDINDICADORES.')" class="btn btn-xs btn-info" data-toggle="tooltip" data-placement="top" title="Detalle!"><i class="fa fa-info-circle"></i></a>
+                                <a onclick="eliminarObjetivoProyecto('.$indicadoractividad->IDINDICADORES.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                    })
+                    ->make(true);
+    }
 }

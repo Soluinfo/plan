@@ -30,8 +30,8 @@
                                 <p aling="justify">En esta interfaz se podrá crear Catalogos para los objetivos.</p>
 
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Nombre de catálogo</label>
-                                            <div class="col-md-6">
+                                            <label class="col-sm-3 col-md-3 control-label">Nombre de catálogo</label>
+                                            <div class="col-sm-6 col-md-6">
                                                 <input type="text" class="form-control" name="txtnombre" placeholder="Catalogo de Objetivos" value="<?php if(isset($NOMBRE)){echo $NOMBRE;} ?>"/>
                                             </div>
                                         </div>
@@ -44,21 +44,21 @@
                                         </div>  
 
                                         <div class="form-group">
-                                            <label class="col-md-3 control-label">Estado</label>
+                                            <label class="col-md-3 col-sm-3 col-lg-3 control-label">Estado</label>
                                             <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
                                                 <select class="form-control select" name="slEstado"/>
                                                 <option value="">Seleccione estado</option>
                                                         @if( isset($ESTADO))
                                                             @if($ESTADO == 1)
-                                                            <option selected="selected" value="1">PENDIENTE</option>
-                                                            <option value="2">APROBADO</option>
+                                                            <option selected="selected" value="1">ACTIVO</option>
+                                                            <option value="2">INACTIVO</option>
                                                             @else
-                                                            <option value="1">PENDIENTE</option>
-                                                            <option selected="selected" value="2">APROBADO</option>
+                                                            <option value="1">ACTIVO</option>
+                                                            <option selected="selected" value="2">INACTIVO</option>
                                                             @endif
                                                             @else
-                                                            <option value="1">PENDIENTE</option>
-                                                            <option value="2">APROBADO</option>
+                                                            <option value="1">ACTIVO</option>
+                                                            <option value="2">INACTIVO</option>
                                                             @endif
                                                 </select>
                                             </div>
@@ -68,7 +68,7 @@
                                         
                                     </form>
                                     <a href="{{ url('/crearcatalogo') }}" class="btn btn-info col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right">Nuevo Catalogo<span class="fa fa-plus fa-right"></span></a>
-                                    <button id="btnGuardarCatalogo" class="btn btn-primary pull-right">Guardar Catalogo<span class="fa fa-floppy-o fa-right"></span></button>
+                                    <button id="btnGuardarCatalogo" class="btn btn-primary col-lg-2 col-md-3 col-sm-4 col-xs-12 pull-right"><?php if(isset($IDCATALOGOOBJETIVO)){ echo "Actualizar Catalogo";}else{ echo "Guardar Catalogo";} ?><span class="fa fa-floppy-o fa-right"></span></button>
 
                                 </div> 
                             </div>
@@ -199,24 +199,33 @@ $("#btnGuardarCatalogo").on("click",function(){
                 dataType : 'json',
                 beforeSend : function(){
                     $.mpb('show',{value: [0,40],speed: 10,state: 'success'});
+                    $('body').loadingModal('show');
+                    $('body').loadingModal('text', 'Guardando Catalogo de objetivos...');
                 },
                 success : function(data){
                     if(data.respuesta == 'ok'){
                         $("input[name=idcatalogoobjetivo]").val(data.codigo);
                         if(data.transaccion == 'guardar'){
                             noty({text: 'Catalogo creado con exito', layout: 'topRight', type: 'success'});
+                            $("#btnGuardarCatalogo").html("Actualizar Catalogo");
                         }else{
                             noty({text: 'Catalogo actualizado con exito', layout: 'topRight', type: 'success'});
                         }
                         
                     }
+                    $('body').loadingModal('hide');
                     $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                     $.mpb('destroy');
                 },
                 error : function(xhr,estado){
+                    $('body').loadingModal('hide');
+                    if(xhr.status == 500){
+                        noty({text: 'Error: falló conexión, intente de nuevo', layout: 'topRight', type: 'error'});
+                    }
+                    console.log("!Error "+xhr.status+", reportelo al centro de computo");
                     $.mpb('show',{value: [40,100],speed: 10,state: 'success'});
                     $.mpb('destroy');
-                    alert("!Error "+xhr.status+", reportelo al centro de computo");
+                    
                     
                 }
             })

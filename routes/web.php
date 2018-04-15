@@ -13,9 +13,18 @@
 use App\Mail\emailsupervisor;
 use Illuminate\Support\Facades\Mail;
 
+<<<<<<< HEAD
 //Route::get('/', 'Auth\LoginController@home');
 Route::get('/', 'PrincipalController@home');
 Route::get('/autenticacion/login','Autenticacion\IniciosesionController@iniciarsesion');
+=======
+
+Route::get('/', function(){
+    return view('auth.login');
+});
+Route::post('/login', 'Auth\LoginController@login')->name('login');
+//Route::get('/autenticacion/login','Autenticacion\IniciosesionController@iniciarsesion');
+>>>>>>> origin/test
 Route::get('/principal', 'PrincipalController@home');
 Route::get('/inicio', 'PrincipalController@home')->name('inicio');
 
@@ -63,6 +72,7 @@ Route::get('/objetivos/detalleObjetivo/{id}','objetivos\DetalleObjetivoControlle
 
 Route::post('/objetivos/datatableAmbitosObjetivo','objetivos\ObjetivosController@datatablesAmbito');
 Route::post('/objetivos/datatableAlcanceObjetivo','objetivos\ObjetivosController@datatablesAlcance');
+Route::post('/objetivos/datatableObjetivosDeCatalogos','objetivos\ObjetivosController@datatablesObjetivosDeCatalogoObjetivos');
 
 Route::get('/crearobjetivos/{id?}', 'objetivos\ObjetivosController@crear');
 Route::post('/objetivos/guardar', 'objetivos\ObjetivosController@guardar');
@@ -89,8 +99,13 @@ Route::get('/crearindicadores/{id?}', 'indicadores\IndicadorController@crear');
 Route::post('/crearindicadores/guardar', 'indicadores\IndicadorController@guardar');
 Route::get('/indicadores/detalleIndicador/{id}','indicadores\DetalleIndicadorController@home');
 Route::get('/indicadores/detalleCatalogoIndicador/{id}','indicadores\DetalleCatalogoIndicadorController@home');
+Route::post('/indicadores/eliminarIndicador','indicadores\IndicadorController@eliminarIndicador');
+//no funciona
 Route::post('/indicadores/datatableIndicadorActividad','proyectos\ActividadController@datatablesIndicador');
+//------------
+Route::post('/indicadores/datatableIndicadores','indicadores\IndicadorController@datatableIndicadores');
 Route::post('/catalogo/datatableCatalogoIndicadores','indicadores\DetalleCatalogoIndicadorController@datatablesCatalogoIndicadores');
+Route::post('/catalogo/eliminarCatalogoIndicador','indicadores\CatalogoIndicadorController@eliminarCatalogoIndicador');
 
 Route::post('/indicadores/datatableActividadIndicador','indicadores\IndicadorController@datatablesActividades');
 
@@ -141,6 +156,7 @@ Route::get('/actividades/detalleactividades/{id}','proyectos\ActividadController
 Route::get('/actividades/modalDetalleActividad','proyectos\ActividadController@modalDetalleActividad');
 Route::post('/actividades/guardarRecursos','proyectos\ActividadController@guardarRecursosActividad');
 Route::post('/actividades/datatablesrecursosactividades','proyectos\ActividadController@datatablesrecursosactividades');
+Route::get('/actividades/entregable','proyectos\EntregableController@home');
 
 Route::post('/ProgresoActividad/obtenerActividadesDeProyecto','proyectos\ActividadController@obtenerActividadesDeProyecto');
 Route::post('/ProgresoActividad/obtenerDetalleActividadesEnModal','proyectos\ActividadController@obtenerDetalleActividadesEnModal');
@@ -217,7 +233,7 @@ Route::post('/actividades/eliminarResponsableActividad','proyectos\ActividadCont
 Route::post('/catalogo/eliminarCatalogoObjetivos','objetivos\CatalogoObjetivosController@eliminarCatalogoObjetivos');
 Route::post('/indicadores/eliminarActividad','indicadores\IndicadorController@eliminarActividadIndicador');
 
-Route::post('/objetivos/eliminarObjetivos/{id}','objetivos\ObjetivosController@eliminarObjetivo');
+Route::post('/objetivos/eliminarObjetivos','objetivos\ObjetivosController@eliminarObjetivo');
 
 //rutas para ver detalles
 Route::post('/catalogo/detalles', 'objetivos\DetalleCatalogoObjetivosController@obtenerDetalleObjetivoCatalogo');

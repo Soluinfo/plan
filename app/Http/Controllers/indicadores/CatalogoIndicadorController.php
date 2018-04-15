@@ -11,9 +11,14 @@ use App\Helpers\IndicadorHelper;
 class CatalogoIndicadorController extends Controller
 {
     public function home(){
+<<<<<<< HEAD
         $objetoindicadores = IndicadorHelper::obtenerCatalogoIndicadores(null);
         //$catalogoindicadores = IndicadorHelper::obtenerArrayCatalogoIndicadores($objetoindicadores);
         return view('indicadores.catalogoindicadores',['catalogoindicadores' => $objetoindicadores]); 
+=======
+        
+        return view('indicadores.catalogoindicadores'); 
+>>>>>>> origin/test
     }
     public function  crear($id = null){
         $datosDeCatalogoIndicador = array();
@@ -21,7 +26,7 @@ class CatalogoIndicadorController extends Controller
         if($id == null){
             
         }else{
-            $Catalogoindicador = $this->obtener($id);
+            $Catalogoindicador = IndicadorHelper::obtenerCatalogoIndicadores($id);
             if(isset($Catalogoindicador)){
                 foreach($Catalogoindicador as $p){
                     $datosDeCatalogoIndicador['IDCATALOGOINDICADORES'] = $p->IDCATALOGOINDICADORES;
@@ -69,18 +74,32 @@ class CatalogoIndicadorController extends Controller
                 echo json_encode($datos);
             }
 }
-public function obtener($id = null){
-    if($id == null){
-        $catalogoindicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
-                        
-                        ->select('catalogoindicadores.*','indicadores.*')
-                        ->get();
-    }else{
-        $catalogoindicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
-                            ->where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
+    public function obtener($id = null){
+        if($id == null){
+            $catalogoindicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
+                            
                             ->select('catalogoindicadores.*','indicadores.*')
                             ->get();
+        }else{
+            $catalogoindicadores = Catalogoindicador::join('indicadores', 'catalogoindicadores.IDCATALOGOINDICADORES', '=', 'indicadores.IDCATALOGOINDICADORES')
+                                ->where('catalogoindicadores.IDCATALOGOINDICADORES',$id)
+                                ->select('catalogoindicadores.*','indicadores.*')
+                                ->get();
+        }
+        return $catalogoindicadores;
     }
-    return $catalogoindicadores;
-}
+
+    public function eliminarCatalogoIndicador(Request $r){
+        if($r->ajax()){
+            $respuesta = '';
+            $verificarSiTieneIndicadores = IndicadorHelper::numeroIndicadoresCatalogo($r->IDCATALOINDICADOR);
+            if($verificarSiTieneIndicadores > 0){
+                $respuesta =  "tieneindicadores";
+            }else{
+                Catalogoindicador::where('IDCATALOGOINDICADORES',$r->IDCATALOINDICADOR)->delete();
+                $respuesta = 'eliminado';
+            }
+            echo $respuesta;
+        }
+    }
 }

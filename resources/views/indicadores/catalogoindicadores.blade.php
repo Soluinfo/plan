@@ -3,7 +3,7 @@
 @section('principal')
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
-                    <li><a href="#">Principal</a></li>                    
+                    <li><a href="{{url('/principal')}}">Principal</a></li>                    
                     <li class="active">Catalogo de indicadores</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       
@@ -30,7 +30,7 @@
                                         <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
                                     </ul>                                
                                 </div>
-                                <table class="table datatable">
+                                <table class="table" id="tablacatalogo">
                                         <thead>
                                             <tr>
                                                 <th>Id</th>
@@ -41,29 +41,10 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            @foreach($catalogoindicadores as $p)
-                                            <tr>
-                                                <td>{{ $p->IDCATALOGOINDICADORES }}</td>
-                                                <td>{{ $p->NOMBRE }}</td>
-                                                <td>{{ $p->FECHA }}</td>
-                                                @if($p->ESTADO == 1)
-                                                
-                                                <td><span class="label label-success label-form">Estado 1</span></td>
-                                                @elseif($p->ESTADO == 2)
-                                                <td><span class="label label-danger label-form">Estado 2</span></td>
-                                                @endif                                            
-                                                <td>
-                                                    <a href="{{ action('indicadores\DetalleCatalogoIndicadorController@home',$p->IDCATALOGOINDICADORES) }}" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
-                                                    <a href="{{ action('indicadores\CatalogoIndicadorController@crear',$p->IDCATALOGOINDICADORES) }}" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
-                                                    <a class="btn btn-danger btn-xs" href="/eliminar/{{ $p->IDCATALOGOOBJETIVO}}" onclick="return confirm('Quiere borrar el registro?')" role="button"><i class="fa fa-trash-o"></i></a> 
-                                                                                                    
-                                                </td>
-                                            </tr>
-                                            @endforeach
-                                            
+                                           
                                         </tbody>
                                 </table>
-                           
+                                {{ csrf_field() }}
                                 <!-- END DEFAULT DATATABLE -->
 
                             </div>
@@ -73,5 +54,79 @@
                 <!-- END PAGE CONTENT WRAPPER --> 
                 @push('PageScript')
                     <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script> 
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
+
+                    <script>
+                        function eliminarCatalogoDeIndicadores(IDCATALOINDICADOR){
+                            
+                                _token = $("input[name=_token]").val();
+                                noty({
+                                    text: '¿Esta seguro que desea eliminar el catalogo?',
+                                    layout: 'topRight',
+                                    buttons: [
+                                            {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                                $noty.close();
+                                                $.post("{{ url('/catalogo/eliminarCatalogoIndicador') }}",{IDCATALOINDICADOR:IDCATALOINDICADOR,_token:_token},function(data){
+                                                    $('body').loadingModal('show');
+                                                    $('body').loadingModal('text', 'Eliminando Catalogo...');
+                                                    if(data == 'eliminado'){
+                                                        tableCatalogoIndicadores.ajax.reload();
+                                                        noty({text: 'El catalogo ha sido Eliminado', layout: 'topRight', type: 'success'});
+                                                        
+                                                    }else if(data == 'tieneindicadores'){
+                                                        noty({text: 'El Catalogo no se ha eliminado, contiene indicadores asignados', layout: 'topRight', type: 'warning'});
+                                                    }else{
+                                                        noty({text: 'Lo sentimos, no se elimino el catalogo intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                    }
+                                                    $('body').loadingModal('hide');
+                                                })
+                                                
+                                                
+                                            }
+                                            },
+                                            {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                                $noty.close();
+                                                noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                                }
+                                            }
+                                        ]
+                                })
+                            
+                            
+                        }
+                        $(function(){
+                            
+                            tableCatalogoIndicadores = $("#tablacatalogo").DataTable({
+                                    "lengthMenu": [ 5, 10],
+                                    "language" : {
+                                        "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                    },
+                                    "autoWidth": false,
+                                    "order": [],
+                                    "processing" : true,
+                                    "serverSide": true,
+                                    "ajax": {
+                                        "url": '{{ url("/catalogo/datatableCatalogoIndicadores") }}',
+                                        "type": "post",
+                                        "data": function (d){
+                                            d._token = $("input[name=_token]").val();
+                                        }
+                                    },
+                                    "columnDefs": [{ targets: [4], "orderable": false}],
+                                    "columns": [
+                                        {width: '8%',data: 'IDCATALOGOINDICADORES'},
+                                        {width: '40%',data: 'NOMBRE'},
+                                        {width: '20%',data: 'FECHA'},
+                                        {width: '18%',data: 'ESTADO'},
+                                        {width: '14%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                    
+                                    ]
+                                });
+                        });
+                    </script>
                 @endpush('PageScript')
 @endsection('principal')

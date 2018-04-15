@@ -42,9 +42,9 @@
 
                                                         <li class="list-group-item"><strong>Estado : </strong>
                                                         @if($ESTADO == 1)
-                                                        <span class="label label-info">PENDIENTE</span>
+                                                        <span class="label label-success">ACTIVO</span>
                                                         @elseif($ESTADO == 2)
-                                                        <span class="label label-success">APROBADO</span>
+                                                        <span class="label label-info">INACTIVO</span>
                                                         @endif
                                                         </li>
                                                     </ul>                                
@@ -54,10 +54,7 @@
                                             {{ csrf_field() }}
                                             <input type="hidden" name="idcatalogoobjetivo" value="{{$IDCATALOGOOBJETIVO or 0}}">
                                         </div>
-                                        <div class="col-md-6">                                          
-
-                                        </div>
-                                        <div class="col-lg-4">
+                                        <div class="col-lg-6">
                                             <!-- DEFAULT LIST GROUP -->
                                             <div class="panel panel-default">
                                                 <div class="panel-heading">
@@ -90,6 +87,7 @@
                                             <th width="50">id</th>
                                             <th>Objetivo</th>
                                             <th>Literal</th>
+                                            <th>Catalogo</th>
                                             <th width="100">Accion</th>
                                             </tr>
 
@@ -174,7 +172,7 @@
                         
                         $(function(){
                             
-//tap para agregar objetivos estrategicos
+                            //tap para agregar objetivos estrategicos
                                 tableCatalogoObjetivos = $("#datatableObjetivosCatalogo").DataTable({
                                     "lengthMenu": [ 5, 10],
                                     "language" : {
@@ -185,7 +183,7 @@
                                     "processing" : true,
                                     "serverSide": true,
                                     "ajax": {
-                                        "url": '{{ url("/catalogo/datatableCataloObjetivos") }}',
+                                        "url": '{{ url("/objetivos/datatableObjetivosDeCatalogos") }}',
                                         "type": "post",
                                         "data": function (d){
                                             d.idcatalogoobjetivo = $("input[name=idcatalogoobjetivo]").val();
@@ -194,9 +192,10 @@
                                     },
                                     //"columnDefs": [{ targets: [3], "orderable": false}],
                                     "columns": [
-                                        {width: '15%',data: 'IDOBJETIVOESTRATEGICO'},
-                                        {width: '50%',data: 'DESCRIPCION'},
-                                        {width: '20%',data: 'LITERAL'}, 
+                                        {width: '8%',data: 'IDOBJETIVOESTRATEGICO'},
+                                        {width: '40%',data: 'descripcionobjetivo'},
+                                        {width: '12%',data: 'LITERAL'}, 
+                                        {width: '25%',data: 'descripcioncatalogoobjetivo'},
                                         {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
                                     
                                     ]

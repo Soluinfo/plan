@@ -3,13 +3,13 @@
 @section('principal')
                 <!-- START BREADCRUMB -->
                 <ul class="breadcrumb">
-                    <li><a href="#">Principal</a></li>                    
-                    <li class="active">Crear Indicadores</li>
+                    <li><a href="{{url('/principal')}}">Principal</a></li>                    
+                    <li class="active">Indicadores</li>
                 </ul>
                 <!-- END BREADCRUMB -->                       
                 <!-- PAGE TITLE -->
                 <div class="page-title">                    
-                    <h2><span class="fa fa-arrow-circle-o-left"></span> Crear indicadores</h2>
+                    <h2><span class="fa fa-arrow-circle-o-left"></span> Indicadores</h2>
                 </div>
                 <!-- END PAGE TITLE --> 
                 <!-- PAGE CONTENT WRAPPER -->
@@ -30,7 +30,7 @@
                                         <li><a href="#" class="panel-remove"><span class="fa fa-times"></span></a></li>
                                     </ul>                                
                                 </div>
-                                <table class="table datatable">
+                                <table class="table" id="datatableIndicadores">
                                     <thead>
                                         <tr>
                                             <th>Id</th>
@@ -41,6 +41,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
+<<<<<<< HEAD
                                         @foreach($indicadores as $p)
                                         <tr>      
                                             <td width="8%">{{ $p->IDINDICADORES }}</td>
@@ -57,9 +58,13 @@
                                         </tr>
                                         @endforeach
                                         
+=======
+                                                                                
+>>>>>>> origin/test
                                     </tbody>
                                 
                                 </table>
+                                {{ csrf_field() }}
                             </div>
                             <!-- END DEFAULT DATATABLE -->
 
@@ -68,6 +73,85 @@
                 
                 <!-- END PAGE CONTENT WRAPPER --> 
                 @push('PageScript')
-                    <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script> 
+                    <script type="text/javascript" src="js/plugins/datatables/jquery.dataTables.min.js"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                    <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
+                <script>
+                    function eliminarIndicador(IDINDICADOR){
+                            
+                            _token = $("input[name=_token]").val();
+                            noty({
+                                text: 'Esta seguro que desea eliminar el Indicador?',
+                                layout: 'topRight',
+                                buttons: [
+                                        {addClass: 'btn btn-success btn-clean', text: 'Aceptar', onClick: function($noty) {
+                                            $noty.close();
+                                            $.post("{{ url('/indicadores/eliminarIndicador') }}",{IDINDICADOR:IDINDICADOR,_token:_token},function(data){
+                                                $('body').loadingModal('show');
+                                                $('body').loadingModal('text', 'Eliminando Indicador...');
+                                                if(data == 'eliminado'){
+                                                    tableCatalogoIndicadores.ajax.reload();
+                                                    noty({text: 'El indicador ha sido Eliminado', layout: 'topRight', type: 'success'});
+                                                    
+                                                }else if(data == 'estaAsignadoAProyecto'){
+                                                    noty({text: 'El indicador no ha sigo eliminado, esta asignado a un proyecto', layout: 'topRight', type: 'success'});
+                                                }else{
+                                                    noty({text: 'Lo sentimos, no se elimino el indicador intenta nuevamente', layout: 'topRight', type: 'error'});
+                                                }
+                                                $('body').loadingModal('hide');
+                                            })
+                                            
+                                            
+                                        }
+                                        },
+                                        {addClass: 'btn btn-danger btn-clean', text: 'Cancelar', onClick: function($noty) {
+                                            $noty.close();
+                                            noty({text: 'Eliminacion cancelada', layout: 'topRight', type: 'error'});
+                                            }
+                                        }
+                                    ]
+                            })
+                        
+                        
+                    }               
+                    $(function(){
+                            //tap para agregar objetivos estrategicos
+                            tableCatalogoIndicadores = $("#datatableIndicadores").DataTable({
+                                "lengthMenu": [ 5, 10],
+                                "language" : {
+                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
+                                "order": [], //Initial no order
+                                "processing" : true,
+                                "serverSide": true,
+                                "ajax": {
+                                    "url": '{{ url("/indicadores/datatableIndicadores") }}',
+                                    "type": "post",
+                                    "data": function (d){
+                                        
+                                        d._token = $("input[name=_token]").val();
+                                    }
+                                },
+                                //"columnDefs": [{ targets: [3], "orderable": false}],
+                                "columns": [
+                                    {width: '10%',data: 'IDINDICADORES'},
+                                    {width: '10%',data: 'LITERAL'},
+                                    {width: '40%',data: 'DESCRIPCION'}, 
+                                    {width: '25%',data: 'NOMBRE'}, 
+                                    {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                
+                                ]
+                            });
+                            //end tap para agregar ambitos de objetivos estrategicos
+                        
+                        
+                        
+                        
+                    })
+                </script>  
                 @endpush('PageScript')
 @endsection('principal')

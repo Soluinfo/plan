@@ -15,7 +15,11 @@
         "laravel/tinker": "~1.0",
         "laravelcollective/html": "5.4.*",
         "laraveles/spanish": "^1.0",
+<<<<<<< HEAD
         "league/flysystem-aws-s3-v3": "^1.0",
+=======
+        "league/flysystem-aws-s3-v2": "~1.0",
+>>>>>>> origin/test
         "mpdf/mpdf": "^7.0",
         "nao-pon/flysystem-google-drive": " ~1.1",
         "php-http/guzzle6-adapter": "^1.1",

@@ -91,134 +91,163 @@ class ObjetivosController extends Controller
                     }
                     return $objetivosestrategicos;
                 }
-//inicio de la funcion para guardar objetivos estrategicos
+            //inicio de la funcion para guardar objetivos estrategicos  
 
-public function guardarambito(Request $r){
-    if($r->ajax()){
-        $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
-        $idAmbitoinfluencia = $r->idambitoinfluencia;
+            public function guardarambito(Request $r){
+                if($r->ajax()){
+                    $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
+                    $idAmbitoinfluencia = $r->idambitoinfluencia;
 
-        if($idAmbitoinfluencia > 0){
-            $ambitoinfluencia = Ambitoinfluencia::where('IDAMBITOINFLUENCIA', $idAmbitoinfluencia)
-                                ->update([
-                                'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,   
+                    if($idAmbitoinfluencia > 0){
+                        $ambitoinfluencia = Ambitoinfluencia::where('IDAMBITOINFLUENCIA', $idAmbitoinfluencia)
+                                            ->update([
+                                            'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,   
+                                            'NOMBREAMBITO' => $r->txtDescripcionAmbito
+                                            
+                                            
+                                            ]);
+                        $datos['respuesta'] = 'ok';
+                        $datos['codigo'] = $idAmbitoinfluencia;
+                        $datos['transaccion'] = 'actualizar';
+                        }else{
+                            $ambitoinfluencia = new Ambitoinfluencia(array(
+                                'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,
                                 'NOMBREAMBITO' => $r->txtDescripcionAmbito
                                 
-                                
-                                ]);
-            $datos['respuesta'] = 'ok';
-            $datos['codigo'] = $idAmbitoinfluencia;
-            $datos['transaccion'] = 'actualizar';
-            }else{
-                $ambitoinfluencia = new Ambitoinfluencia(array(
-                    'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,
-                    'NOMBREAMBITO' => $r->txtDescripcionAmbito
+                            ));
+                            $ambitoinfluencia->save();
+                            $id = $ambitoinfluencia->id;
+                            $datos['respuesta'] = 'ok';
+                            $datos['codigo'] = $id;
+                            $datos['transaccion'] = 'guardar';
+                        }
+                        echo json_encode($datos);
+                    }
+                }
+                    public function datatablesAmbito(Request $r){
+                        if($r->ajax()){
+                            $idObjetivo = $r->idobjetivo;
+                            $datosambitos = Ambitoinfluencia::join('objetivosestrategicos', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', '=', 'ambitosinfluencias.IDOBJETIVOESTRATEGICO')
+                                                                ->where('ambitosinfluencias.IDOBJETIVOESTRATEGICO', '=' ,$r->idobjetivo)
+                                                                ->select('ambitosinfluencias.IDAMBITOINFLUENCIA',
+                                                                'objetivosestrategicos.DESCRIPCION',
+                                                                'ambitosinfluencias.NOMBREAMBITO')
+                                                                ->get();
+                                                                                                            
+                            return Datatables($datosambitos)
+                            ->addColumn('action', function ($datosambitos) {
+                                return '<a onclick="editarDetalleAmbito('.$datosambitos->IDAMBITOINFLUENCIA.')"class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editareee!"><span class="fa fa-edit"></span></a>                   
+                                        <a onclick="eliminarAmbito('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
+                            })
+                            ->removeColumn('IDOBJETIVOESTRATEGICO')
+                            ->make(true);
+                        }
+                    }
+                    public function eliminarAmbitoObjetivo(Request $r){
+                        if($r->ajax()){
+                            $eliminar = Ambitoinfluencia::where(['IDAMBITOINFLUENCIA' => $r->IDAMBITOINFLUENCIA])
+                                                            ->delete();
+                            
+                            echo 'eliminado';          
+                        }
+                    }
+                    public function guardaralcance(Request $r){
+                        if($r->ajax()){
+                            $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
+                            $idAlcance = $r->idalcance;
                     
-                ));
-                $ambitoinfluencia->save();
-                $id = $ambitoinfluencia->id;
-                $datos['respuesta'] = 'ok';
-                $datos['codigo'] = $id;
-                $datos['transaccion'] = 'guardar';
-            }
-            echo json_encode($datos);
-        }
-    }
-        public function datatablesAmbito(Request $r){
-            if($r->ajax()){
-                $idObjetivo = $r->idobjetivo;
-                $datosambitos = Ambitoinfluencia::join('objetivosestrategicos', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', '=', 'ambitosinfluencias.IDOBJETIVOESTRATEGICO')
-                                                    ->where('ambitosinfluencias.IDOBJETIVOESTRATEGICO', '=' ,$r->idobjetivo)
-                                                    ->select('ambitosinfluencias.IDAMBITOINFLUENCIA',
-                                                    'objetivosestrategicos.DESCRIPCION',
-                                                    'ambitosinfluencias.NOMBREAMBITO')
-                                                    ->get();
-                                                                                                
-                return Datatables($datosambitos)
-                 ->addColumn('action', function ($datosambitos) {
-                    return '<a onclick="editarDetalleAmbito('.$datosambitos->IDAMBITOINFLUENCIA.')"class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editareee!"><span class="fa fa-edit"></span></a>                   
-                            <a onclick="eliminarAmbito('.$datosambitos->IDAMBITOINFLUENCIA.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminar!"><i class="fa fa-trash-o"></i></a>';
-                })
-                ->removeColumn('IDOBJETIVOESTRATEGICO')
-                ->make(true);
-            }
-        }
-        public function eliminarAmbitoObjetivo(Request $r){
-            if($r->ajax()){
-                $eliminar = Ambitoinfluencia::where(['IDAMBITOINFLUENCIA' => $r->IDAMBITOINFLUENCIA])
-                                                ->delete();
-                
-                echo 'eliminado';          
-            }
-        }
-        public function guardaralcance(Request $r){
-            if($r->ajax()){
-                $datos = array('respuesta' => 'no','codigo' => 0,'transaccion' => 'guardar');
-                $idAlcance = $r->idalcance;
-        
-                if($idAlcance > 0){
-                    $ambitoinfluencia = Alcance::where('IDALCANCE', $idAlcance)
-                                        ->update([
+                            if($idAlcance > 0){
+                                $ambitoinfluencia = Alcance::where('IDALCANCE', $idAlcance)
+                                                    ->update([
+                                                    'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,   
+                                                    'DESCRIPCIONALCANCE' => $r->txtDescripcionAlcance
+                                                    
+                                                    
+                                                    ]);
+                                $datos['respuesta'] = 'ok';
+                                $datos['codigo'] = $idAlcance;
+                                $datos['transaccion'] = 'actualizar';
+                                }else{
+                                    $alcance = new Alcance(array(
                                         'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,   
                                         'DESCRIPCIONALCANCE' => $r->txtDescripcionAlcance
                                         
-                                        
-                                        ]);
-                    $datos['respuesta'] = 'ok';
-                    $datos['codigo'] = $idAlcance;
-                    $datos['transaccion'] = 'actualizar';
-                    }else{
-                        $alcance = new Alcance(array(
-                            'IDOBJETIVOESTRATEGICO' => $r->idobjetivo,   
-                            'DESCRIPCIONALCANCE' => $r->txtDescripcionAlcance
-                            
-                        ));
-                        $alcance ->save();
-                        $id = $alcance ->id;
-                        $datos['respuesta'] = 'ok';
-                        $datos['codigo'] = $id;
-                        $datos['transaccion'] = 'guardar';
-                    }
-                    echo json_encode($datos);
-                } 
-    
-}
-public function datatablesAlcance(Request $r){
-    if($r->ajax()){
-        $idAlcance = $r->idalcance;
-        $datosalcance = Alcance::join('objetivosestrategicos', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', '=', 'alcances.IDOBJETIVOESTRATEGICO')
-                                            ->where('alcances.IDOBJETIVOESTRATEGICO', '=' ,$r->idobjetivo)
-                                            ->select('alcances.IDALCANCE','objetivosestrategicos.DESCRIPCION','alcances.DESCRIPCIONALCANCE')
-                                            ->get();
-                                        
-        return Datatables($datosalcance)
-        ->addColumn('action', function ($datosalcance) {
-            return '<a onclick="editarDetalleAmbito('.$datosalcance->IDALCANCE.')"class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
-                    <a onclick="eliminarAlcance('.$datosalcance->IDALCANCE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminarte!"><i class="fa fa-trash-o"></i></a>';
-        })
-        ->removeColumn('IDOBJETIVOESTRATEGICO')
-        ->make(true);
-    }
-}
-public function eliminarAlcanceObjetivo(Request $r){
-    if($r->ajax()){
-        $eliminar = Alcance::where(['IDALCANCE' => $r->IDALCANCE])
-                                        ->delete();
-        
-        echo 'eliminado';          
-    }
-}
-public function eliminarObjetivo($id = null){
+                                    ));
+                                    $alcance ->save();
+                                    $id = $alcance ->id;
+                                    $datos['respuesta'] = 'ok';
+                                    $datos['codigo'] = $id;
+                                    $datos['transaccion'] = 'guardar';
+                                }
+                                echo json_encode($datos);
+                            } 
+                
+            }
+            public function datatablesAlcance(Request $r){
+                if($r->ajax()){
+                    $idAlcance = $r->idalcance;
+                    $datosalcance = Alcance::join('objetivosestrategicos', 'objetivosestrategicos.IDOBJETIVOESTRATEGICO', '=', 'alcances.IDOBJETIVOESTRATEGICO')
+                                                        ->where('alcances.IDOBJETIVOESTRATEGICO', '=' ,$r->idobjetivo)
+                                                        ->select('alcances.IDALCANCE','objetivosestrategicos.DESCRIPCION','alcances.DESCRIPCIONALCANCE')
+                                                        ->get();
+                                                    
+                    return Datatables($datosalcance)
+                    ->addColumn('action', function ($datosalcance) {
+                        return '<a onclick="editarDetalleAmbito('.$datosalcance->IDALCANCE.')"class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>                   
+                                <a onclick="eliminarAlcance('.$datosalcance->IDALCANCE.')" class="btn btn-xs btn-danger" data-toggle="tooltip" data-placement="top" title="Eliminarte!"><i class="fa fa-trash-o"></i></a>';
+                    })
+                    ->removeColumn('IDOBJETIVOESTRATEGICO')
+                    ->make(true);
+                }
+            }
+            public function eliminarAlcanceObjetivo(Request $r){
+                if($r->ajax()){
+                    $eliminar = Alcance::where(['IDALCANCE' => $r->IDALCANCE])
+                                                    ->delete();
+                    
+                    echo 'eliminado';          
+                }
+            }
+            public function eliminarObjetivo(Request $r){
+                    Objetivo::where('IDOBJETIVOESTRATEGICO',$r->IDOBJETIVO)->delete();                    
+                    echo 'eliminado';          
+                
+            }
+            /*public function obtenerAmbitos($id = null){
+                $ambitos = Ambitoinfluencia::all();
+                return $ambitos;
+            }*/
 
-        $eliminar = Objetivo::find($id);
-        
-        $eliminar->delete();
-        
-        echo 'Proyecto Eliminado';          
-    
-}
-/*public function obtenerAmbitos($id = null){
-    $ambitos = Ambitoinfluencia::all();
-    return $ambitos;
-}*/
+            public function datatablesObjetivosDeCatalogoObjetivos(Request $r){
+                if($r->ajax()){
+                    $idcatalogoobjetivo = $r->idcatalogoobjetivo;
+                    if($idcatalogoobjetivo == null){
+                        $datoscatalogo = Objetivo::join('catalogoobjetivos', 'catalogoobjetivos.IDCATALOGOOBJETIVO', '=', 'objetivosestrategicos.IDCATALOGOOBJETIVO')
+                                                        
+                                                        ->select('objetivosestrategicos.IDOBJETIVOESTRATEGICO',
+                                                                'objetivosestrategicos.DESCRIPCION as descripcionobjetivo',
+                                                                'objetivosestrategicos.LITERAL',
+                                                                'catalogoobjetivos.NOMBRE as descripcioncatalogoobjetivo')
+                                                        ->get();
+                    }else{
+                        $datoscatalogo = Objetivo::join('catalogoobjetivos', 'catalogoobjetivos.IDCATALOGOOBJETIVO', '=', 'objetivosestrategicos.IDCATALOGOOBJETIVO')
+                                                        ->where('catalogoobjetivos.IDCATALOGOOBJETIVO', '=' ,$r->idcatalogoobjetivo)
+                                                        ->select('objetivosestrategicos.IDOBJETIVOESTRATEGICO',
+                                                                'objetivosestrategicos.DESCRIPCION as descripcionobjetivo',
+                                                                'objetivosestrategicos.LITERAL',
+                                                                'catalogoobjetivos.NOMBRE as descripcioncatalogoobjetivo')
+                                                        ->get();
+                    }
+                    
+                                                                                                    
+                    return Datatables($datoscatalogo)
+                     ->addColumn('action', function ($datoscatalogo) {
+                        return '<a href="'.action('objetivos\DetalleObjetivoController@home',$datoscatalogo->IDOBJETIVOESTRATEGICO).'" type="button" class="btn btn-info btn-xs" data-toggle="tooltip" data-placement="top" title="Detalle!"><span class="fa fa-info-circle"></span></a>
+                        <a href="'.action('objetivos\ObjetivosController@crear',$datoscatalogo->IDOBJETIVOESTRATEGICO).'" class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="top" title="editar!"><span class="fa fa-edit"></span></a>
+                        <a onclick="eliminarObjetivo('.$datoscatalogo->IDOBJETIVOESTRATEGICO.')" class="btn btn-danger btn-xs" data-toggle="tooltip" data-placement="top" title="eliminar!"><span class="fa fa-trash-o"></span></a>';
+                    })
+                    
+                    ->make(true);
+                }
+            }
 }

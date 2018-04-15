@@ -84,7 +84,7 @@
                                             Indicadores del Catalogo
                                             @endslot
                                             @slot('idcomponent')
-                                            datatableIndicadoresCatalogo
+                                            datatableIndicadores
                                             @endslot
                                             <tr>
                                             <th width="50">id</th>
@@ -104,56 +104,50 @@
                 
                 
                 @push('PageScript')
-                    <script>
-                        /*function obtenerDetalleObjetivo(IDOBJETIVOESTRATEGICO){
-                           _token = $("input[name=_token]").val();
-                            $.post("{{ url('/objetivos/detalles') }}",{_token:_token,IDOBJETIVOESTRATEGICO:IDOBJETIVOESTRATEGICO},function(data){
-                                $("#tablaDetalleObjetivo").html(data);
-                            })
-                            $("#modalDetalleObjetivo").modal('show');
-                           
-                        }*/
-                        
-                        
-                        $(function(){
-                            
-//tap para agregar objetivos estrategicos
-                                tableCatalogoIndicadores = $("#datatableIndicadoresCatalogo").DataTable({
-                                    "lengthMenu": [ 5, 10],
-                                    "language" : {
-                                        "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
-                                    },
-                                    "autoWidth": false,
-                                    "order": [], //Initial no order
-                                    "processing" : true,
-                                    "serverSide": true,
-                                    "ajax": {
-                                        "url": '{{ url("/catalogo/datatableCatalogoIndicadores") }}',
-                                        "type": "post",
-                                        "data": function (d){
-                                            d.idcatalogoindicadores = $("input[name=idcatalogoindicadores]").val();
-                                            d._token = $("input[name=_token]").val();
-                                        }
-                                    },
-                                    //"columnDefs": [{ targets: [3], "orderable": false}],
-                                    "columns": [
-                                        {width: '15%',data: 'IDCATALOGOINDICADORES'},
-                                        {width: '50%',data: 'DESCRIPCION'},
-                                        {width: '20%',data: 'LITERAL'}, 
-                                        {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
-                                    
-                                    ]
-                                });
+                <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>
+                <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js')}}"></script> 
+                <script type='text/javascript' src="{{ url('js/plugins/noty/jquery.noty.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topCenter.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topLeft.js') }}"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/layouts/topRight.j') }}s"></script>
+                <script type='text/javascript' src="{{ url('js/plugins/noty/themes/default.js') }}"></script>
+                <script>
+                                            
+                    $(function(){
+                            //tap para agregar objetivos estrategicos
+                            tableCatalogoIndicadores = $("#datatableIndicadores").DataTable({
+                                "lengthMenu": [ 5, 10],
+                                "language" : {
+                                    "url": '{{ url("/js/plugins/datatables/spanish.json") }}',
+                                },
+                                "autoWidth": false,
+                                "order": [], //Initial no order
+                                "processing" : true,
+                                "serverSide": true,
+                                "ajax": {
+                                    "url": '{{ url("/indicadores/datatableIndicadores") }}',
+                                    "type": "post",
+                                    "data": function (d){
+                                        d.idcatalogoindicadores = $("input[name=idcatalogoindicadores]").val();
+                                        d._token = $("input[name=_token]").val();
+                                    }
+                                },
+                                //"columnDefs": [{ targets: [3], "orderable": false}],
+                                "columns": [
+                                    {width: '10%',data: 'IDINDICADORES'},
+                                    {width: '10%',data: 'LITERAL'},
+                                    {width: '40%',data: 'DESCRIPCION'}, 
+                                    {width: '25%',data: 'NOMBRE'}, 
+                                    {width: '15%',data: 'action', name: 'action', orderable: false, searchable: false},
+                                
+                                ]
+                            });
                             //end tap para agregar ambitos de objetivos estrategicos
-                            
-                           
-                            
-                            
-                        })
-                    </script>
-                    
-                    <script type="text/javascript" src="{{ url('js/plugins/knob/jquery.knob.min.js')}}"></script>
-                    <script type="text/javascript" src="{{ url('js/plugins/datatables/jquery.dataTables.min.js')}}"></script> 
-                    
+                        
+                        
+                        
+                        
+                    })
+                </script>                    
                 @endpush('PageScript')
 @endsection('principal')
